@@ -167,7 +167,7 @@ Após isso, através da ferramenta \texttt{train\_test\_split} da biblioteca \te
     \end{itemize}
 }
 
-Para a realização deste exercício, especificamente para o proposto na letra (a), foi inicialmente realizado o cálculo do Kernel Principal Component Analysis (KPCA) através da biblioteca \texttt{Scikit-Learn} com a função \texttt{KernelPCA}. Foi empiricamente escolhido um kernel polinomial para o cálculo da matriz KPCA com todas as componentes, para posteriormente selecionar as principais componentes. O conjunto de dados projetados nas duas principais componentes do KPCA está presente na Figura \ref{fig:KPCA}.
+Para a realização deste exercício, especificamente para o proposto na letra (a), foi inicialmente realizado o cálculo do Kernel Principal Component Analysis (KPCA) através da biblioteca \texttt{Scikit-Learn} com a função \texttt{KernelPCA}, com o intuito de determinar o número de componentes principais de todas as bases que serão calculadas posteriormente para cada fold. Foi empiricamente escolhido um kernel polinomial para o cálculo da matriz KPCA com todas as componentes, para posteriormente selecionar as principais componentes. O conjunto de dados projetados nas duas principais componentes do KPCA está presente na Figura \ref{fig:KPCA}.
 
 \begin{figure}[H]
     \centering 
@@ -187,7 +187,7 @@ Para determinar a quantidade ideal de componentes principais, utilizou-se a bibl
     \label{fig:vari_kpca} % cria um rótulo para referência no texto
 \end{figure}
 
-Utilizando a técnica de K-Fold Cross-Validation, os dados são divididos em \( k \) subconjuntos (ou "folds") de tamanhos aproximadamente iguais. Em cada iteração, um dos \( k \) folds é reservado como conjunto de validação, enquanto os \( k-1 \) folds restantes são utilizados para treinamento, resultando em \( k \) modelos distintos. Para este experimento, foi utilizado \( \texttt{K-fold} = 4 \), e a função \texttt{SVC} da biblioteca \texttt{Scikit-Learn} foi empregada para calcular o modelo de Máquinas de Vetores de Suporte (SVM), para o caso não separável, com o objetivo de realizar a classificação dos dados. Esta construção é baseada na minimização da função custo $\tau$ decrita abaixo:
+Utilizando a técnica de K-Fold Cross-Validation, os dados são divididos em \( k \) subconjuntos (ou "folds") de tamanhos aproximadamente iguais. Em cada iteração, um dos \( k \) folds é reservado como conjunto de validação, enquanto os \( k-1 \) folds restantes são utilizados para treinamento, resultando em \( k \) modelos distintos. Para este experimento, foi utilizado \( \texttt{K-fold} = 4 \), sendo realizado o PCA para o conjunto de treinamento correspondente de cada fold através da função \texttt{pca.tranform()}, reduzindo a dimensionalidade deste conjunto de acordo com o número de componentes encontradas anteriormente, neste caso, 435. Logo após, a função \texttt{SVC} da biblioteca \texttt{Scikit-Learn} foi empregada para calcular o modelo de Máquinas de Vetores de Suporte (SVM), para o caso não separável, com o objetivo de realizar a classificação dos dados. Esta construção é baseada na minimização da função custo $\tau$ decrita abaixo:
 \[
 \tau(\phi, \xi, C) = \frac{1}{2} \|\phi\|^2 + C \sum_{i=1}^{M} \xi_i
 \]
@@ -227,7 +227,7 @@ Com o intuito de promover uma visualização gráfica para exemplificar como ser
 
 \newpage
 
-Para a realização do item (b), foi inicialmente realizado o cálculo do Principal Component Analysis (PCA) utilizando a biblioteca \texttt{Scikit-Learn} com a função \texttt{PCA}. Neste primeiro passo, foram calculadas todas as componentes principais, permitindo posteriormente a seleção das mais relevantes para este conjunto de dados. A projeção do conjunto de dados na base PCA está representada na Figura \ref{fig:PCA}.
+Para a realização do item (b), foi inicialmente realizado o cálculo do Principal Component Analysis (PCA) utilizando a biblioteca \texttt{Scikit-Learn} com a função \texttt{PCA}, também com o intuito de determinar o número de componentes para todas as bases PCA que serão calculadas em cada fold. Neste primeiro passo, foram calculadas todas as componentes principais, permitindo posteriormente a seleção das mais relevantes para este conjunto de dados. A projeção do conjunto de dados na base PCA está representada na Figura \ref{fig:PCA}.
 
 \begin{figure}[H]
     \centering 
@@ -236,7 +236,7 @@ Para a realização do item (b), foi inicialmente realizado o cálculo do Princi
     \label{fig:PCA} % cria um rótulo para referência no texto
 \end{figure}
 
-Após o cálculo das componentes principais, foi gerado o gráfico da variância explicada cumulativa, fornecido pelo próprio cálculo do PCA através do método \texttt{explained\_variance\_ratio\_}. O resultado obtido está ilustrado na Figura \ref{fig:vari_pca}. Para selecionar o número adequado de componentes principais, foi utilizada a função \texttt{argmax} da biblioteca \texttt{Numpy}, determinando o número de componentes necessárias para explicar pelo menos 95\% da variância dos dados, resultando em 123 componentes. Com isso, a matriz de dados transformada pelo PCA foi reduzida para conter apenas essas componentes.
+Após o cálculo das componentes principais, foi gerado o gráfico da variância explicada cumulativa, fornecido pelo próprio cálculo do PCA através do método \texttt{explained\_variance\_ratio\_}. O resultado obtido está ilustrado na Figura \ref{fig:vari_pca}. Para selecionar o número adequado de componentes principais, foi utilizada a função \texttt{argmax} da biblioteca \texttt{Numpy}, determinando o número de componentes necessárias para explicar pelo menos 95\% da variância dos dados, resultando em 123 componentes. Com isso, a matriz de dados transformada pelo PCA será reduzida para conter apenas essas componentes.
 
 \begin{figure}[H]
     \centering 
@@ -245,7 +245,7 @@ Após o cálculo das componentes principais, foi gerado o gráfico da variância
     \label{fig:vari_pca} % cria um rótulo para referência no texto
 \end{figure}
 
-Em seguida, foi aplicada a estratégia \texttt{K-fold} com valor 4, com a mesma subdivisão de dados realizada no item (a), para que fosse posteriormente realizada uma comparação entre os modelos. Utilizando a função \texttt{SVC} da biblioteca \texttt{Scikit-Learn}, foi construído um Kernel Support Vector Machine (KSVM), com kernel polinomial definido empiricamente, com o objetivo de realizar a classificação dos dados, obtendo as acurácias mostradas na Tabela \ref{tab:pca_svm} para os conjuntos de validação e teste. Novamente, a constante de regularização considerada foi \(C=1\), definida experimentalmente.
+Em seguida, foi aplicada a estratégia \texttt{K-fold} com valor 4, com a mesma subdivisão de dados realizada no item (a), para que fosse posteriormente realizada uma comparação entre os modelos. Novamente, foi realizado o cálculo de PCA para o conjunto de treinamento respectivo a cada fold, reduzindo a dimensionalidade para as 123 componentes principais. Utilizando a função \texttt{SVC} da biblioteca \texttt{Scikit-Learn}, foi construído um Kernel Support Vector Machine (KSVM), com kernel polinomial definido empiricamente, com o objetivo de realizar a classificação dos dados, obtendo as acurácias mostradas na Tabela \ref{tab:pca_svm} para os conjuntos de validação e teste. Novamente, a constante de regularização considerada foi \(C=1\), definida experimentalmente.
 
 \begin{table}[H]
     \centering
@@ -517,7 +517,7 @@ Para acessar o código referente à realização deste exercício, \href{https:/
     \item[(c)] \textit{ Compare os resultados obtidos nos itens (a) e (b) acima.}
 \end{enumerate}
 
-Para a realização da letra (a), foi então calculado o PCA e efetuada a redução de dimensionalidade de forma análoga à realizada anteriormente na questão 1, na letra (b), e obtendo a mesma base e redução de dimensionalidade, já que o conjunto de treinamento explorado é o memso. Mas, ao invés de usar um Kernel SVM para realizar a classificação dos dados, foi realizado o treinamento do Linear Discriminant Analysis (LDA), com K-fold = 4, com o número de componentes iguais a 1 (pois temos apenas duas classes) sobre o conjunto obtido pela projeção do conjunto de dados na base PCA, através da biblioteca \texttt{Scikit-Learn} com a função \texttt{lda.fit}. A acurácia obtida na classificação do conjunto de validação e de teste através do LDA está descrita na tabela \ref{tab:lda_clas}.
+Para a realização da letra (a), foi então calculado um PCA e efetuada a redução de dimensionalidade, para cada fold, de forma análoga à realizada anteriormente na questão 1, na letra (b). Mas, agora, ao invés de usar um Kernel SVM para realizar a classificação dos dados, foi realizado o treinamento do Linear Discriminant Analysis (LDA), com K-fold = 4, com o número de componentes iguais a 1 (pois temos apenas duas classes) sobre o conjunto obtido pela projeção do conjunto de dados na base PCA, através da biblioteca \texttt{Scikit-Learn} com a função \texttt{lda.fit}. A acurácia obtida na classificação do conjunto de validação e de teste através do LDA está descrita na tabela \ref{tab:lda_clas}.
 
 \begin{table}[H]
     \centering
@@ -542,7 +542,7 @@ Para a realização do item (b) deste exercício, foi realizado o seguinte passo
     \item Foi projetado então o conjunto de dados nesta base obtida, denominada base DPCA.   
 \end{enumerate}
 
-Finalmente, foi treinado um KSVM com kernel polinomial e com K-fold igual a 4, obtendo as acurácias presentes na Tabela \ref{tab:dpca_ksvm} para o conjunto de validação e de teste.
+Finalmente, foi treinado um KSVM com kernel polinomial, onde todo o processo descrito foi realizado com K-fold igual a 4, ou seja, foi treinada uma base DPCA para cada fold, reduzindo a dimensionalidade de acordo com o número de componentes principais encontradas no PCA da letra (a), neste caso, 123 componentes. Foram obtidas assim então as acurácias presentes na Tabela \ref{tab:dpca_ksvm} para o conjunto de validação e de teste.
 
 \begin{table}[H]
     \centering
