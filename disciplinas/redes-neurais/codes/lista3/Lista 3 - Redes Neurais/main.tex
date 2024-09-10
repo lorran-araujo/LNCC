@@ -83,7 +83,7 @@
 
 Este documento refere-se à elaboração da terceira lista de exercícios da disciplina de Fundamentos de Redes Neurais e Aprendizagem Estatística, promovida pelo Laboratório Nacional de Computação Científica (LNCC), ministrada pelo professor Gilson Antonio Giraldi. A lista consiste em três questões, que serão apresentadas neste formato de artigo, detalhando o passo a passo necessário para a resolução e implementação de cada uma delas. Todas as questões foram implementadas na linguagem Python, utilizando notebooks do tipo iPynb e empregando bibliotecas como \texttt{Keras} \cite{keras}, \texttt{Pandas} \cite{pandas}, \texttt{Matplotlib} \cite{matplotlib}, \texttt{Numpy} \cite{numpy}, \texttt{Scikit-learn} \cite{scikit-learn}, \texttt{OpenCV} \cite{opencv}, \texttt{Seaborn} \cite{seaborn} e \texttt{PIL} \cite{pillow}. As implementações de todas as questões serão disponibilizadas ao final da explicação de cada uma delas neste documento.
 
-Para a realização de todas as questões, foi utilizada a base de imagens CIFAR-10, fornecida pelo \texttt{Keras}. Esse conjunto de dados é composto por 60.000 imagens coloridas com 32 pixels de largura e 32 pixels de comprimento, distribuídas em 10 classes. Entretanto, foi realizada uma filtragem para trabalhar com a classificação de apenas duas classes de imagens, aviões e carros, reduzindo então o conjunto para 12.000 imagens. Algumas dessas imagens são ilustradas na Figura \ref{fig:amostra}. Além disso, devido à limitações de hardware, nos exercícios 1 e 3, foram utilizados apenas 1.200 das 12.000 imagens disponíveis.
+Para a realização de todas as questões, foi utilizada a base de imagens CIFAR-10, fornecida pelo \texttt{Keras}. Esse conjunto de dados é composto por 60.000 imagens de dimensão $32\times32$, distribuídas em 10 classes. Entretanto, foi realizada uma filtragem para trabalhar com a classificação de apenas duas classes de imagens, aviões e carros, reduzindo então o conjunto para 12.000 imagens. Algumas dessas imagens são ilustradas na Figura \ref{fig:amostra}. Além disso, devido à limitações de hardware, nos exercícios 1 e 3, foram utilizados apenas 1.200 das 12.000 imagens disponíveis.
 
 \begin{figure}[H]
     \centering 
@@ -93,7 +93,7 @@ Para a realização de todas as questões, foi utilizada a base de imagens CIFAR
 \end{figure}
 
 
-O banco de imagens utilizado foi importado da classe \texttt{datasets.cifar10} da biblioteca \texttt{Keras} através da função \texttt{load\_data()}. A escolha de usar um mesmo banco de dados em todas as questões se objetivou em realizar uma comparação entre as diferentes estratégias de classificação dos dados que cada exercício pede.
+O banco de imagens utilizado foi importado da classe \texttt{datasets.cifar10} da biblioteca \texttt{Keras} através da função \texttt{load\_data()}. A escolha de usar um mesmo banco de dados em todas as questões tem como intuito realizar uma comparação entre as diferentes estratégias de classificação dos dados que cada exercício pede.
 
 %=================================================================================================
 %=================================================================================================
@@ -167,7 +167,7 @@ Após isso, através da ferramenta \texttt{train\_test\_split} da biblioteca \te
     \end{itemize}
 }
 
-Para a realização deste exercício, especificamente para o proposto na letra (a), foi inicialmente realizado o cálculo do Kernel Principal Component Analysis (KPCA) através da biblioteca \texttt{Scikit-Learn} com a função \texttt{KernelPCA}, com o intuito de determinar o número de componentes principais de todas as bases que serão calculadas posteriormente para cada fold. Foi empiricamente escolhido um kernel polinomial para o cálculo da matriz KPCA com todas as componentes, para posteriormente selecionar as principais componentes. O conjunto de dados projetados nas duas principais componentes do KPCA está presente na Figura \ref{fig:KPCA}.
+Para a realização deste exercício, especificamente para o proposto na letra (a), foi inicialmente realizado o cálculo do Kernel Principal Component Analysis (KPCA) através da biblioteca \texttt{Scikit-Learn} com a função \texttt{KernelPCA}, com o intuito de determinar o número de componentes principais de todas as bases que serão calculadas posteriormente para cada fold. Foi empiricamente escolhido um kernel polinomial para o cálculo da matriz KPCA com todas as componentes, para posteriormente selecionar as principais. Apenas como ilustração, o conjunto de dados de treinamento projetados nas duas principais componentes do KPCA está presente na Figura \ref{fig:KPCA}.
 
 \begin{figure}[H]
     \centering 
@@ -178,7 +178,7 @@ Para a realização deste exercício, especificamente para o proposto na letra (
 
 A função para calcular a base KPCA também retorna os autovalores correspondentes aos autovetores que formam as colunas da base KPCA obtida no espaço de características. Assim, foi possível calcular a variância explicada dividindo cada autovalor pela soma de todos os autovalores, que estão em ordem decrescente. Utilizando a biblioteca \texttt{Matplotlib}, foi gerado o gráfico mostrado na Figura \ref{fig:vari_kpca}, que ilustra a soma cumulativa das variâncias explicadas. Esse gráfico permite avaliar o número de componentes da base KPCA necessários para representar uma certa porcentagem da variância total do conjunto de dados.
 
-Para determinar a quantidade ideal de componentes principais, utilizou-se a biblioteca \texttt{Numpy} com a função \texttt{argmax} para calcular o número de componentes necessários para explicar no mínimo 95\% da variância dos dados, com base na variância explicada cumulativa. O resultado indicou que são necessários 435 componentes. A partir disso, a matriz KPCA calculada anteriormente foi reduzida para este número de componentes.
+Para determinar a quantidade ideal de componentes principais, utilizou-se a biblioteca \texttt{Numpy} com a função \texttt{argmax} para calcular o número de componentes necessários para explicar no mínimo 95\% da variância dos dados, com base na variância explicada cumulativa. O resultado indicou que, neste caso, são necessários 435 componentes.
 
 \begin{figure}[H]
     \centering 
@@ -187,7 +187,7 @@ Para determinar a quantidade ideal de componentes principais, utilizou-se a bibl
     \label{fig:vari_kpca} % cria um rótulo para referência no texto
 \end{figure}
 
-Utilizando a técnica de K-Fold Cross-Validation, os dados são divididos em \( k \) subconjuntos (ou "folds") de tamanhos aproximadamente iguais. Em cada iteração, um dos \( k \) folds é reservado como conjunto de validação, enquanto os \( k-1 \) folds restantes são utilizados para treinamento, resultando em \( k \) modelos distintos. Para este experimento, foi utilizado \( \texttt{K-fold} = 4 \), sendo realizado o PCA para o conjunto de treinamento correspondente de cada fold através da função \texttt{pca.tranform()}, reduzindo a dimensionalidade deste conjunto de acordo com o número de componentes encontradas anteriormente, neste caso, 435. Logo após, a função \texttt{SVC} da biblioteca \texttt{Scikit-Learn} foi empregada para calcular o modelo de Máquinas de Vetores de Suporte (SVM), para o caso não separável, com o objetivo de realizar a classificação dos dados. Esta construção é baseada na minimização da função custo $\tau$ decrita abaixo:
+Utilizando a técnica de K-Fold Cross-Validation, os dados são divididos em \( k \) subconjuntos (ou "folds") de tamanhos aproximadamente iguais. Em cada iteração, um dos \( k \) folds é reservado como conjunto de validação, enquanto os \( k-1 \) folds restantes são utilizados para treinamento, resultando em \( k \) modelos distintos. Para a resolução deste exercício, foi utilizado \( \texttt{K-fold} = 4 \), sendo então realizado o cálculo da base KPCA para o conjunto de treinamento correspondente a cada fold, atraves da função \texttt{.fit()}, reduzindo a dimensionalidade deste conjunto de acordo com o número de componentes encontradas anteriormente, neste caso, 435. Posteriormente, foi realizada a projeção dos dados de treinamento, validação e testes nesta base através da função \texttt{pca.tranform()}. Logo após, a função \texttt{SVC} da biblioteca \texttt{Scikit-Learn} foi empregada para calcular o modelo de Máquinas de Vetores de Suporte (SVM), para o caso não separável, com o objetivo de realizar a classificação dos dados. Esta construção é baseada na minimização da função custo $\tau$ decrita abaixo:
 \[
 \tau(\phi, \xi, C) = \frac{1}{2} \|\phi\|^2 + C \sum_{i=1}^{M} \xi_i
 \]
@@ -201,7 +201,7 @@ Onde:
 
 Foi utilizado a constante $C=1$ para a realização desta questão, definida experimentalmente.
 
-Os resultados de acurácia obtida para os modelos de cada fold, tanto para os conjuntos de validação quanto para os conjuntos de teste, estão apresentados na Tabela \ref{tab:kpca_svm}. Em média, observa-se que o classificador apresentou uma maior acurácia nos conjuntos de teste em comparação com os conjuntos de validação, obtendo, em ambos casos, acurácias superiores à casa dos 78\%, chegando a 86\% no conjunto de testes.
+Os resultados de acurácia obtida para os modelos de cada fold, tanto para os conjuntos de validação quanto para os conjuntos de teste, estão apresentados na Tabela \ref{tab:kpca_svm}. Em média, observa-se que o classificador apresentou uma maior acurácia nos conjuntos de teste em comparação com os conjuntos de validação, obtendo, em ambos casos, acurácias superiores à casa dos 78\%, chegando a 84\% no conjunto de testes.
 
 \begin{table}[H]
     \centering
@@ -209,14 +209,14 @@ Os resultados de acurácia obtida para os modelos de cada fold, tanto para os co
     \hline
     \rowcolor[HTML]{C0C0C0} 
     Conjunto                          & Fold 1 & Fold 2 & Fold 3 & Fold 4 & Média  \\ \hline
-    \cellcolor[HTML]{C0C0C0}Validação & 0.78   & 0.78   & 0.78   & 0.84   & 0.795  \\ \hline
-    \cellcolor[HTML]{C0C0C0}Teste     & 0.82   & 0.86   & 0.81   & 0.84   & 0.8325 \\ \hline
+    \cellcolor[HTML]{C0C0C0}Validação & 0.79   & 0.78   & 0.79   & 0.80   & 0.79  \\ \hline
+    \cellcolor[HTML]{C0C0C0}Teste     & 0.83   & 0.84   & 0.81   & 0.84   & 0.83 \\ \hline
     \end{tabular}
     \caption{Acurácia da classificação do SVM Linear com o KPCA}
     \label{tab:kpca_svm}
 \end{table}
 
-Com o intuito de promover uma visualização gráfica para exemplificar como seria a reta de separação para apenas as duas principais componentes obtidas pelo cálculo do KPCA, foi realizado o treinamento de um novo SVM linear sobre o conjunto de dados projetados apenas nas duas principais componentes do KPCA, obtendo a reta de separação mostrada na Figura \ref{fig:kpca_reta}, juntamente com a projeção do conjunto de teste nesta base. Neste caso, a acurácia média obtida no conjunto de testes foi de 69\%, inferior à de 79\% obtida em média anteriormente com todas as componentes principais, evidenciando que a redução de dimensionalidade para apenas duas componentes principais impactou negativamente na performance do classificador. Além disso, a margem de separação construída possui um tamanho considerável, onde, nesta região, o classificador teve muita incerteza ao apontar de qual classe eram os dados.
+Com o intuito de promover uma visualização gráfica para exemplificar como seria a reta de separação para apenas as duas principais componentes obtidas pelo cálculo do KPCA, foi realizado o treinamento de um novo SVM linear sobre o conjunto de dados projetados apenas nas duas principais componentes do KPCA, obtendo a reta de separação mostrada na Figura \ref{fig:kpca_reta}, juntamente com a projeção do conjunto de teste nesta base. Neste caso, a acurácia média obtida no conjunto de testes foi de 69\%, inferior à de 79\% obtida em média anteriormente com todas as componentes principais, evidenciando que a redução de dimensionalidade para apenas duas componentes principais impactou negativamente na performance do classificador. Além disso, a margem de separação construída possui um tamanho considerável, que indica que, nesta região, o classificador teve muita incerteza ao apontar de qual classe eram os dados.
 
 \begin{figure}[H]
     \centering 
@@ -227,7 +227,7 @@ Com o intuito de promover uma visualização gráfica para exemplificar como ser
 
 \newpage
 
-Para a realização do item (b), foi inicialmente realizado o cálculo do Principal Component Analysis (PCA) utilizando a biblioteca \texttt{Scikit-Learn} com a função \texttt{PCA}, também com o intuito de determinar o número de componentes para todas as bases PCA que serão calculadas em cada fold. Neste primeiro passo, foram calculadas todas as componentes principais, permitindo posteriormente a seleção das mais relevantes para este conjunto de dados. A projeção do conjunto de dados na base PCA está representada na Figura \ref{fig:PCA}.
+Para a realização do item (b), foi inicialmente realizado o cálculo do Principal Component Analysis (PCA) utilizando a biblioteca \texttt{Scikit-Learn} com a função \texttt{PCA}, também com o intuito de determinar o número de componentes principais para todas as bases PCA que serão calculadas em cada fold. Neste primeiro passo, foram calculadas todas as componentes principais, permitindo posteriormente a seleção das mais relevantes para este conjunto de dados. A projeção do conjunto de dados na base PCA está representada na Figura \ref{fig:PCA}.
 
 \begin{figure}[H]
     \centering 
@@ -236,7 +236,7 @@ Para a realização do item (b), foi inicialmente realizado o cálculo do Princi
     \label{fig:PCA} % cria um rótulo para referência no texto
 \end{figure}
 
-Após o cálculo das componentes principais, foi gerado o gráfico da variância explicada cumulativa, fornecido pelo próprio cálculo do PCA através do método \texttt{explained\_variance\_ratio\_}. O resultado obtido está ilustrado na Figura \ref{fig:vari_pca}. Para selecionar o número adequado de componentes principais, foi utilizada a função \texttt{argmax} da biblioteca \texttt{Numpy}, determinando o número de componentes necessárias para explicar pelo menos 95\% da variância dos dados, resultando em 123 componentes. Com isso, a matriz de dados transformada pelo PCA será reduzida para conter apenas essas componentes.
+Após o cálculo das componentes principais, foi gerado o gráfico da variância explicada cumulativa, fornecido pelo próprio cálculo do PCA através do método \texttt{explained\_variance\_ratio\_}. O resultado obtido está ilustrado na Figura \ref{fig:vari_pca}. Para selecionar o número adequado de componentes principais, foi utilizada a função \texttt{argmax} da biblioteca \texttt{Numpy}, determinando o número de componentes necessárias para explicar pelo menos 95\% da variância dos dados, resultando em 123 componentes. Com isso, a matriz de dados transformada pelo PCA de cada fold será reduzida para este número de componentes principais.
 
 \begin{figure}[H]
     \centering 
@@ -245,7 +245,7 @@ Após o cálculo das componentes principais, foi gerado o gráfico da variância
     \label{fig:vari_pca} % cria um rótulo para referência no texto
 \end{figure}
 
-Em seguida, foi aplicada a estratégia \texttt{K-fold} com valor 4, com a mesma subdivisão de dados realizada no item (a), para que fosse posteriormente realizada uma comparação entre os modelos. Novamente, foi realizado o cálculo de PCA para o conjunto de treinamento respectivo a cada fold, reduzindo a dimensionalidade para as 123 componentes principais. Utilizando a função \texttt{SVC} da biblioteca \texttt{Scikit-Learn}, foi construído um Kernel Support Vector Machine (KSVM), com kernel polinomial definido empiricamente, com o objetivo de realizar a classificação dos dados, obtendo as acurácias mostradas na Tabela \ref{tab:pca_svm} para os conjuntos de validação e teste. Novamente, a constante de regularização considerada foi \(C=1\), definida experimentalmente.
+Em seguida, foi aplicada a estratégia \texttt{K-fold} com valor 4, com a mesma subdivisão de dados realizada no item (a), para que fosse posteriormente realizada uma comparação entre os modelos. Novamente, foi realizado o cálculo de PCA para o conjunto de treinamento respectivo ao fold através da função \texttt{.fit()}, e então reduzindo a dimensionalidade para as 123 componentes principais. Utilizando a função \texttt{SVC} da biblioteca \texttt{Scikit-Learn}, foi construído um Kernel Support Vector Machine (KSVM), com kernel polinomial definido empiricamente, com o objetivo de realizar a classificação dos dados, obtendo as acurácias mostradas na Tabela \ref{tab:pca_svm} para os conjuntos de validação e teste. Novamente, a constante de regularização considerada foi \(C=1\), definida experimentalmente.
 
 \begin{table}[H]
     \centering
@@ -253,19 +253,19 @@ Em seguida, foi aplicada a estratégia \texttt{K-fold} com valor 4, com a mesma 
     \hline
     \rowcolor[HTML]{C0C0C0} 
     Conjunto                          & Fold 1 & Fold 2 & Fold 3 & Fold 4 & Média  \\ \hline
-    \cellcolor[HTML]{C0C0C0}Validação & 0.81   & 0.70   & 0.73   & 0.75   & 0.7475  \\ \hline
-    \cellcolor[HTML]{C0C0C0}Teste     & 0.83   & 0.84   & 0.77   & 0.81   & 0.8125 \\ \hline
+    \cellcolor[HTML]{C0C0C0}Validação & 0.82   & 0.69   & 0.73   & 0.74   & 0.745  \\ \hline
+    \cellcolor[HTML]{C0C0C0}Teste     & 0.83   & 0.83   & 0.77   & 0.81   & 0.81 \\ \hline
     \end{tabular}
-    \caption{Acurácia da classificação do SVM Polinomial com o PCA}
+    \caption{Acurácia da classificação do KSVM Polinomial com o PCA}
     \label{tab:pca_svm}
 \end{table}
 
-Com o intuito de visualizar o plano de separação utilizando apenas as duas componentes principais obtidas pelo PCA, foi treinado um novo SVM com kernel polinomial sobre o conjunto de treinamento projetado na base PCA reduzida apenas para suas duas componentes principais, gerando a curva de separação presente na Figura \ref{fig:pca_reta}. Essa figura também mostra a projeção do conjunto de testes nas duas primeiras direções principais. Nesse cenário, a acurácia média alcançada sobre o conjunto de validação foi de 62\%, evidenciando mais uma vez que a redução de dimensionalidade para duas componentes impactou negativamente na acurácia do classificador.
+Com o intuito de visualizar o plano de separação utilizando apenas as duas componentes principais obtidas pelo PCA, foi treinado um novo SVM com kernel polinomial sobre o conjunto de treinamento projetado na base PCA reduzida apenas para suas duas componentes principais, gerando a curva de separação presente na Figura \ref{fig:pca_reta}. Essa figura também mostra a projeção do conjunto de testes nas duas primeiras direções principais. Nesse cenário, a acurácia média alcançada sobre o conjunto de validação foi de 64\%, evidenciando mais uma vez que a redução de dimensionalidade para duas componentes impactou negativamente na acurácia do classificador.
 
 \begin{figure}[H]
     \centering 
     \includegraphics[width=0.5\textwidth]{imgs/ex1/pca_reta.png}
-    \caption{Curva de decisão do SVM Polinomial com PCA}
+    \caption{Curva de decisão do KSVM Polinomial com PCA}
     \label{fig:pca_reta} % cria um rótulo para referência no texto
 \end{figure}
 
@@ -345,7 +345,7 @@ A arquitetura construída com essa inspiração está descrita na Tabela \ref{ta
 Logo, foram usadas no total 6 camadas do tipo convolucionais, 3 camadas de pooling e uma camada densa Multi Layer Perceptron (MLP), onde:
 
 \begin{itemize}
-    \item A função de ativação Rectified Linear Unit(ReLU) foi utilizada nas MLP e convolucionais da rede, como na arquitetura da VGGNet, dada por:
+    \item A função de ativação Rectified Linear Unit(ReLU) foi utilizada na camada Dense e na saída das camadas convolucionais, após o batch normalization, como na arquitetura da VGGNet. A função é dada por:
     
     \[
     \text{ReLu}(x) = \max(0, x).
@@ -359,14 +359,14 @@ Logo, foram usadas no total 6 camadas do tipo convolucionais, 3 camadas de pooli
         \text{softmax}(\mathbf{z}) = \left( \frac{\exp(z_1)}{\sum_{j=1}^{K} \exp(z_j)}, \frac{\exp(z_2)}{\sum_{j=1}^{K} \exp(z_j)}, \ldots, \frac{\exp(z_K)}{\sum_{j=1}^{K} \exp(z_j)} \right).
     \]
     
-    \item Foi utilizado o parâmetro das redes convolucionais padding igual a same, que significa que haverá um preenchimento uniforme nas bordas com zeros, e strides (1,1), de modo que as saídas das camadas convolucionais terão o mesmo tamanho que as entradas delas \cite{keras}.
+    \item Foi utilizado o parâmetro das redes convolucionais padding igual a same, que significa que haverá um preenchimento uniforme nas bordas com zeros, e strides igual a 1, de modo que as saídas das camadas convolucionais terão o mesmo tamanho que suas entradas delas \cite{keras}.
 \end{itemize}
 
 Foram usadas também algumas outras estratégias na construção da rede, como:
 
 \begin{itemize}
-    \item Batch Normalization: técnica usada para melhorar a estabilidade e a velocidade do treinamento de redes neurais profundas. Ela funciona normalizando a entrada de cada camada para ter média zero e variância unitária. A ideia é normalizar as saídas das camadas para que estejam em uma faixa específica, o que permite que o treinamento seja mais estável e rápido \cite{ioffe2015batch}. Camadas de batch normalization foram aplicadas nas saídas de todas as camadas CNN e MLP.
-    \item Dropout: técnica de regularização usada para prevenir o overfitting em redes neurais. Durante o treinamento, o dropout desativa aleatoriamente uma fração dos neurônios em uma camada, forçando a rede a aprender representações mais robustas e a não depender excessivamente de nenhum neurônio específico. Isso faz com que a rede neural generalize melhor, pois cada unidade não pode confiar excessivamente em outras unidades \cite{srivastava2014dropout}. Para este modelo, um dropout de 20\% foi aplicado a última camada da primeira, segunda e terceira camada Conv e Pool. Além disso, foi usado um dropout de 25\% na camada MLP.
+    \item Batch Normalization: técnica usada para melhorar a estabilidade e a velocidade do treinamento de redes neurais profundas. Ela funciona normalizando a entrada de cada camada para ter média zero e variância unitária. A ideia é normalizar as saídas das camadas para que estejam em uma faixa específica, o que permite que o treinamento seja mais estável e rápido \cite{ioffe2015batch}. Camadas de batch normalization foram aplicadas nas saídas de todas as camadas CNN e Dense.
+    \item Dropout: técnica de regularização usada para prevenir o overfitting em redes neurais. Durante o treinamento, o dropout desativa aleatoriamente uma fração dos neurônios em uma camada, forçando a rede a aprender representações mais robustas e a não depender excessivamente de nenhum neurônio específico. Isso faz com que a rede neural generalize melhor, pois cada unidade não pode confiar excessivamente em outras unidades \cite{srivastava2014dropout}. Para este modelo, um dropout de 25\% foi aplicado a última camada da primeira, segunda e terceira camada Conv e Pool. Além disso, foi usado um dropout de 50\% na camada MLP.
 \end{itemize}
 
 Para função de perda (Loss), foi utilizada a categorical cross-entropy (CCE), que é usada para problemas de classificação multiclasse. Ela mede a divergência entre a distribuição de probabilidade prevista pela rede (saída do softmax) e a verdadeira distribuição de rótulos. A CCE é definida da seguinte forma:
@@ -431,35 +431,35 @@ Finalmente, foi realizado o treinamento cdo modelo usando $K-Fold$ = 5, como det
 \begin{figure}[H]
     \centering 
     \includegraphics[width=0.75\textwidth]{imgs/ex2/train_f1.png}
-    \caption{Evolução da acurácia e da loss sob o conjunto de treinamento e de validação para o fold 1}
+    \caption{Evolução da acurácia e da loss do conjunto de treinamento e de validação para o fold 1}
     \label{fig:t1} % cria um rótulo para referência no texto
 \end{figure}
 
 \begin{figure}[H]
     \centering 
     \includegraphics[width=0.75\textwidth]{imgs/ex2/train_f2.png}
-    \caption{Evolução da acurácia e da loss sob o conjunto de treinamento e de validação para o fold 2}
+    \caption{Evolução da acurácia e da loss do conjunto de treinamento e de validação para o fold 2}
     \label{fig:t2} % cria um rótulo para referência no texto
 \end{figure}
 
 \begin{figure}[H]
     \centering 
     \includegraphics[width=0.75\textwidth]{imgs/ex2/train_f3.png}
-    \caption{Evolução da acurácia e da loss sob o conjunto de treinamento e de validação para o fold 3}
+    \caption{Evolução da acurácia e da loss do conjunto de treinamento e de validação para o fold 3}
     \label{fig:t3} % cria um rótulo para referência no texto
 \end{figure}
 
 \begin{figure}[H]
     \centering 
     \includegraphics[width=0.75\textwidth]{imgs/ex2/train_f4.png}
-    \caption{Evolução da acurácia e da loss sob o conjunto de treinamento e de validação para o fold 4}
+    \caption{Evolução da acurácia e da loss do conjunto de treinamento e de validação para o fold 4}
     \label{fig:t4} % cria um rótulo para referência no texto
 \end{figure}
 
 \begin{figure}[H]
     \centering 
     \includegraphics[width=0.75\textwidth]{imgs/ex2/train_f5.png}
-    \caption{Evolução da acurácia e da loss sob o conjunto de treinamento e de validação para o fold 5}
+    \caption{Evolução da acurácia e da loss do conjunto de treinamento e de validação para o fold 5}
     \label{fig:t5} % cria um rótulo para referência no texto
 \end{figure}
 
@@ -475,7 +475,7 @@ Os modelos apresentaram uma acurácia final média de 97\% sobre o conjunto de v
     Macro Recal of the Classifier     & 0.96 & 0.97 & 0.97 & 0.97 & 0.97 & 0.97  \\ \hline
     Macro F1 score                    & 0.96 & 0.97 & 0.97 & 0.97 & 0.97 & 0.97  \\ \hline
     Multi-Class Acuracy               & 0.96 & 0.97 & 0.97 & 0.97 & 0.97 & 0.97  \\ \hline
-    Avanged Error Rate                & 0.04 & 0.03 & 0.03 & 0.03 & 0.03 & 0.03  \\ \hline
+    Averaged Error Rate                & 0.04 & 0.03 & 0.03 & 0.03 & 0.03 & 0.03  \\ \hline
     \end{tabular}
     \caption{Métricas de performance dos modelos aplicados ao conjunto de testes}
     \label{tab:acu1}
@@ -484,7 +484,7 @@ Os modelos apresentaram uma acurácia final média de 97\% sobre o conjunto de v
 \begin{figure}[H]
     \centering 
     \includegraphics[width=0.95\textwidth]{imgs/ex2/confusion.png}
-    \caption{Matriz de confusão dos modelos sobre o conjunto de testes}
+    \caption{Matriz de confusão dos modelos aplicados ao conjunto de testes}
     \label{fig:conf} % cria um rótulo para referência no texto
 \end{figure}
 
@@ -517,7 +517,7 @@ Para acessar o código referente à realização deste exercício, \href{https:/
     \item[(c)] \textit{ Compare os resultados obtidos nos itens (a) e (b) acima.}
 \end{enumerate}
 
-Para a realização da letra (a), foi então calculado um PCA e efetuada a redução de dimensionalidade, para cada fold, de forma análoga à realizada anteriormente na questão 1, na letra (b). Mas, agora, ao invés de usar um Kernel SVM para realizar a classificação dos dados, foi realizado o treinamento do Linear Discriminant Analysis (LDA), com K-fold = 4, com o número de componentes iguais a 1 (pois temos apenas duas classes) sobre o conjunto obtido pela projeção do conjunto de dados na base PCA, através da biblioteca \texttt{Scikit-Learn} com a função \texttt{lda.fit}. A acurácia obtida na classificação do conjunto de validação e de teste através do LDA está descrita na tabela \ref{tab:lda_clas}.
+Para a realização da letra (a), foi então calculado o PCA e efetuada a redução de dimensionalidade, para cada fold, de forma análoga à realizada anteriormente na questão 1, na letra (b). Mas, agora, ao invés de utilizar um Kernel SVM para realizar a classificação dos dados, foi realizado o treinamento do Linear Discriminant Analysis (LDA), com K-fold = 4, com o número de componentes iguais a 1 (pois temos apenas duas classes) sobre o conjunto obtido pela projeção do conjunto de dados na base PCA deste fold, através da biblioteca \texttt{Scikit-Learn} com a função \texttt{lda.fit}. A acurácia obtida na classificação do conjunto de validação e de teste através do LDA está descrita na tabela \ref{tab:lda_clas}.
 
 \begin{table}[H]
     \centering
@@ -532,17 +532,19 @@ Para a realização da letra (a), foi então calculado um PCA e efetuada a redu�
     \label{tab:lda_clas}
 \end{table}
 
-Para a realização do item (b) deste exercício, foi realizado o seguinte passo a passo para o cálculo da base Discriminant Principal Components Analysis (DPCA):
+Para a realização do item (b) deste exercício, foi realizado o seguinte passo a passo para o cálculo da base Discriminant Principal Components Analysis (DPCA) de cada fold e treinamento do KSVM correspondente:
 
 \begin{enumerate}
-    \item Usando a projeção dos dados na base PCA calculada na questão anteriormente, foi então calculado o SVM com através da função \texttt{SVC};
+    \item Utilizando o número de componentes encontrados anteriormente na letra (a), foi calculada a base PCA referente ao conjunto de treinamento do respectivo fold e projetado esses dados nesta base;
+    \item Logo após, foi então calculado o SVM neste conjunto de treinamento projetado na base PCA através da função \texttt{SVC};
     \item O método {.support\_vectors\_} permite que o vetor discrimante (pesos) gerados pelo treinamento do SVM possam ser acessados. Foi então calculada a norma desses pesos através da função \texttt{np.linalg.norm} do \texttt{Numpy};
     \item Estes pesos foram organizados em ordem decrescente através da função \texttt{argsort} também do \texttt{Numpy};
     \item Através do método \texttt{pca.components\_}, foi obtida os vetores da base PCA calculada anteriormente e ordenada conforme a orientação em ordem decrescente dos pesos realizada no passo anterior;
-    \item Foi projetado então o conjunto de dados nesta base obtida, denominada base DPCA.   
+    \item Foi projetado então o conjunto de dados de treinamento originais do fold nesta base obtida, denominada base DPCA;
+    \item Finalmente, foi treinado um KSVM com kernel polinomial, através da função \texttt{SVC}, usando o parâmetro $C=1$.
 \end{enumerate}
 
-Finalmente, foi treinado um KSVM com kernel polinomial, onde todo o processo descrito foi realizado com K-fold igual a 4, ou seja, foi treinada uma base DPCA para cada fold, reduzindo a dimensionalidade de acordo com o número de componentes principais encontradas no PCA da letra (a), neste caso, 123 componentes. Foram obtidas assim então as acurácias presentes na Tabela \ref{tab:dpca_ksvm} para o conjunto de validação e de teste.
+ Todo o processo descrito foi realizado com K-fold igual a 4, ou seja, foi treinada uma base DPCA para cada fold, reduzindo a dimensionalidade de acordo com o número de componentes principais encontradas no PCA da letra (a), neste caso, 123 componentes. Foram obtidas assim então as acurácias presentes na Tabela \ref{tab:dpca_ksvm} para o conjunto de validação e de teste.
 
 \begin{table}[H]
     \centering
@@ -550,14 +552,14 @@ Finalmente, foi treinado um KSVM com kernel polinomial, onde todo o processo des
     \hline
     \rowcolor[HTML]{C0C0C0} 
     Conjunto                          & Fold 1 & Fold 2 & Fold 3 & Fold 4 & Média  \\ \hline
-    \cellcolor[HTML]{C0C0C0}Validação & 0.82   & 0.70  & 0.73   & 0.75   & 0.75  \\ \hline
+    \cellcolor[HTML]{C0C0C0}Validação & 0.82   & 0.69  & 0.72   & 0.75   & 0.745  \\ \hline
     \cellcolor[HTML]{C0C0C0}Teste     & 0.84   & 0.83   & 0.77   & 0.82   & 0.815 \\ \hline
     \end{tabular}
     \caption{Acurácia da classificação do KSVM com o DPCA}
     \label{tab:dpca_ksvm}
 \end{table}
 
-Pelo resultado obtido das acurácias, podemos afirmar que o desempenho dos modelos de classificação propostos nos itens (a) e (b) obtiveram performances similares, tendo o modelo construído no item (b) obtido uma acurácia ligeiramente melhor. Além disso, a matriz de confusão presente na Figura \ref{fig:conf3} e \ref{fig:conf4} mostra que para o K-fold igual a 3, o item (a) teve um desempenho melhor, tendo o modelo do item (b) para este fold um número considerável de falsos positivos da classe carros. Este fenômeno também foi observado na questão 1 e item (b), mostrando que o conjunto de dados de treinamento produzidos pelo fold 3, que é o mesmo para ambas as questões, influenciaram negativamente na construção destes modelos em relação aos conjuntos produzidos pelos outros folds.
+Pelo resultado obtido das acurácias, podemos afirmar que o desempenho dos modelos de classificação propostos nos itens (a) e (b) obtiveram performances similares, tendo o modelo construído no item (b) obtido uma acurácia ligeiramente melhor. Além disso, a matriz de confusão presente na Figura \ref{fig:conf3} e \ref{fig:conf4} mostra que para o K-fold igual a 3, o item (a) obteve um desempenho melhor, tendo o modelo do item (b) para este fold um número considerável de falsos positivos da classe carros. Este fenômeno também foi observado na questão 1 e item (b), mostrando que o conjunto de dados de treinamento produzidos pelo fold 3, que é o mesmo para ambas as questões, influenciaram negativamente na construção destes modelos em comparação aos conjuntos produzidos pelos outros folds.
 
 \begin{figure}[H]
     \centering 
