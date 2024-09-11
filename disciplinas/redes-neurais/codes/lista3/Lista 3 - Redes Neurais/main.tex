@@ -167,7 +167,7 @@ Após isso, através da ferramenta \texttt{train\_test\_split} da biblioteca \te
     \end{itemize}
 }
 
-Para a realização deste exercício, especificamente para o proposto na letra (a), foi inicialmente realizado o cálculo do Kernel Principal Component Analysis (KPCA) através da biblioteca \texttt{Scikit-Learn} com a função \texttt{KernelPCA}, com o intuito de determinar o número de componentes principais de todas as bases que serão calculadas posteriormente para cada fold. Foi empiricamente escolhido um kernel polinomial para o cálculo da matriz KPCA com todas as componentes, para posteriormente selecionar as principais. Apenas como ilustração, o conjunto de dados de treinamento projetados nas duas principais componentes do KPCA está presente na Figura \ref{fig:KPCA}.
+Para a realização deste exercício, especificamente para o proposto na letra (a), foi inicialmente realizado o cálculo do Kernel Principal Component Analysis (KPCA) através da biblioteca \texttt{Scikit-Learn} com a função \texttt{KernelPCA}. O objetivo deste passo é determinar o número de componentes principais de todas as bases que serão calculadas posteriormente para cada fold. Logo, foi empiricamente escolhido um kernel polinomial para o cálculo da matriz KPCA com todas as componentes, para posteriormente determinar o número de componentes principais. Apenas como ilustração, o conjunto de dados de treinamento projetados nas duas principais componentes do KPCA está presente na Figura \ref{fig:KPCA}.
 
 \begin{figure}[H]
     \centering 
@@ -187,7 +187,7 @@ Para determinar a quantidade ideal de componentes principais, utilizou-se a bibl
     \label{fig:vari_kpca} % cria um rótulo para referência no texto
 \end{figure}
 
-Utilizando a técnica de K-Fold Cross-Validation, os dados são divididos em \( k \) subconjuntos (ou "folds") de tamanhos aproximadamente iguais. Em cada iteração, um dos \( k \) folds é reservado como conjunto de validação, enquanto os \( k-1 \) folds restantes são utilizados para treinamento, resultando em \( k \) modelos distintos. Para a resolução deste exercício, foi utilizado \( \texttt{K-fold} = 4 \), sendo então realizado o cálculo da base KPCA para o conjunto de treinamento correspondente a cada fold, atraves da função \texttt{.fit()}, reduzindo a dimensionalidade deste conjunto de acordo com o número de componentes encontradas anteriormente, neste caso, 435. Posteriormente, foi realizada a projeção dos dados de treinamento, validação e testes nesta base através da função \texttt{pca.tranform()}. Logo após, a função \texttt{SVC} da biblioteca \texttt{Scikit-Learn} foi empregada para calcular o modelo de Máquinas de Vetores de Suporte (SVM), para o caso não separável, com o objetivo de realizar a classificação dos dados. Esta construção é baseada na minimização da função custo $\tau$ decrita abaixo:
+Utilizando a técnica de K-Fold Cross-Validation, os dados são divididos em \( k \) subconjuntos (ou "folds") de tamanhos aproximadamente iguais. Em cada iteração, um dos \( k \) folds é reservado como conjunto de validação, enquanto os \( k-1 \) folds restantes são utilizados para treinamento, resultando em \( k \) modelos distintos. Para a resolução deste exercício, foi utilizado \( \texttt{K-fold} = 4 \), sendo então realizado o cálculo da base KPCA para o conjunto de treinamento correspondente a cada fold, através da função \texttt{.fit()}, reduzindo a dimensionalidade deste conjunto de acordo com o número de componentes encontradas anteriormente, neste caso, 435. Posteriormente, foi realizada a projeção dos dados de treinamento, validação e testes nesta base através da função \texttt{pca.tranform()}. Logo após, a função \texttt{SVC} da biblioteca \texttt{Scikit-Learn} foi empregada para calcular o modelo de Máquinas de Vetores de Suporte (SVM), para o caso não separável, com o objetivo de realizar a classificação dos dados. Esta construção é baseada na minimização da função custo $\tau$ decrita abaixo:
 \[
 \tau(\phi, \xi, C) = \frac{1}{2} \|\phi\|^2 + C \sum_{i=1}^{M} \xi_i
 \]
@@ -201,7 +201,7 @@ Onde:
 
 Foi utilizado a constante $C=1$ para a realização desta questão, definida experimentalmente.
 
-Os resultados de acurácia obtida para os modelos de cada fold, tanto para os conjuntos de validação quanto para os conjuntos de teste, estão apresentados na Tabela \ref{tab:kpca_svm}. Em média, observa-se que o classificador apresentou uma maior acurácia nos conjuntos de teste em comparação com os conjuntos de validação, obtendo, em ambos casos, acurácias superiores à casa dos 78\%, chegando a 84\% no conjunto de testes.
+Os resultados obtidos refentes à acurácia da classificação dos modelos de cada fold, aplicados, tanto no conjunto de validação quanto no conjunto de teste, estão apresentados na Tabela \ref{tab:kpca_svm}. Em média, observa-se que o classificador apresentou uma maior acurácia nos conjuntos de teste em comparação com os conjuntos de validação, obtendo, em ambos casos, acurácias superiores à casa dos 78\%, chegando a 84\% no conjunto de testes.
 
 \begin{table}[H]
     \centering
@@ -260,7 +260,7 @@ Em seguida, foi aplicada a estratégia \texttt{K-fold} com valor 4, com a mesma 
     \label{tab:pca_svm}
 \end{table}
 
-Com o intuito de visualizar o plano de separação utilizando apenas as duas componentes principais obtidas pelo PCA, foi treinado um novo SVM com kernel polinomial sobre o conjunto de treinamento projetado na base PCA reduzida apenas para suas duas componentes principais, gerando a curva de separação presente na Figura \ref{fig:pca_reta}. Essa figura também mostra a projeção do conjunto de testes nas duas primeiras direções principais. Nesse cenário, a acurácia média alcançada sobre o conjunto de validação foi de 64\%, evidenciando mais uma vez que a redução de dimensionalidade para duas componentes impactou negativamente na acurácia do classificador.
+Com o intuito de visualizar o plano de separação utilizando apenas as duas componentes principais obtidas pelo PCA, foi treinado um novo SVM com kernel polinomial sobre o conjunto de treinamento projetado na base PCA reduzida apenas para suas duas componentes principais, gerando a curva de separação presente na Figura \ref{fig:pca_reta}. Essa figura também mostra a projeção do conjunto de testes nas duas primeiras direções principais. Nesse cenário, a acurácia média alcançada no conjunto de teste foi de 64\%, evidenciando mais uma vez que a redução de dimensionalidade para duas componentes impactou negativamente na acurácia do classificador.
 
 \begin{figure}[H]
     \centering 
@@ -269,19 +269,19 @@ Com o intuito de visualizar o plano de separação utilizando apenas as duas com
     \label{fig:pca_reta} % cria um rótulo para referência no texto
 \end{figure}
 
-Observando as Tabelas \ref{tab:kpca_svm} e \ref{tab:pca_svm}, podemos notar que, no geral, o modelo proposto no item (a) obteve uma maior acurácia na classificação das imagens, tanto no conjunto de treinamento quanto no de conjunto de validação. Além disso, a matriz de confusão presente na Figura \ref{fig:1conf_b}, construída sobre o conjunto de testes, mostra que, por exemplo, para o fold igual a 3 no modelo proposto no item (b), houve uma quantidade significativa de predições erradas, onde aviões foram preditos como carros. Este problema não ocorreu no modelo proposto no item (a), como mostrado na Figura \ref{fig:1conf_a}, o que também evidencia sua performence superior na tarefa em questão.
+Observando as Tabelas \ref{tab:kpca_svm} e \ref{tab:pca_svm}, podemos notar que, no geral, o modelo proposto no item (a) obteve uma maior acurácia na classificação das imagens, tanto no conjunto de treinamento quanto no de conjunto de validação. Além disso, a matriz de confusão presente na Figura \ref{fig:1conf_b}, construída sobre o conjunto de testes, mostra que, por exemplo, para o fold igual a 3 no modelo proposto no item (b), houve uma quantidade significativa de predições erradas, onde aviões foram preditos como carros. Este problema não ocorreu de maneira intensa no modelo proposto no item (a), como mostrado na Figura \ref{fig:1conf_a}, o que também evidencia sua performence superior na tarefa em questão.
 
 \begin{figure}[H]
     \centering 
     \includegraphics[width=0.62\textwidth]{imgs/ex1/conf_a.png}
-    \caption{Matriz de convolução dos modelos do item (a)}
+    \caption{Matriz de confusão dos modelos do item (a) aplicados ao conjunto de testes}
     \label{fig:1conf_a} % cria um rótulo para referência no texto
 \end{figure}
 
 \begin{figure}[H]
     \centering 
     \includegraphics[width=0.62\textwidth]{imgs/ex1/conf_b.png}
-    \caption{Matriz de convolução dos modelos do item (b)}
+    \caption{Matriz de confusão dos modelos do item (b) aplicados ao conjunto de testes}
     \label{fig:1conf_b} % cria um rótulo para referência no texto
 \end{figure}
 
@@ -359,14 +359,14 @@ Logo, foram usadas no total 6 camadas do tipo convolucionais, 3 camadas de pooli
         \text{softmax}(\mathbf{z}) = \left( \frac{\exp(z_1)}{\sum_{j=1}^{K} \exp(z_j)}, \frac{\exp(z_2)}{\sum_{j=1}^{K} \exp(z_j)}, \ldots, \frac{\exp(z_K)}{\sum_{j=1}^{K} \exp(z_j)} \right).
     \]
     
-    \item Foi utilizado o parâmetro das redes convolucionais padding igual a same, que significa que haverá um preenchimento uniforme nas bordas com zeros, e strides igual a 1, de modo que as saídas das camadas convolucionais terão o mesmo tamanho que suas entradas delas \cite{keras}.
+    \item Foi utilizado o parâmetro das redes convolucionais padding igual a same, que significa que haverá um preenchimento uniforme nas bordas com zeros, e strides igual a 1, de modo que as saídas das camadas convolucionais terão o mesmo tamanho que suas entradas \cite{keras}.
 \end{itemize}
 
-Foram usadas também algumas outras estratégias na construção da rede, como:
+Foram usadas também algumas outras estratégias para obter uma melhor perfomance da rede, como:
 
 \begin{itemize}
     \item Batch Normalization: técnica usada para melhorar a estabilidade e a velocidade do treinamento de redes neurais profundas. Ela funciona normalizando a entrada de cada camada para ter média zero e variância unitária. A ideia é normalizar as saídas das camadas para que estejam em uma faixa específica, o que permite que o treinamento seja mais estável e rápido \cite{ioffe2015batch}. Camadas de batch normalization foram aplicadas nas saídas de todas as camadas CNN e Dense.
-    \item Dropout: técnica de regularização usada para prevenir o overfitting em redes neurais. Durante o treinamento, o dropout desativa aleatoriamente uma fração dos neurônios em uma camada, forçando a rede a aprender representações mais robustas e a não depender excessivamente de nenhum neurônio específico. Isso faz com que a rede neural generalize melhor, pois cada unidade não pode confiar excessivamente em outras unidades \cite{srivastava2014dropout}. Para este modelo, um dropout de 25\% foi aplicado a última camada da primeira, segunda e terceira camada Conv e Pool. Além disso, foi usado um dropout de 50\% na camada MLP.
+    \item Dropout: técnica de regularização usada para prevenir o overfitting em redes neurais. Durante o treinamento, o dropout desativa aleatoriamente uma fração dos neurônios em uma camada, forçando a rede a aprender representações mais robustas e a não depender excessivamente de nenhum neurônio específico. Isso faz com que a rede neural generalize melhor, pois cada unidade não pode confiar excessivamente em outras unidades \cite{srivastava2014dropout}. Para este modelo, um dropout de 25\% foi aplicado a última camada da primeira, segunda e terceira camada Conv e Pool. Além disso, foi usado um dropout de 50\% na camada Dense.
 \end{itemize}
 
 Para função de perda (Loss), foi utilizada a categorical cross-entropy (CCE), que é usada para problemas de classificação multiclasse. Ela mede a divergência entre a distribuição de probabilidade prevista pela rede (saída do softmax) e a verdadeira distribuição de rótulos. A CCE é definida da seguinte forma:
@@ -394,7 +394,7 @@ velocity = velocity - learning\_rate * g
 w = w + velocity
 \]
 
-onde \(g\) é o gradiente da função Loss. Além disso, foi utilizada a regularização \( L^2 \) com parâmetro \(\lambda = 1e-6\), a qual adiciona um termo de penalização à função de perda original, que ajuda a manter os pesos da rede menores e mais controlados, pois estes são considerados na função de perda. Logo, a função Loss regularizada é dada por:
+onde \(g\) é o gradiente da função Loss. Além disso, foi utilizada a regularização \( L^2 \) com parâmetro \(\lambda = 1e-6\), a qual adiciona um termo de penalização à função de perda original, que ajuda a manter os pesos da rede menores e mais controlados, pois estes são considerados na função de perda. Logo, a função Loss com o termo de regularização é dada por:
 
 \[
 \text{Loss} = CCE + \dfrac{\lambda}{2} \sum_{i=1}^{n} w_i^2
@@ -426,7 +426,7 @@ Para o treinamento do modelo, utilizando a biblioteca \texttt{Keras}, foi consid
     \item \textit{restore\_best\_weights} = True: restaura para a rede os pesos referentes à epoca com melhor resultado na métrica escolhida.
 \end{itemize}
 
-Finalmente, foi realizado o treinamento cdo modelo usando $K-Fold$ = 5, como determinado pela questão. Para isso, foi considerado o batch size tamanho 64 e 50 épocas, que foram definidos empiricamente. A evolução da acurácia e da loss, para o treinamento e a validação, estão presentes nos gráficos das figuras \ref{fig:t1}, \ref{fig:t2}, \ref{fig:t3},\ref{fig:t4} e \ref{fig:t5} . Através do gráfico, podemos perceber no geral que a evolução da loss não demonstrou a ocorrência de overfitting, mas pode se notar uma oscilação na acurácia do conjunto de validação do treinamento.
+Finalmente, foi realizado o treinamento do modelo usando $K-Fold$ = 5, como determinado pela questão. Para isso, foi considerado o batch size tamanho 64 e 50 épocas, definidos empiricamente. A evolução da acurácia e da loss, para o treinamento e a validação, estão presentes nos gráficos das figuras \ref{fig:t1}, \ref{fig:t2}, \ref{fig:t3},\ref{fig:t4} e \ref{fig:t5} . Através do gráfico, podemos perceber no geral que a evolução da loss não demonstrou a ocorrência de overfitting, mas pode se notar uma oscilação na acurácia do conjunto de validação do treinamento.
 
 \begin{figure}[H]
     \centering 
@@ -463,7 +463,7 @@ Finalmente, foi realizado o treinamento cdo modelo usando $K-Fold$ = 5, como det
     \label{fig:t5} % cria um rótulo para referência no texto
 \end{figure}
 
-Os modelos apresentaram uma acurácia final média de 97\% sobre o conjunto de validação. Com as ferramentas \texttt{confusion\_matrix} e \texttt{classification\_report}, presentes na biblioteca \texttt{Scikit-Learn}, podemos então plotar a matriz de confusão relativa ao modelo de cada fold, presente na Figura \ref{fig:conf}, onde 0 é referente a aviões e 1 a carros, e também calcular as métricas estátisticas descritas na seção 8.6 de \cite{book}, com precisão de duas casas decimais, obtendo então os resultados, sobre o conjunto de teste, presentes na tabela \ref{tab:acu1}.
+Os modelos apresentaram uma acurácia final média de 97\% sobre o conjunto de validação. Com as ferramentas \texttt{confusion\_matrix} e \texttt{classification\_report}, presentes na biblioteca \texttt{Scikit-Learn}, podemos então plotar a matriz de confusão relativa aos modelos respectivos à cada fold, presente na Figura \ref{fig:conf}, onde a legenda 0 se refere a aviões e a legenda 1 a carros, e também calcular as métricas estátisticas descritas na seção 8.6 de \cite{book}, com precisão de duas casas decimais, obtendo então os resultados, sobre o conjunto de teste, presentes na tabela \ref{tab:acu1}.
 
 \begin{table}[H]
     \centering
@@ -517,7 +517,15 @@ Para acessar o código referente à realização deste exercício, \href{https:/
     \item[(c)] \textit{ Compare os resultados obtidos nos itens (a) e (b) acima.}
 \end{enumerate}
 
-Para a realização da letra (a), foi então calculado o PCA e efetuada a redução de dimensionalidade, para cada fold, de forma análoga à realizada anteriormente na questão 1, na letra (b). Mas, agora, ao invés de utilizar um Kernel SVM para realizar a classificação dos dados, foi realizado o treinamento do Linear Discriminant Analysis (LDA), com K-fold = 4, com o número de componentes iguais a 1 (pois temos apenas duas classes) sobre o conjunto obtido pela projeção do conjunto de dados na base PCA deste fold, através da biblioteca \texttt{Scikit-Learn} com a função \texttt{lda.fit}. A acurácia obtida na classificação do conjunto de validação e de teste através do LDA está descrita na tabela \ref{tab:lda_clas}.
+Para a realização da letra (a), inicialmente foi realizado o processo análogo ao item (b) da questão 1: 
+\begin{itemize}
+    \item Cálculo do PCA para encontrar o número de componentes principais que serão usadas em cada fold;
+    \item Utilizando K-fold = 4, foi realizado o cálculo da base PCA utilizando o conjunto de treinamento de cada fold e selecionando as componentes principais encontradas anteriormente, neste caso, 121;
+    \item Agora, ao invés de utilizar um Kernel SVM para realizar a classificação dos dados como feito no item (a) da questão 1, foi realizado o treinamento do Linear Discriminant Analysis (LDA), com o número de componentes iguais a 1 (pois temos apenas duas classes) sobre o conjunto obtido pela projeção do conjunto de treinamento na base PCA do respectivo fold, através da biblioteca \texttt{Scikit-Learn} com a função \texttt{lda.fit}.
+
+\end{itemize}
+
+A acurácia obtida na classificação do conjunto de validação e de teste através do LDA para cada fold está descrita na tabela \ref{tab:lda_clas}.
 
 \begin{table}[H]
     \centering
@@ -535,7 +543,7 @@ Para a realização da letra (a), foi então calculado o PCA e efetuada a reduç
 Para a realização do item (b) deste exercício, foi realizado o seguinte passo a passo para o cálculo da base Discriminant Principal Components Analysis (DPCA) de cada fold e treinamento do KSVM correspondente:
 
 \begin{enumerate}
-    \item Utilizando o número de componentes encontrados anteriormente na letra (a), foi calculada a base PCA referente ao conjunto de treinamento do respectivo fold e projetado esses dados nesta base;
+    \item Utilizando o número de componentes encontrados anteriormente na letra (a) (121), foi calculada a base PCA referente ao conjunto de treinamento do respectivo fold e projetado esses dados nesta base com a redução de dimensionalidade para este número de componentes;
     \item Logo após, foi então calculado o SVM neste conjunto de treinamento projetado na base PCA através da função \texttt{SVC};
     \item O método {.support\_vectors\_} permite que o vetor discrimante (pesos) gerados pelo treinamento do SVM possam ser acessados. Foi então calculada a norma desses pesos através da função \texttt{np.linalg.norm} do \texttt{Numpy};
     \item Estes pesos foram organizados em ordem decrescente através da função \texttt{argsort} também do \texttt{Numpy};
@@ -544,7 +552,7 @@ Para a realização do item (b) deste exercício, foi realizado o seguinte passo
     \item Finalmente, foi treinado um KSVM com kernel polinomial, através da função \texttt{SVC}, usando o parâmetro $C=1$.
 \end{enumerate}
 
- Todo o processo descrito foi realizado com K-fold igual a 4, ou seja, foi treinada uma base DPCA para cada fold, reduzindo a dimensionalidade de acordo com o número de componentes principais encontradas no PCA da letra (a), neste caso, 123 componentes. Foram obtidas assim então as acurácias presentes na Tabela \ref{tab:dpca_ksvm} para o conjunto de validação e de teste.
+ Todo o processo descrito foi realizado com K-fold igual a 4, ou seja, foi treinada uma base DPCA e treinado um KSVM para cada fold. Foram obtidas assim então as acurácias presentes na Tabela \ref{tab:dpca_ksvm} para o conjunto de validação e de teste.
 
 \begin{table}[H]
     \centering
@@ -559,19 +567,19 @@ Para a realização do item (b) deste exercício, foi realizado o seguinte passo
     \label{tab:dpca_ksvm}
 \end{table}
 
-Pelo resultado obtido das acurácias, podemos afirmar que o desempenho dos modelos de classificação propostos nos itens (a) e (b) obtiveram performances similares, tendo o modelo construído no item (b) obtido uma acurácia ligeiramente melhor. Além disso, a matriz de confusão presente na Figura \ref{fig:conf3} e \ref{fig:conf4} mostra que para o K-fold igual a 3, o item (a) obteve um desempenho melhor, tendo o modelo do item (b) para este fold um número considerável de falsos positivos da classe carros. Este fenômeno também foi observado na questão 1 e item (b), mostrando que o conjunto de dados de treinamento produzidos pelo fold 3, que é o mesmo para ambas as questões, influenciaram negativamente na construção destes modelos em comparação aos conjuntos produzidos pelos outros folds.
+Pelo resultado obtido das acurácias, podemos afirmar que o desempenho dos modelos de classificação propostos nos itens (a) e (b) obtiveram performances similares, tendo o modelo construído no item (b) obtido uma acurácia ligeiramente melhor. Porém, a matriz de confusão referente ao modelo do item (a) presente na Figura \ref{fig:conf3} e a matriz de confusão referente ao modelo do item (b) presente na Figura \ref{fig:conf4} mostra que para o K-fold igual a 3, o item (a) obteve um desempenho melhor, tendo o modelo do item (b) para este fold um número considerável de falsos positivos da classe carros. Este fenômeno também foi observado na questão 1 item (b), mostrando que o conjunto de dados de treinamento produzidos pelo fold 3, que é o mesmo para ambas as questões, influenciaram negativamente na construção destes modelos em comparação aos conjuntos produzidos pelos outros folds.
 
 \begin{figure}[H]
     \centering 
     \includegraphics[width=0.95\textwidth]{imgs/ex3/conf3.png}
-    \caption{Matriz de confusão dos modelos do item (a) sobre o conjunto de testes}
+    \caption{Matriz de confusão dos modelos do item (a) aplicados ao conjunto de testes}
     \label{fig:conf3} % cria um rótulo para referência no texto
 \end{figure}
 
 \begin{figure}[H]
     \centering 
     \includegraphics[width=0.95\textwidth]{imgs/ex3/conf4.png}
-    \caption{Matriz de confusão dos modelos do item (b) sobre o conjunto de testes}
+    \caption{Matriz de confusão dos modelos do item (b) aplicados ao conjunto de testes}
     \label{fig:conf4} % cria um rótulo para referência no texto
 \end{figure}
 
