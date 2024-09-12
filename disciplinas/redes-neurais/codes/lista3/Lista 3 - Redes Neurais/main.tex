@@ -545,7 +545,7 @@ Para a realização do item (b) deste exercício, foi realizado o seguinte passo
 \begin{enumerate}
     \item Utilizando o número de componentes encontrados anteriormente na letra (a) (121), foi calculada a base PCA referente ao conjunto de treinamento do respectivo fold e projetado esses dados nesta base com a redução de dimensionalidade para este número de componentes;
     \item Logo após, foi então calculado o SVM neste conjunto de treinamento projetado na base PCA através da função \texttt{SVC};
-    \item O método {.support\_vectors\_} permite que o vetor discrimante (pesos) gerados pelo treinamento do SVM possam ser acessados. Foi então calculada a norma desses pesos através da função \texttt{np.linalg.norm} do \texttt{Numpy};
+    \item O método {.coef\_} permite que o vetor discrimante (pesos) gerados pelo treinamento do SVM possam ser acessados. Foi então calculada a norma desses pesos através da função \texttt{np.linalg.norm} do \texttt{Numpy};
     \item Estes pesos foram organizados em ordem decrescente através da função \texttt{argsort} também do \texttt{Numpy};
     \item Através do método \texttt{pca.components\_}, foi obtida os vetores da base PCA calculada anteriormente e ordenada conforme a orientação em ordem decrescente dos pesos realizada no passo anterior;
     \item Foi projetado então o conjunto de dados de treinamento originais do fold nesta base obtida, denominada base DPCA;
@@ -561,7 +561,7 @@ Para a realização do item (b) deste exercício, foi realizado o seguinte passo
     \rowcolor[HTML]{C0C0C0} 
     Conjunto                          & Fold 1 & Fold 2 & Fold 3 & Fold 4 & Média  \\ \hline
     \cellcolor[HTML]{C0C0C0}Validação & 0.82   & 0.69  & 0.72   & 0.75   & 0.745  \\ \hline
-    \cellcolor[HTML]{C0C0C0}Teste     & 0.84   & 0.83   & 0.77   & 0.82   & 0.815 \\ \hline
+    \cellcolor[HTML]{C0C0C0}Teste     & 0.84   & 0.83   & 0.76   & 0.82   & 0.8125 \\ \hline
     \end{tabular}
     \caption{Acurácia da classificação do KSVM com o DPCA}
     \label{tab:dpca_ksvm}
