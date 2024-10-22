@@ -337,7 +337,7 @@ Substituindo então na equação \ref{eq:pre}, teremos então que:
 
 \textbf{Resolução:}
 
-Vamos provar primeiramente que vale a propriedade seguinte, que posteriormente será usada na resolução da questão, onde $A,B,C,D \in R^{N \times N}$:
+Vamos primeiramente provar que vale a seguinte propriedade, onde $A,B,C,D \in R^{N \times N}$:
 
 \begin{equation*}
 	(A \otimes B)(C \otimes D) = (AC \otimes BD)
@@ -346,7 +346,11 @@ Vamos provar primeiramente que vale a propriedade seguinte, que posteriormente s
 De fato, utilizando a multiplicação entre blocos de matrizes, teremos que:
 
 \begin{equation*}
-	{[(A \otimes B)(C \otimes D)]}_{ij} = \sum_{k=1}^{N} (a_{ik}B)(c_{kj}D) = \sum_{k=1}^{N} a_{ik}c_{kj}BD = {[AC]}_{ij} BD =  {[(AC) \otimes (BD)]}_{ij}
+	{[(A \otimes B)(C \otimes D)]}_{ij} = [a_{i1}B \cdots a_{iN}B][c_{1j}D \cdots c_{Nj}D]^{T} = \sum_{k=1}^{N} (a_{ik}B)(c_{kj}D) = 
+\end{equation*}
+
+\begin{equation*}
+	\sum_{k=1}^{N} a_{ik}c_{kj}BD = {[AC]}_{ij} BD =  {[(AC) \otimes (BD)]}_{ij}
 \end{equation*}
 
 para quaisquer $i,j \in \{1,..,N\}$. Logo, podemos concluir que vale:
@@ -355,7 +359,9 @@ para quaisquer $i,j \in \{1,..,N\}$. Logo, podemos concluir que vale:
 	(A \otimes B)(C \otimes D) = (AC \otimes BD)
 \end{equation*}
 
-Partiremos então para a resolução da questão. Como $A$ e $B$ são não singulares, então temos que existe as matrizes inversas $A^{-1}$ e $B^{-1}$. Queremos mostrar então que:
+Logo, fazendo o uso da propriedade demonstrada acima, iremos provar então a equação \ref{eq:inv}. 
+
+Por hipótese, $A$ e $B$ são não singulares, então temos que existe as matrizes inversas $A^{-1}$ e $B^{-1}$. Queremos mostrar então que:
 
 \begin{equation*}
 	(A \otimes B)(A^{-1} \otimes B^{-1}) = I_{N^2}
@@ -400,7 +406,7 @@ Portanto, podemos concluir que:
 
 \textbf{Resolução:}
 
-O Teorema de Amostragem estabelece as condições necessárias para que um sinal contínuo \( f(x) \) possa ser perfeitamente reconstruído a partir de suas amostras discretas \( f_n = f(nT) \), onde \( T = \dfrac{1}{\omega_s} \) é o período de amostragem, e \( \omega_s \) é a frequência de amostragem. A transformada de Fourier do sinal, \( F(\omega) \), deve ser igual a zero para todas as frequências fora do intervalo \( -\omega_c \leq \omega \leq \omega_c \), onde \( \omega_c \) é a frequência de corte.
+O Teorema de Amostragem estabelece as condições necessárias para que um sinal contínuo \( f(x) \) possa ser perfeitamente reconstruído a partir de suas amostras discretas \( f_n = f(nT) \), onde \( T = \dfrac{1}{\omega_s} \) é o período de amostragem, e \( \omega_s \) é a frequência de amostragem. A transformada de Fourier do sinal, \( F(\omega) \), deve ser igual a zero para todas as frequências fora do intervalo \( -\omega_c \leq \omega \leq \omega_c \), onde \( \omega_c \) é denominada frequência de corte.
 
 Inicialmente, vamos considerar a função de amostragem ideal dado pelo Dirac delta, com espaçamento $T$:
 
