@@ -1,0 +1,110 @@
+\documentclass[]{abntex2}
+\usepackage{lmodern}	
+\usepackage[T1]{fontenc}		
+\usepackage[utf8]{inputenc}		
+\usepackage{indentfirst}		
+\usepackage{nomencl} 			
+\usepackage{color}				
+\usepackage{graphicx}			
+\usepackage{microtype} 			
+\usepackage{amsmath}
+\usepackage{float}
+\usepackage{lipsum}	
+\usepackage[brazilian,hyperpageref]{backref}
+\usepackage[alf]{abntex2cite}	
+\usepackage[table]{xcolor}
+\usepackage{amssymb}
+\usepackage{hyperref}
+
+% ---
+% Informações de dados para CAPA e FOLHA DE ROSTO
+% ---
+
+\titulo{Trabalho - GA030 (Estatística)}
+\autor{Lorran de Araújo Durães Soares\thanks{lorranspbr@gmail.com}}
+\local{Petrópolis - RJ - Brasil}
+\data{2024}
+% ---
+
+% ---
+% Configurações de aparência do PDF final
+% alterando o aspecto da cor azul
+\definecolor{blue}{RGB}{41,5,195}
+% ---
+
+% Altera as margens padrões
+\setlrmarginsandblock{3cm}{3cm}{*}
+\setulmarginsandblock{3cm}{3cm}{*}
+\checkandfixthelayout
+
+% O tamanho do parágrafo é dado por:
+\setlength{\parindent}{1.3cm}
+
+% Controle do espaçamento entre um parágrafo e outro:
+\setlength{\parskip}{0.2cm}  % tente também \onelineskip
+
+% Espaçamento simples
+\SingleSpacing
+
+\begin{document}
+
+% Retira espaço extra obsoleto entre as frases.
+\frenchspacing 
+
+\maketitle
+
+\section*{\textbf{Introdução}}
+
+Este texto refere-se à realização do trabalho da disciplina GA030 (Estatística) do Laboratório da pós graduação do Laboratório Nacional de Computação Científica, ministrada pelo prof. Marcio Rentes Borges. Serão apresentadas as questões propostas, seguidas da sua resolução.
+
+\section*{\textbf{Questão 1}}
+\noindent Após abordarmos a \textit{Lei dos Grandes Números} e o \textit{Teorema do Limite Central}, chegamos a um ponto crucial do curso: a estimação de parâmetros (desconhecidos) associados à distribuição de probabilidade de uma variável aleatória.
+
+\noindent O presente trabalho tem como objetivo a fixação das ideias introduzidas até aqui. Para isso, utilizaremos dados armazenados em quatro arquivos, que contêm amostras de diferentes variáveis aleatórias, conforme a Tabela 1.
+
+\begin{table}[H]
+    \centering
+    \begin{tabular}{|c|c|c|}
+        \hline
+        \textbf{Variável} & \textbf{Arquivo} & \textbf{Distribuição} \\
+        \hline
+        $Q \sim N(0, 2)$ & \texttt{data1q.dat} & Normal \\
+        $X \sim U[-1, 1]$ & \texttt{data1x.dat} & Uniforme \\
+        $Y \sim E(\lambda = 0.05)$ & \texttt{data1y.dat} & Exponencial \\
+        $T \sim B(15, 0.40)$ & \texttt{data1t.dat} & Binomial \\
+        \hline
+    \end{tabular}
+    \caption{Tabela de dados}
+    \label{tab:dados}
+\end{table}
+
+\section*{\textbf{(a)}}
+
+\noindent Dado que conhecemos a distribuição de probabilidades de cada variável aleatória e os parâmetros que as caracterizam (Tabela \ref{tab:dados}), calcule a expectativa e a variância (teóricas) de cada uma delas, usando as definições que vimos em aula.
+
+\textbf{Resolução:}
+
+Utilizando os parâmetros presentes na tabela \ref{tab:dados}, iremos calcular a média e a variância teóricas de cada conjunto de dados.
+
+\begin{itemize}
+    \item Para o conjunto $Q$, não será necessário cálculos, pois os próprios parâmetros da curva normal fornecem à sua média e variância. Logo:
+    \[
+    \mu_x = 0
+    \]
+    e
+    \[
+    {\sigma^2}_x = 2
+    \]
+\end{itemize}
+
+% ----------------------------------------------------------
+% ELEMENTOS PÓS-TEXTUAIS
+% ----------------------------------------------------------
+\postextual
+
+% ----------------------------------------------------------
+% Referências bibliográficas
+% ----------------------------------------------------------
+\bibliography{Bibliografia}
+
+\end{document}
