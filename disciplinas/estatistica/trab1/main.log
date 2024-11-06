@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.25 (TeX Live 2023/Debian) (preloaded format=pdflatex 2024.10.16)  5 NOV 2024 16:51
+This is pdfTeX, Version 3.141592653-2.6-1.40.25 (TeX Live 2023/Debian) (preloaded format=pdflatex 2024.10.16)  6 NOV 2024 11:15
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -931,28 +931,103 @@ Package microtype Info: Loading generic protrusion settings for font family
 pdfTeX warning (ext4): destination with the same identifier (name{table.0.1}) has been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
                                                   \__shipout_drop_firstpage_...
-l.97     \]
-           ]
+l.93     \[
+           ] [2
+pdfTeX warning (ext4): destination with the same identifier (name{table.0.2}) has been already used, duplicate ignored
+<argument> ...shipout:D \box_use:N \l_shipout_box 
+                                                  \__shipout_drop_firstpage_...
+l.157 
+      {/usr/share/texmf/fonts/enc/dvips/lm/lm-mathex.enc}]
+<imgs/hist.png, id=41, 715.473pt x 605.6226pt>
+File: imgs/hist.png Graphic file (type png)
+<use imgs/hist.png>
+Package pdftex.def Info: imgs/hist.png  used on input line 187.
+(pdftex.def)             Requested size: 354.40135pt x 299.98279pt.
+ [3
+pdfTeX warning (ext4): destination with the same identifier (name{table.0.3}) has been already used, duplicate ignored
+<argument> ...shipout:D \box_use:N \l_shipout_box 
+                                                  \__shipout_drop_firstpage_...
+l.209 P
+       ara a realização desta questão, foram realizados 1000 sorteios de ...]
+<imgs/cod.png, id=52, 502.87875pt x 315.579pt>
+File: imgs/cod.png Graphic file (type png)
+<use imgs/cod.png>
+Package pdftex.def Info: imgs/cod.png  used on input line 213.
+(pdftex.def)             Requested size: 354.40135pt x 222.40135pt.
+<imgs/medvarQ.png, id=54, 1166.4378pt x 476.2593pt>
+File: imgs/medvarQ.png Graphic file (type png)
+<use imgs/medvarQ.png>
+Package pdftex.def Info: imgs/medvarQ.png  used on input line 230.
+(pdftex.def)             Requested size: 354.40135pt x 144.70293pt.
+<imgs/medvarX.png, id=56, 1164.9924pt x 476.2593pt>
+File: imgs/medvarX.png Graphic file (type png)
+<use imgs/medvarX.png>
+Package pdftex.def Info: imgs/medvarX.png  used on input line 239.
+(pdftex.def)             Requested size: 354.40135pt x 144.88461pt.
+<imgs/medvarY.png, id=58, 1188.8415pt x 476.2593pt>
+File: imgs/medvarY.png Graphic file (type png)
+<use imgs/medvarY.png>
+Package pdftex.def Info: imgs/medvarY.png  used on input line 248.
+(pdftex.def)             Requested size: 354.40135pt x 141.97775pt.
+<imgs/medvarT.png, id=60, 1170.0513pt x 480.5955pt>
+File: imgs/medvarT.png Graphic file (type png)
+<use imgs/medvarT.png>
+Package pdftex.def Info: imgs/medvarT.png  used on input line 257.
+(pdftex.def)             Requested size: 354.40135pt x 145.56575pt.
+
+Underfull \vbox (badness 2799) has occurred while \output is active []
+
+ [4
+pdfTeX warning (ext4): destination with the same identifier (name{figure.0.1}) has been already used, duplicate ignored
+<argument> ...shipout:D \box_use:N \l_shipout_box 
+                                                  \__shipout_drop_firstpage_...
+l.266 \textbf{Resolução:}
+                            <./imgs/hist.png>] [5
+pdfTeX warning (ext4): destination with the same identifier (name{figure.0.2}) has been already used, duplicate ignored
+<argument> ...shipout:D \box_use:N \l_shipout_box 
+                                                  \__shipout_drop_firstpage_...
+l.266 \textbf{Resolução:}
+                           
+pdfTeX warning (ext4): destination with the same identifier (name{figure.0.3}) has been already used, duplicate ignored
+<argument> ...shipout:D \box_use:N \l_shipout_box 
+                                                  \__shipout_drop_firstpage_...
+l.266 \textbf{Resolução:}
+                            <./imgs/cod.png> <./imgs/medvarQ.png>] [6
+pdfTeX warning (ext4): destination with the same identifier (name{figure.0.4}) has been already used, duplicate ignored
+<argument> ...shipout:D \box_use:N \l_shipout_box 
+                                                  \__shipout_drop_firstpage_...
+l.266 \textbf{Resolução:}
+                           
+pdfTeX warning (ext4): destination with the same identifier (name{figure.0.5}) has been already used, duplicate ignored
+<argument> ...shipout:D \box_use:N \l_shipout_box 
+                                                  \__shipout_drop_firstpage_...
+l.266 \textbf{Resolução:}
+                           
+pdfTeX warning (ext4): destination with the same identifier (name{figure.0.6}) has been already used, duplicate ignored
+<argument> ...shipout:D \box_use:N \l_shipout_box 
+                                                  \__shipout_drop_firstpage_...
+l.266 \textbf{Resolução:}
+                            <./imgs/medvarX.png> <./imgs/medvarY.png> <./imgs/medvarT.png>]
 No file main.bbl.
-[2] (./main.aux)
+[7] (./main.aux)
  ***********
 LaTeX2e <2023-11-01> patch level 1
 L3 programming layer <2020/03/25>
  ***********
  ) 
 Here is how much of TeX's memory you used:
- 20507 strings out of 474222
- 330455 string characters out of 5748732
- 1938975 words of memory out of 5000000
- 42335 multiletter control sequences out of 15000+600000
- 618804 words of font info for 128 fonts, out of 8000000 for 9000
+ 20606 strings out of 474222
+ 331989 string characters out of 5748732
+ 1939975 words of memory out of 5000000
+ 42389 multiletter control sequences out of 15000+600000
+ 619883 words of font info for 141 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 110i,12n,107p,1056b,595s stack positions out of 10000i,1000n,20000p,200000b,200000s
-</usr/share/texmf/fonts/type1/public/lm/lmbx10.pfb></usr/share/texmf/fonts/type1/public/lm/lmmi10.pfb></usr/share/texmf/fonts/type1/public/lm/lmmi7.pfb></usr/share/texmf/fonts/type1/public/lm/lmr10.pfb></usr/share/texmf/fonts/type1/public/lm/lmr12.pfb></usr/share/texmf/fonts/type1/public/lm/lmr6.pfb></usr/share/texmf/fonts/type1/public/lm/lmr7.pfb></usr/share/texmf/fonts/type1/public/lm/lmr8.pfb></usr/share/texmf/fonts/type1/public/lm/lmri10.pfb></usr/share/texmf/fonts/type1/public/lm/lmssbx10.pfb></usr/share/texmf/fonts/type1/public/lm/lmsy10.pfb></usr/share/texmf/fonts/type1/public/lm/lmtt10.pfb>
-Output written on main.pdf (2 pages, 208397 bytes).
+ 110i,12n,107p,1056b,607s stack positions out of 10000i,1000n,20000p,200000b,200000s
+</usr/share/texmf/fonts/type1/public/lm/lmbx10.pfb></usr/share/texmf/fonts/type1/public/lm/lmex10.pfb></usr/share/texmf/fonts/type1/public/lm/lmmi10.pfb></usr/share/texmf/fonts/type1/public/lm/lmmi7.pfb></usr/share/texmf/fonts/type1/public/lm/lmr10.pfb></usr/share/texmf/fonts/type1/public/lm/lmr12.pfb></usr/share/texmf/fonts/type1/public/lm/lmr6.pfb></usr/share/texmf/fonts/type1/public/lm/lmr7.pfb></usr/share/texmf/fonts/type1/public/lm/lmr8.pfb></usr/share/texmf/fonts/type1/public/lm/lmri10.pfb></usr/share/texmf/fonts/type1/public/lm/lmssbx10.pfb></usr/share/texmf/fonts/type1/public/lm/lmsy10.pfb></usr/share/texmf/fonts/type1/public/lm/lmtt10.pfb>
+Output written on main.pdf (7 pages, 535390 bytes).
 PDF statistics:
- 100 PDF objects out of 1000 (max. 8388607)
- 68 compressed objects within 1 object stream
- 8 named destinations out of 1000 (max. 500000)
- 39425 words of extra memory for PDF output out of 42996 (max. 10000000)
+ 167 PDF objects out of 1000 (max. 8388607)
+ 115 compressed objects within 2 object streams
+ 26 named destinations out of 1000 (max. 500000)
+ 39455 words of extra memory for PDF output out of 42996 (max. 10000000)
 
