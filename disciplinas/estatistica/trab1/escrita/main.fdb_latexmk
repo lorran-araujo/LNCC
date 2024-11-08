@@ -1,5 +1,5 @@
 # Fdb version 4
-["bibtex main"] 0 "main.aux" "main.bbl" "main" 1730902541.56743 0
+["bibtex main"] 0 "main.aux" "main.bbl" "main" 1731087780.88407 0
   "/usr/share/texlive/texmf-dist/bibtex/bib/abntex2/abntex2-options.bib" 1357081713 5396 4eb260dac60f150ae608d45252853090 ""
   "/usr/share/texlive/texmf-dist/bibtex/bst/abntex2/abntex2-alf.bst" 1543183680 60064 0819ac8568f9a482510a46e3a8a6f605 ""
   "Bibliografia.bib" 0 -1 0 ""
@@ -8,9 +8,9 @@
   "main.bbl"
   "main.blg"
   (rewritten before read)
-["pdflatex"] 1730902540.13079 "/home/lorran/github/LNCC/disciplinas/estatistica/trab1/main.tex" "main.pdf" "main" 1730902541.56762 0
+["pdflatex"] 1731087779.52779 "/home/lorran/github/LNCC/disciplinas/estatistica/trab1/escrita/main.tex" "main.pdf" "main" 1731087780.88424 0
   "/etc/texmf/web2c/texmf.cnf" 1729106050.91823 475 c0e671620eb5563b2130f56340a5fde8 ""
-  "/home/lorran/github/LNCC/disciplinas/estatistica/trab1/main.tex" 1730902539.90757 11745 dbb7c5a2f16625a48306bb8c978cfaca ""
+  "/home/lorran/github/LNCC/disciplinas/estatistica/trab1/escrita/main.tex" 1731087779.19678 11766 e551cf8bd0e02c44c7bfdd28406b9bb0 ""
   "/usr/share/texlive/texmf-dist/fonts/map/fontname/texfonts.map" 1577235249 3524 cb3e574dea2d1052e39280babc910dc8 ""
   "/usr/share/texlive/texmf-dist/fonts/tfm/public/amsfonts/symbols/msam10.tfm" 1246382020 916 f87d7c45f9c908e672703b83b72241a3 ""
   "/usr/share/texlive/texmf-dist/fonts/tfm/public/amsfonts/symbols/msam5.tfm" 1246382020 924 9904cf1d39e9767e7a3622f2a125a565 ""
@@ -186,14 +186,14 @@
   "/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map" 1729106078.31823 5472669 54eaf61a88b6b7896ebd0dac973cb29c ""
   "/var/lib/texmf/web2c/pdftex/pdflatex.fmt" 1729106139 8215277 3060ff0bcbfb1a40af0e2e34fbfeb885 ""
   "imgs/cod.png" 1730902093.99849 48303 e81381e776d0407fd92f849ab696df2c ""
-  "imgs/hist.png" 1730899432.69669 84793 1960af47077494ec2e2b142f85f4fcff ""
-  "imgs/medvarQ.png" 1730902418.34197 68787 6cd6eb305b2624917ac7fbf8ab9ca9e0 ""
-  "imgs/medvarT.png" 1730902483.9387 69435 ea9fa1b1c2b211a195cdda4038472bc3 ""
-  "imgs/medvarX.png" 1730902443.32126 59856 c58b1588ed42df31eefbf6d15385028e ""
-  "imgs/medvarY.png" 1730902464.56367 77794 3a03de97da5de8e63655f48610201f3b ""
-  "main.aux" 1730902541.22457 3454 669f514ef675f9e1a0bc082b9a472140 "pdflatex"
+  "imgs/hist.png" 1731087550.8561 103386 b6f8789f21cc077fdaf06d169a1bb057 ""
+  "imgs/medvarQ.png" 1731087589.29711 98921 dcac35dede348a605663b7c0d53e1a9d ""
+  "imgs/medvarT.png" 1731087626.51696 73750 73b0006adae142b4edc02705ee60da14 ""
+  "imgs/medvarX.png" 1731087606.19711 70997 ee5c6143d44b67cdc77f70b73bd45508 ""
+  "imgs/medvarY.png" 1731087617.967 90632 455ac1caca1f57b4284cf0062b5befc7 ""
+  "main.aux" 1731087780.53676 3454 669f514ef675f9e1a0bc082b9a472140 "pdflatex"
   "main.bbl" 0 -1 0 "bibtex main"
-  "main.tex" 1730902539.90757 11745 dbb7c5a2f16625a48306bb8c978cfaca ""
+  "main.tex" 1731087779.19678 11766 e551cf8bd0e02c44c7bfdd28406b9bb0 ""
   (generated)
   "main.aux"
   "main.log"
