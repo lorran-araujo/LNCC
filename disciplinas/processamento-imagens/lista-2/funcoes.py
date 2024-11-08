@@ -2,7 +2,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 class PCAAnalysis:
-    def __init__(self, data, n_components=None):
+    def __init__(self, data, labels=None, n_components=None):
         """
         Inicializa a classe com o conjunto de dados e o número de componentes desejados.
         
@@ -12,6 +12,7 @@ class PCAAnalysis:
         """
         self.data = data
         self.n_components = n_components
+        self.labels = labels
         self.mean = None
         self.data_mean = None
         self.pca_base = None
@@ -19,6 +20,9 @@ class PCAAnalysis:
         self.eigenvalues = None
         self.eigenvectors = None
         self.transformed_data = None
+
+    def data_label(self, labels):
+        self.labels = labels
 
     def truncate(self):
         """
@@ -118,8 +122,27 @@ class PCAAnalysis:
         if self.transformed_data is None:
             raise ValueError("O PCA ainda não foi ajustado. Execute o método 'fit()' antes.")
         
-        plt.figure(figsize=(8, 6))
-        plt.scatter(self.transformed_data[:, dim1], self.transformed_data[:, dim2], alpha=0.7)
+        if self.labels is not None:
+            colors=['blue','red', 'green', 'purple']
+            legend =['Sério', 'Sorrindo']
+
+            classes = np.unique(self.labels)
+
+            plt.figure(figsize=(8, 6))
+
+            for i, clas in enumerate(classes):
+                
+                class_0 = self.transformed_data[self.labels == clas]
+                if clas == 0:
+                    plt.scatter(class_0[:, dim1], class_0[:, dim2], color=colors[i], label=legend[0])
+                else:
+                    plt.scatter(class_0[:, dim1], class_0[:, dim2], color=colors[i], label=legend[1])
+            
+            plt.legend()
+                
+        else:    
+            plt.scatter(self.transformed_data[:, dim1], self.transformed_data[:, dim2], alpha=0.7)
+        
         plt.xlabel(f"Componente Principal {dim1 + 1}")
         plt.ylabel(f"Componente Principal {dim2 + 1}")
         plt.title("Projeção dos Dados na Base PCA")
