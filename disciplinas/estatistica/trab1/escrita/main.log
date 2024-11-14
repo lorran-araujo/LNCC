@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.25 (TeX Live 2023/Debian) (preloaded format=pdflatex 2024.10.16)  8 NOV 2024 14:42
+This is pdfTeX, Version 3.141592653-2.6-1.40.25 (TeX Live 2023/Debian) (preloaded format=pdflatex 2024.10.16)  14 NOV 2024 15:35
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -782,7 +782,31 @@ Package: amsfonts 2013/01/14 v3.01 Basic AMSFonts support
 LaTeX Font Info:    Redeclaring math symbol \hbar on input line 98.
 LaTeX Font Info:    Overwriting math alphabet `\mathfrak' in version `bold'
 (Font)                  U/euf/m/n --> U/euf/b/n on input line 106.
+)) (/usr/share/texlive/texmf-dist/tex/latex/listings/listings.sty
+\lst@mode=\count363
+\lst@gtempboxa=\box64
+\lst@token=\toks41
+\lst@length=\count364
+\lst@currlwidth=\dimen263
+\lst@column=\count365
+\lst@pos=\count366
+\lst@lostspace=\dimen264
+\lst@width=\dimen265
+\lst@newlines=\count367
+\lst@lineno=\count368
+\lst@maxwidth=\dimen266
+ (/usr/share/texlive/texmf-dist/tex/latex/listings/lstmisc.sty
+File: lstmisc.sty 2023/02/27 1.9 (Carsten Heinz)
+\c@lstnumber=\count369
+\lst@skipnumbers=\count370
+\lst@framebox=\box65
+) (/usr/share/texlive/texmf-dist/tex/latex/listings/listings.cfg
+File: listings.cfg 2023/02/27 1.9 listings configuration
 ))
+Package: listings 2023/02/27 1.9 (Carsten Heinz)
+ (/usr/share/texlive/texmf-dist/tex/latex/listings/lstlang1.sty
+File: lstlang1.sty 2023/02/27 1.9 listings language file
+)
 
 ******************************************************
 Stock height and width: 794.96999pt by 614.295pt
@@ -806,106 +830,107 @@ Sidefootvsep and sidefootheight: 12pt and 548.39996pt
 (./main.aux)
 \openout1 = `main.aux'.
 
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 49.
-LaTeX Font Info:    ... okay on input line 49.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 49.
-LaTeX Font Info:    ... okay on input line 49.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 49.
-LaTeX Font Info:    ... okay on input line 49.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 49.
-LaTeX Font Info:    ... okay on input line 49.
-LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 49.
-LaTeX Font Info:    ... okay on input line 49.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 49.
-LaTeX Font Info:    ... okay on input line 49.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 49.
-LaTeX Font Info:    ... okay on input line 49.
-LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 49.
-LaTeX Font Info:    ... okay on input line 49.
-LaTeX Font Info:    Checking defaults for PU/pdf/m/n on input line 49.
-LaTeX Font Info:    ... okay on input line 49.
-Package hyperref Info: Link coloring OFF on input line 49.
-\myptabbox=\box64
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 67.
+LaTeX Font Info:    ... okay on input line 67.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 67.
+LaTeX Font Info:    ... okay on input line 67.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 67.
+LaTeX Font Info:    ... okay on input line 67.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 67.
+LaTeX Font Info:    ... okay on input line 67.
+LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 67.
+LaTeX Font Info:    ... okay on input line 67.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 67.
+LaTeX Font Info:    ... okay on input line 67.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 67.
+LaTeX Font Info:    ... okay on input line 67.
+LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 67.
+LaTeX Font Info:    ... okay on input line 67.
+LaTeX Font Info:    Checking defaults for PU/pdf/m/n on input line 67.
+LaTeX Font Info:    ... okay on input line 67.
+Package hyperref Info: Link coloring OFF on input line 67.
+\myptabbox=\box66
 \myptabboxwidth=\skip267
  (/usr/share/texlive/texmf-dist/tex/context/base/mkii/supp-pdf.mkii
 [Loading MPS to PDF converter (version 2006.09.02).]
-\scratchcounter=\count363
-\scratchdimen=\dimen263
-\scratchbox=\box65
-\nofMPsegments=\count364
-\nofMParguments=\count365
-\everyMPshowfont=\toks41
-\MPscratchCnt=\count366
-\MPscratchDim=\dimen264
-\MPnumerator=\count367
-\makeMPintoPDFobject=\count368
-\everyMPtoPDFconversion=\toks42
+\scratchcounter=\count371
+\scratchdimen=\dimen267
+\scratchbox=\box67
+\nofMPsegments=\count372
+\nofMParguments=\count373
+\everyMPshowfont=\toks42
+\MPscratchCnt=\count374
+\MPscratchDim=\dimen268
+\MPnumerator=\count375
+\makeMPintoPDFobject=\count376
+\everyMPtoPDFconversion=\toks43
 ) (/usr/share/texlive/texmf-dist/tex/latex/epstopdf-pkg/epstopdf-base.sty
 Package: epstopdf-base 2020-01-24 v2.11 Base part for package epstopdf
 Package epstopdf-base Info: Redefining graphics rule for `.eps' on input line 485.
  (/usr/share/texlive/texmf-dist/tex/latex/latexconfig/epstopdf-sys.cfg
 File: epstopdf-sys.cfg 2010/07/13 v1.3 Configuration of (r)epstopdf for TeX Live
 ))
-LaTeX Info: Redefining \microtypecontext on input line 49.
-Package microtype Info: Applying patch `item' on input line 49.
-Package microtype Info: Applying patch `toc' on input line 49.
-Package microtype Info: Applying patch `eqnum' on input line 49.
-Package microtype Info: Applying patch `footnote' on input line 49.
-Package microtype Info: Applying patch `verbatim' on input line 49.
+LaTeX Info: Redefining \microtypecontext on input line 67.
+Package microtype Info: Applying patch `item' on input line 67.
+Package microtype Info: Applying patch `toc' on input line 67.
+Package microtype Info: Applying patch `eqnum' on input line 67.
+Package microtype Info: Applying patch `footnote' on input line 67.
+Package microtype Info: Applying patch `verbatim' on input line 67.
 Package microtype Info: Generating PDF output.
 Package microtype Info: Character protrusion enabled (level 2).
 Package microtype Info: Using default protrusion set `alltext'.
 Package microtype Info: Automatic font expansion enabled (level 2),
 (microtype)             stretch: 20, shrink: 20, step: 1, non-selected.
 Package microtype Info: Using default expansion set `alltext-nott'.
-LaTeX Info: Redefining \showhyphens on input line 49.
+LaTeX Info: Redefining \showhyphens on input line 67.
 Package microtype Info: No adjustment of tracking.
 Package microtype Info: No adjustment of interword spacing.
 Package microtype Info: No adjustment of character kerning.
  (/usr/share/texlive/texmf-dist/tex/latex/microtype/mt-cmr.cfg
 File: mt-cmr.cfg 2013/05/19 v2.2 microtype config. file: Computer Modern Roman (RS)
 )
-LaTeX Font Info:    Trying to load font information for OT1+lmr on input line 55.
+\c@lstlisting=\count377
+LaTeX Font Info:    Trying to load font information for OT1+lmr on input line 73.
  (/usr/share/texmf/tex/latex/lm/ot1lmr.fd
 File: ot1lmr.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
 )
-LaTeX Font Info:    Trying to load font information for OML+lmm on input line 55.
+LaTeX Font Info:    Trying to load font information for OML+lmm on input line 73.
  (/usr/share/texmf/tex/latex/lm/omllmm.fd
 File: omllmm.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
 )
-LaTeX Font Info:    Trying to load font information for OMS+lmsy on input line 55.
+LaTeX Font Info:    Trying to load font information for OMS+lmsy on input line 73.
  (/usr/share/texmf/tex/latex/lm/omslmsy.fd
 File: omslmsy.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
 )
-LaTeX Font Info:    Trying to load font information for OMX+lmex on input line 55.
+LaTeX Font Info:    Trying to load font information for OMX+lmex on input line 73.
  (/usr/share/texmf/tex/latex/lm/omxlmex.fd
 File: omxlmex.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
 )
 LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <10.95> on input line 55.
+(Font)              <10.95> on input line 73.
 LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <8> on input line 55.
+(Font)              <8> on input line 73.
 LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <6> on input line 55.
-LaTeX Font Info:    Trying to load font information for U+msa on input line 55.
+(Font)              <6> on input line 73.
+LaTeX Font Info:    Trying to load font information for U+msa on input line 73.
  (/usr/share/texlive/texmf-dist/tex/latex/amsfonts/umsa.fd
 File: umsa.fd 2013/01/14 v3.01 AMS symbols A
 ) (/usr/share/texlive/texmf-dist/tex/latex/microtype/mt-msa.cfg
 File: mt-msa.cfg 2006/02/04 v1.1 microtype config. file: AMS symbols (a) (RS)
 )
-LaTeX Font Info:    Trying to load font information for U+msb on input line 55.
+LaTeX Font Info:    Trying to load font information for U+msb on input line 73.
  (/usr/share/texlive/texmf-dist/tex/latex/amsfonts/umsb.fd
 File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 ) (/usr/share/texlive/texmf-dist/tex/latex/microtype/mt-msb.cfg
 File: mt-msb.cfg 2005/06/01 v1.0 microtype config. file: AMS symbols (b) (RS)
 )
-LaTeX Font Info:    Trying to load font information for TS1+lmr on input line 55.
+LaTeX Font Info:    Trying to load font information for TS1+lmr on input line 73.
  (/usr/share/texmf/tex/latex/lm/ts1lmr.fd
 File: ts1lmr.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
 )
 LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <5> on input line 55.
-LaTeX Font Info:    Trying to load font information for T1+lmss on input line 56.
+(Font)              <5> on input line 73.
+LaTeX Font Info:    Trying to load font information for T1+lmss on input line 74.
  (/usr/share/texmf/tex/latex/lm/t1lmss.fd
 File: t1lmss.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
 )
@@ -914,10 +939,10 @@ Package microtype Info: Loading generic protrusion settings for font family
 (microtype)             For optimal results, create family-specific settings.
 (microtype)             See the microtype manual for details.
 LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <10> on input line 67.
+(Font)              <10> on input line 85.
 LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <7> on input line 67.
-LaTeX Font Info:    Trying to load font information for T1+lmtt on input line 71.
+(Font)              <7> on input line 85.
+LaTeX Font Info:    Trying to load font information for T1+lmtt on input line 89.
  (/usr/share/texmf/tex/latex/lm/t1lmtt.fd
 File: t1lmtt.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
 )
@@ -931,103 +956,100 @@ Package microtype Info: Loading generic protrusion settings for font family
 pdfTeX warning (ext4): destination with the same identifier (name{table.0.1}) has been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
                                                   \__shipout_drop_firstpage_...
-l.93     \[
-           ] [2
+l.111     \[
+            ] [2
 pdfTeX warning (ext4): destination with the same identifier (name{table.0.2}) has been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
                                                   \__shipout_drop_firstpage_...
-l.157 
-      {/usr/share/texmf/fonts/enc/dvips/lm/lm-mathex.enc}]
+l.188 \end{table}
+                 {/usr/share/texmf/fonts/enc/dvips/lm/lm-mathex.enc}]
 <imgs/hist.png, id=42, 729.927pt x 605.6226pt>
 File: imgs/hist.png Graphic file (type png)
 <use imgs/hist.png>
-Package pdftex.def Info: imgs/hist.png  used on input line 187.
+Package pdftex.def Info: imgs/hist.png  used on input line 203.
 (pdftex.def)             Requested size: 354.40135pt x 294.05005pt.
+
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
  [3
 pdfTeX warning (ext4): destination with the same identifier (name{table.0.3}) has been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
                                                   \__shipout_drop_firstpage_...
-l.209 P
-       ara a realização desta questão, foram realizados 1000 sorteios de ...]
-<imgs/cod.png, id=53, 502.87875pt x 315.579pt>
-File: imgs/cod.png Graphic file (type png)
-<use imgs/cod.png>
-Package pdftex.def Info: imgs/cod.png  used on input line 213.
-(pdftex.def)             Requested size: 354.40135pt x 222.40135pt.
-<imgs/medvarQ.png, id=55, 1193.1777pt x 490.7133pt>
-File: imgs/medvarQ.png Graphic file (type png)
-<use imgs/medvarQ.png>
-Package pdftex.def Info: imgs/medvarQ.png  used on input line 230.
-(pdftex.def)             Requested size: 354.40135pt x 145.75502pt.
-<imgs/medvarX.png, id=57, 1179.4464pt x 490.7133pt>
-File: imgs/medvarX.png Graphic file (type png)
-<use imgs/medvarX.png>
-Package pdftex.def Info: imgs/medvarX.png  used on input line 239.
-(pdftex.def)             Requested size: 354.40135pt x 147.44724pt.
-<imgs/medvarY.png, id=59, 1203.2955pt x 490.7133pt>
-File: imgs/medvarY.png Graphic file (type png)
-<use imgs/medvarY.png>
-Package pdftex.def Info: imgs/medvarY.png  used on input line 248.
-(pdftex.def)             Requested size: 354.40135pt x 144.52704pt.
-<imgs/medvarT.png, id=61, 1183.7826pt x 494.3268pt>
-File: imgs/medvarT.png Graphic file (type png)
-<use imgs/medvarT.png>
-Package pdftex.def Info: imgs/medvarT.png  used on input line 257.
-(pdftex.def)             Requested size: 354.40135pt x 147.98991pt.
-
-Underfull \vbox (badness 5756) has occurred while \output is active []
-
- [4
+l.207 
+      ] [4
 pdfTeX warning (ext4): destination with the same identifier (name{figure.0.1}) has been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
                                                   \__shipout_drop_firstpage_...
-l.266 \textbf{Resolução:}
-                            <./imgs/hist.png>] [5
+l.226 
+       <./imgs/hist.png>]
+LaTeX Font Info:    Font shape `T1/lmtt/bx/n' in size <9> not available
+(Font)              Font shape `T1/lmtt/b/n' tried instead on input line 233.
+<imgs/medvarQ.png, id=62, 1190.2869pt x 490.7133pt>
+File: imgs/medvarQ.png Graphic file (type png)
+<use imgs/medvarQ.png>
+Package pdftex.def Info: imgs/medvarQ.png  used on input line 277.
+(pdftex.def)             Requested size: 420.84865pt x 173.49686pt.
+<imgs/medvarX.png, id=63, 1179.4464pt x 490.7133pt>
+File: imgs/medvarX.png Graphic file (type png)
+<use imgs/medvarX.png>
+Package pdftex.def Info: imgs/medvarX.png  used on input line 284.
+(pdftex.def)             Requested size: 420.84865pt x 175.09172pt.
+<imgs/medvarY.png, id=64, 1203.2955pt x 490.7133pt>
+File: imgs/medvarY.png Graphic file (type png)
+<use imgs/medvarY.png>
+Package pdftex.def Info: imgs/medvarY.png  used on input line 291.
+(pdftex.def)             Requested size: 420.84865pt x 171.62492pt.
+<imgs/medvarT.png, id=65, 1183.7826pt x 494.3268pt>
+File: imgs/medvarT.png Graphic file (type png)
+<use imgs/medvarT.png>
+Package pdftex.def Info: imgs/medvarT.png  used on input line 298.
+(pdftex.def)             Requested size: 420.84865pt x 175.73991pt.
+ [5
 pdfTeX warning (ext4): destination with the same identifier (name{figure.0.2}) has been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
                                                   \__shipout_drop_firstpage_...
-l.266 \textbf{Resolução:}
-                           
+l.309 \textbf{Resolução:}
+                           ] [6
 pdfTeX warning (ext4): destination with the same identifier (name{figure.0.3}) has been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
                                                   \__shipout_drop_firstpage_...
-l.266 \textbf{Resolução:}
-                            <./imgs/cod.png> <./imgs/medvarQ.png>] [6
+l.309 \textbf{Resolução:}
+                           
 pdfTeX warning (ext4): destination with the same identifier (name{figure.0.4}) has been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
                                                   \__shipout_drop_firstpage_...
-l.266 \textbf{Resolução:}
+l.309 \textbf{Resolução:}
                            
 pdfTeX warning (ext4): destination with the same identifier (name{figure.0.5}) has been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
                                                   \__shipout_drop_firstpage_...
-l.266 \textbf{Resolução:}
-                           
+l.309 \textbf{Resolução:}
+                            <./imgs/medvarQ.png> <./imgs/medvarX.png> <./imgs/medvarY.png>]
+No file main.bbl.
+[7
 pdfTeX warning (ext4): destination with the same identifier (name{figure.0.6}) has been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
                                                   \__shipout_drop_firstpage_...
-l.266 \textbf{Resolução:}
-                            <./imgs/medvarX.png> <./imgs/medvarY.png> <./imgs/medvarT.png>]
-No file main.bbl.
-[7] (./main.aux)
+l.323 \end{document}
+                     <./imgs/medvarT.png>] (./main.aux)
  ***********
 LaTeX2e <2023-11-01> patch level 1
 L3 programming layer <2020/03/25>
  ***********
  ) 
 Here is how much of TeX's memory you used:
- 20604 strings out of 474222
- 331991 string characters out of 5748732
- 1939975 words of memory out of 5000000
- 42389 multiletter control sequences out of 15000+600000
- 619800 words of font info for 140 fonts, out of 8000000 for 9000
+ 22451 strings out of 474222
+ 356348 string characters out of 5748732
+ 2114975 words of memory out of 5000000
+ 44187 multiletter control sequences out of 15000+600000
+ 623778 words of font info for 147 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 110i,12n,107p,1064b,607s stack positions out of 10000i,1000n,20000p,200000b,200000s
-</usr/share/texmf/fonts/type1/public/lm/lmbx10.pfb></usr/share/texmf/fonts/type1/public/lm/lmex10.pfb></usr/share/texmf/fonts/type1/public/lm/lmmi10.pfb></usr/share/texmf/fonts/type1/public/lm/lmmi7.pfb></usr/share/texmf/fonts/type1/public/lm/lmr10.pfb></usr/share/texmf/fonts/type1/public/lm/lmr12.pfb></usr/share/texmf/fonts/type1/public/lm/lmr6.pfb></usr/share/texmf/fonts/type1/public/lm/lmr7.pfb></usr/share/texmf/fonts/type1/public/lm/lmr8.pfb></usr/share/texmf/fonts/type1/public/lm/lmri10.pfb></usr/share/texmf/fonts/type1/public/lm/lmssbx10.pfb></usr/share/texmf/fonts/type1/public/lm/lmsy10.pfb></usr/share/texmf/fonts/type1/public/lm/lmtt10.pfb>
-Output written on main.pdf (7 pages, 587766 bytes).
+ 110i,12n,107p,1064b,1501s stack positions out of 10000i,1000n,20000p,200000b,200000s
+</usr/share/texmf/fonts/type1/public/lm/lmbx10.pfb></usr/share/texmf/fonts/type1/public/lm/lmex10.pfb></usr/share/texmf/fonts/type1/public/lm/lmmi10.pfb></usr/share/texmf/fonts/type1/public/lm/lmmi7.pfb></usr/share/texmf/fonts/type1/public/lm/lmr10.pfb></usr/share/texmf/fonts/type1/public/lm/lmr12.pfb></usr/share/texmf/fonts/type1/public/lm/lmr6.pfb></usr/share/texmf/fonts/type1/public/lm/lmr7.pfb></usr/share/texmf/fonts/type1/public/lm/lmr8.pfb></usr/share/texmf/fonts/type1/public/lm/lmri10.pfb></usr/share/texmf/fonts/type1/public/lm/lmssbx10.pfb></usr/share/texmf/fonts/type1/public/lm/lmsy10.pfb></usr/share/texmf/fonts/type1/public/lm/lmtk10.pfb></usr/share/texmf/fonts/type1/public/lm/lmtt10.pfb></usr/share/texmf/fonts/type1/public/lm/lmtt9.pfb>
+Output written on main.pdf (7 pages, 633168 bytes).
 PDF statistics:
- 168 PDF objects out of 1000 (max. 8388607)
- 116 compressed objects within 2 object streams
- 26 named destinations out of 1000 (max. 500000)
- 39455 words of extra memory for PDF output out of 42996 (max. 10000000)
+ 211 PDF objects out of 1000 (max. 8388607)
+ 156 compressed objects within 2 object streams
+ 52 named destinations out of 1000 (max. 500000)
+ 42522 words of extra memory for PDF output out of 42996 (max. 10000000)
 

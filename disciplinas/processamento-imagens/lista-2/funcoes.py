@@ -16,7 +16,6 @@ class PCAAnalysis:
         self.mean = None
         self.data_mean = None
         self.pca_base = None
-        self.mean = None
         self.eigenvalues = None
         self.eigenvectors = None
         self.transformed_data = None
@@ -24,6 +23,9 @@ class PCAAnalysis:
     def data_label(self, labels):
         self.labels = labels
 
+    def def_ncomponents(self, n_components):
+        self.n_components = n_components
+        
     def truncate(self):
         """
         Reduz o número de componentes principais mantendo os dados truncados para n componentes.
@@ -37,7 +39,7 @@ class PCAAnalysis:
         if self.eigenvectors is None:
              raise ValueError("O PCA ainda não foi ajustado. Execute o método 'fit()' antes.")
         
-        if self.n_components != None:
+        if self.n_components is not None:
             matriz = np.zeros((len(self.data), len(self.data)))
             np.fill_diagonal(matriz[:self.n_components, :self.n_components], 1)
             P_PCA = np.dot(self.eigenvectors, matriz)
@@ -90,17 +92,13 @@ class PCAAnalysis:
         if self.eigenvalues is None:
             raise ValueError("O PCA ainda não foi ajustado. Execute o método 'fit()' antes.")
 
-        # Passo 1: Calcular a variância explicada
         variancia_explicada = self.eigenvalues / np.sum(self.eigenvalues)
-
-        # Passo 2: Calcular a variância explicada acumulada
         variancia_explicada_acumulada = np.cumsum(variancia_explicada)
 
         self.n_components = np.argmax((variancia_explicada_acumulada) >= 0.95) + 1
 
         print(f"Número de componentes que representam 95% da variância dos dados: {self.n_components}")
 
-        # Passo 3: Plotar o gráfico de energia dos autovalores
         plt.figure(figsize=(10, 5))
         plt.bar(range(len(variancia_explicada)), variancia_explicada, alpha=0.6, label='Variância Explicada Individual')
         plt.step(range(len(variancia_explicada_acumulada)), variancia_explicada_acumulada, where='mid', color='red', label='Variância Explicada Acumulada')
@@ -157,7 +155,9 @@ class PCAAnalysis:
             data_transf = self.transformed_data
             data_mean = self.mean
         else:
-            data_mean = np.mean(data, axis=0)
+            data_mean = self.mean
+            # data_mean = np.mean(data, axis=0)
+            #media ou data tirando media?
 
         data_reconstructed = data_mean + np.dot(data_transf, np.transpose(self.pca_base))
 
@@ -167,15 +167,15 @@ class PCAAnalysis:
         fig.subplots_adjust(hspace=0.3)  
 
         for i in range(num_imagens):
-            # Plotar imagem reduzida na primeira linha
+            
             axes[0, i].imshow(data_reconstructed[20*i].reshape(360, 260), cmap='gray')
             axes[0, i].set_title(f'Reconstruída {i+1}')
             axes[0, i].axis('off')  
 
-            # Plotar imagem original na segunda linha
+            
             axes[1, i].imshow(data[20*i].reshape(360, 260), cmap='gray')
             axes[1, i].set_title(f'Original {i+1}')
-            axes[1, i].axis('off') # Remove os eixos para uma visualização limpa
+            axes[1, i].axis('off')
 
         plt.show()
         return data_reconstructed
@@ -207,10 +207,11 @@ class PCAAnalysis:
         if self.pca_base is None:
             raise ValueError("O PCA ainda não foi ajustado. Execute o método 'fit()' antes.")            
 
-        data_mean = np.mean(data, axis=0)
+        #mean = np.mean(data, axis=0)
 
-        data = data - data_mean
+        #data_mean = data - mean
+        data_mean = data - self.mean
 
-        data_transformed = np.dot(data, self.pca_base)
+        data_transformed = np.dot(data_mean, self.pca_base)
 
         return data_transformed 

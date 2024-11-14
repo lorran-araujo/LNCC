@@ -16,6 +16,24 @@
 \usepackage{amssymb}
 \usepackage{hyperref}
 
+\usepackage{listings}
+\usepackage{xcolor}
+
+\lstset{
+    language=Python,
+    basicstyle=\ttfamily\small,
+    keywordstyle=\color{blue}\bfseries,
+    stringstyle=\color{red},
+    commentstyle=\color{gray},
+    numbers=left,
+    numberstyle=\tiny\color{gray},
+    frame=single,
+    breaklines=true,
+    tabsize=4,
+    showspaces=false,
+    showstringspaces=false
+}
+
 % ---
 % Informações de dados para CAPA e FOLHA DE ROSTO
 % ---
@@ -87,9 +105,9 @@ Este texto refere-se à realização do trabalho da disciplina GA030 (Estatísti
 Usando as definições dadas em aula e utilizando os parâmetros presentes na tabela \ref{tab:dados}, iremos calcular a média e a variância teórica de cada variável de dados.
 
 \begin{itemize}
-    \item Para o variável $Q$, não será necessário cálculos, pois os próprios parâmetros da curva normal fornecem à sua média e variância. Logo, $\mu_Q = 0$ e ${{\sigma}_Q}^{2} = 2$.
+    \item Para a variável $Q$, não será necessário cálculos, pois os próprios parâmetros da curva normal fornecem à sua média e variância. Logo, $\mu_Q = 0$ e ${{\sigma}_Q}^{2} = 2$.
     
-    \item Para o variável $X$, que tem origem em uma distribuição uniforme, teremos que média e variância serão dados por:
+    \item Para a variável $X$, que tem origem em uma distribuição uniforme, teremos que a média e a variância serão dadas por:
     \[
     \mu_X = \dfrac{-1+1}{2} \Rightarrow \mu_X = 0
     \]
@@ -97,7 +115,7 @@ Usando as definições dadas em aula e utilizando os parâmetros presentes na ta
     {{\sigma}_X}^{2} = \dfrac{{(1-(-1))}^2}{12}=\dfrac{4}{12} \Rightarrow {{\sigma}_X}^{2} = \dfrac{1}{3}
     \]
 
-    \item Para o variável $Y$, originado através de uma distribuição exponencial com $lambda=0.05$, teremos que média e variância serão dados por:
+    \item Para a variável $Y$, originado através de uma distribuição exponencial com $\lambda=0.05$, teremos que a média e a variância serão dadas por:
     \[
     \mu_Y = \dfrac{1}{\lambda} = \dfrac{1}{0.05} \Rightarrow \mu_y = 20
     \]
@@ -105,7 +123,7 @@ Usando as definições dadas em aula e utilizando os parâmetros presentes na ta
     {{\sigma}_Y}^{2} = \dfrac{1}{\lambda^2} = \dfrac{1}{0.05^2} = \dfrac{1}{0.0025} \Rightarrow {{\sigma}_Y}^{2} = 400
     \]
 
-    \item Para o variável $T$, dado por uma distribuição binomial com $p=0.40$ e $N=15$, teremos que média e variância serão dados então por:
+    \item Para a variável $T$, dada por uma distribuição binomial com $p=0.40$ e $N=15$, teremos que a média e a variância serão dadas então por:
     \[
     \mu_T = N \cdot p = 15 \cdot 0.4 \Rightarrow \mu_T = 6
     \]
@@ -114,7 +132,7 @@ Usando as definições dadas em aula e utilizando os parâmetros presentes na ta
     \]
 \end{itemize}
 
-Logo, a seguinte tabela \ref{tab:medvar} apresenta os resultado obtidos para a média e variância teóricas de cada uma das variáveis.
+Logo, com os resultados obtidos, a tabela \ref{tab:medvar} apresenta a média e variância teóricas de cada uma das variáveis.
 
 \begin{table}[H]
     \centering
@@ -141,19 +159,17 @@ Faça comentários.
 
 \textbf{Resolução:}
 
-Para fazer a estimativa da média e da variância de cada variável iremos usar os estimadores clássicos:
+Para fazer a estimativa da média e da variância de cada variável, iremos usar os estimadores clássicos, pois estes se tratam de estimativas não tendencionas, de variância mínima e coerentes:
 
 \[
 \bar{X} = \dfrac{1}{n} \sum_{i=1}^{n} X_i
 \]
 
-e
-
 \[
 S^2 = \dfrac{1}{n-1} \sum_{i=1}^{n} (X_i - \bar{X})^2
 \]
 
-pois eles são estimativas não tendencionas, de variância mínima e coerente. Logo, foram obtidos as seguintes estimativas presente na tabela \ref{tab:esti}, apresentadas aqui com três casas decimais de precisão.
+Foi então construído um programa na linguagem Python, que foi então utilizado para obter as estimativas para a média e para a variância de cada variável aleatória. Os resultados estão presentes na tabela \ref{tab:esti}, apresentadas aqui com três casas decimais de precisão.
 
 \begin{table}[H]
     \centering
@@ -171,7 +187,7 @@ pois eles são estimativas não tendencionas, de variância mínima e coerente. 
     \label{tab:esti}
 \end{table}
 
-Pode ser observado após a realização deste exercício que, como cada conjunto de dados possui um número consideravelmente grande de amostras (5 milhões), então as estimativas para a média e a variância se aproximam dos valores reais teóricos.
+Após a realização deste exercício, pode ser observado que as estimativas para a média e para a variância se aproximam consideravelmente dos valores reais. Isso acontece pois o número de amostras de cada conjunto de dados é suficientemente grande. Neste caso, cada variável aleatória possui 5 milhões de amostras, tornando possível estimar a média e a variância com a precisão apresentada.
 
 \section*{\textbf{(c)}}
 
@@ -180,16 +196,16 @@ verificando se estes são condizentes com os modelos teóricos (Tabela 1).
 
 \textbf{Resolução:}
 
-Para cada variável, foi construído o histograma das frequências relativas, normalizando os dados para que o histograma, dada a grande quantidade de dados, se aproxime da função de densidade de probabilidade (pdf) ou da função de probabilidade (pf) correspondente à origem dos dados. Para realizar essa comparação, a pdf ou pf teórica foi sobreposta ao histograma, com o intuito de verificar se este está condizente com o modelo teórico. A figura \ref{fig:hist} apresenta o resultado obtido. Para as variáveis contínuas, as partições (bins) foram ajustados automaticamente.
+Para cada variável, foi construído o histograma das frequências relativas, normalizando os dados para que o histograma, dada a grande quantidade de dados, se aproxime da função de densidade de probabilidade (pdf) ou da função de probabilidade (pf) correspondente à distribuição de origem dos dados. Para realizar essa comparação, a pdf ou pf teórica foi sobreposta ao histograma, com o intuito de verificar se este está condizente com o modelo teórico. A figura \ref{fig:hist} apresenta o resultado obtido. Para as variáveis contínuas, as partições (bins) foram ajustados automaticamente.
 
-\begin{figure}
+\begin{figure}[H]
     \centering 
     \includegraphics[width=0.8\textwidth]{imgs/hist.png}
     \caption{Histograma de frequências relativas dos dados com distribuições sobrepostas}
     \label{fig:hist} % cria um rótulo para referência no texto
 \end{figure}
 
-A visualização da figura acima evidencia que os histogramas estão condizentes com os respectivos modelos teóricos, pois os dados ficaram bem ajustados às pdf ou à pf em todos os casos.
+A visualização da figura acima evidencia que os histogramas estão condizentes com os respectivos modelos teóricos, pois os dados ficaram bem ajustados às respectivas pdf ou pf em todos os casos.
 
 \section*{\textbf{(d)}}
 
@@ -206,14 +222,43 @@ características que as amostras aleatórias devem ter. Apresente o código.
 
 \textbf{Resolução:}
 
-Para a realização desta questão, foram realizados 1000 sorteios de 5, 10 e depois 50 dados de cada variável, construindo então as variáveis aleatórias média e variância amostrais. A figura \ref{fig:cod} mostra a codificação realizada para a realização desta questão.
+Para a realização desta questão, foram realizados 1000 sorteios aleatórios de 5, 10 e posteriormente 50 dados de cada variável, construindo então as variáveis aleatórias média e variância amostrais. A figura \ref{fig:cod} mostra a codificação realizada para a realização desta questão.
 
-\begin{figure}
-    \centering 
-    \includegraphics[width=0.8\textwidth]{imgs/cod.png}
-    \caption{Código para o cálculo das variáveis média e da variância amostral}
-    \label{fig:cod} % cria um rótulo para referência no texto
+\begin{figure}[H]
+    \centering
+    \begin{minipage}{\textwidth}
+    \begin{lstlisting}
+        n_samples = [5,10,50]
+        
+        for key, dat in data.items():
+            for n in n_samples:
+                medias = []
+                variancias = []
+        
+                amostras = np.random.choice(dat, size=(10000, n), replace=False)
+                medias = amostras.mean(axis=1)
+                variancias = amostras.var(axis=1, ddof=1)
+        
+                if key == 'data_q':
+                    medias_amostrais_q[f'{key}_{n}'] = medias
+                    variancias_amostrais_q[f'{key}_{n}'] = variancias
+                elif key == 'data_x':
+                    medias_amostrais_x[f'{key}_{n}'] = medias
+                    variancias_amostrais_x[f'{key}_{n}'] = variancias
+                elif key == 'data_y':
+                    medias_amostrais_y[f'{key}_{n}'] = medias
+                    variancias_amostrais_y[f'{key}_{n}'] = variancias
+                elif key == 'data_t':
+                    medias_amostrais_t[f'{key}_{n}'] = medias
+                    variancias_amostrais_t[f'{key}_{n}'] = variancias
+                else:
+                    raise(ValueError)
+    \end{lstlisting}   
+    \end{minipage} 
+    \caption{Código para cálculo das variáveis média amostral e variância amostral}
+    \label{fig:cod}
 \end{figure}
+
 
 \section*{\textbf{(e)}}
 
@@ -223,41 +268,39 @@ Faça isso para as variáveis (Q, X, Y e T).
 
 \textbf{Resolução:}
 
-Para a variavel vinda da normal, é esperado que tal tal, presente na figura \ref{fig:medvarQ}.
+Para esta questão, é esperado que todas as médias amostrais se aproximem de uma curva normal, com mesma média que a variável de origem e com variância igual a da origem dividida por $n$, onde $n$ se trata do número de amostras que caracterizam a média amostral, neste caso, 5, 10 ou 50. Já para a variância, no caso da variável originada da distribuição normal, é esperado que, multiplicada por um fator, ela se caracterize por uma distribuição qui-quadrada, com $n - 1$ graus de liberdade. Para as outras variáveis, não é esperado que a variância amostral se comporte de uma maneira específica.
+
+Logo, foram construídos os histogramas e as curvas sobrepostas esperadas, presentes nas figuras \ref{fig:medvarQ}, \ref{fig:medvarX}, \ref{fig:medvarY} e \ref{fig:medvarT}, onde cada coluna apresenta o histograma da média amostral (azul) e da variância amostral (vermelha) com $n$ igual a 5, 10 e 50, respectivamente.
 
 \begin{figure}
     \centering 
-    \includegraphics[width=0.8\textwidth]{imgs/medvarQ.png}
-    \caption{Histograma de frequências das variáveis aleatórias média amostral e variância amostral com curva respectiva sobreposta}
+    \includegraphics[width=0.95\textwidth]{imgs/medvarQ.png}
+    \caption{Histograma das variáveis média e variância amostrais com origem Q}
     \label{fig:medvarQ} % cria um rótulo para referência no texto
 \end{figure}
 
-Para a variavel vinda da normal, é esperado que tal tal, presente na figura \ref{fig:medvarX}.
-
 \begin{figure}
     \centering 
-    \includegraphics[width=0.8\textwidth]{imgs/medvarX.png}
-    \caption{Histograma de frequências das variáveis aleatórias média amostral e variância amostral com curva respectiva sobreposta}
+    \includegraphics[width=0.95\textwidth]{imgs/medvarX.png}
+    \caption{Histograma das variáveis média e variância amostrais com origem X}
     \label{fig:medvarX} % cria um rótulo para referência no texto
 \end{figure}
 
-Para a variavel vinda da normal, é esperado que tal tal, presente na figura \ref{fig:medvarY}.
-
 \begin{figure}
     \centering 
-    \includegraphics[width=0.8\textwidth]{imgs/medvarY.png}
-    \caption{Histograma de frequências das variáveis aleatórias média amostral e variância amostral com curva respectiva sobreposta}
+    \includegraphics[width=0.95\textwidth]{imgs/medvarY.png}
+    \caption{Histograma das variáveis média e variância amostrais  com origem Y}
     \label{fig:medvarY} % cria um rótulo para referência no texto
 \end{figure}
 
-Para a variavel vinda da normal, é esperado que tal tal, presente na figura \ref{fig:medvarT}.
-
 \begin{figure}
     \centering 
-    \includegraphics[width=0.8\textwidth]{imgs/medvarT.png}
-    \caption{Histograma de frequências das variáveis aleatórias média amostral e variância amostral com curva respectiva sobreposta}
+    \includegraphics[width=0.95\textwidth]{imgs/medvarT.png}
+    \caption{Histograma das variáveis média e variância amostrais com origem T}
     \label{fig:medvarT} % cria um rótulo para referência no texto
 \end{figure}
+
+Observando a sobreposição das curvas, pode se notar que os histogramas se aproximam satisfatóriamente das distribuições teóricas esperadas para cada variável.
 
 \section*{\textbf{(e)}}
 
@@ -265,6 +308,7 @@ Para a variavel vinda da normal, é esperado que tal tal, presente na figura \re
 
 \textbf{Resolução:}
 
+Observando as figuras, pode se concluir que quanto maior era a amostra, mais facilmente o histograma se ajustou à sobreposição da curva esperada. Embora não se esperasse nada das outras variâncias, elas também obtiveram uma distribuição blabla parecendo normal e tals.
 
 % ----------------------------------------------------------
 % ELEMENTOS PÓS-TEXTUAIS
