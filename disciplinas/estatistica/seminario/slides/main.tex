@@ -1,0 +1,34 @@
+\documentclass{beamer}
+\usepackage{amsfonts,amsmath,oldgerm}
+
+\usepackage{./assets/style/beamerthemeLNCC}
+\usetheme{LNCC}
+
+\usepackage[backend=biber,style=numeric]{biblatex}
+\addbibresource{referencias.bib}  % Adicione o arquivo de referências .bib
+
+% Remover o título da citação
+\AtEveryCitekey{\clearfield{title}}
+\AtEveryBibitem{\clearfield{title}}
+
+\newcommand{\testcolor}[1]{\colorbox{#1}{\textcolor{#1}{test}}~\texttt{#1}}
+
+\usefonttheme[onlymath]{serif}
+
+\titlebackground*{assets/img/background}
+
+\newcommand{\hrefcol}[2]{\textcolor{LNCCaltblue}{\href{#1}{#2}}}
+
+\title{Linear Discriminant Analisys (LDA)}
+\subtitle{Seminário de Estatística}
+\course{Master's Degree in Computational Modeling}
+\author{Lorran de Araújo Durães Soares}
+
+\begin{document}
+\maketitle
+
+\include{tex/example/beamerLNCC-example}
+
+\backmatter
+
+\end{document}

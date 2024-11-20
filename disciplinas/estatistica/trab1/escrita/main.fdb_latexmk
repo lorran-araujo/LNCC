@@ -1,5 +1,5 @@
 # Fdb version 4
-["bibtex main"] 0 "main.aux" "main.bbl" "main" 1731609310.76991 0
+["bibtex main"] 0 "main.aux" "main.bbl" "main" 1732111355.08106 0
   "/usr/share/texlive/texmf-dist/bibtex/bib/abntex2/abntex2-options.bib" 1357081713 5396 4eb260dac60f150ae608d45252853090 ""
   "/usr/share/texlive/texmf-dist/bibtex/bst/abntex2/abntex2-alf.bst" 1543183680 60064 0819ac8568f9a482510a46e3a8a6f605 ""
   "Bibliografia.bib" 0 -1 0 ""
@@ -8,9 +8,9 @@
   "main.bbl"
   "main.blg"
   (rewritten before read)
-["pdflatex"] 1731609309.14268 "/home/lorran/github/LNCC/disciplinas/estatistica/trab1/escrita/main.tex" "main.pdf" "main" 1731609310.77012 0
+["pdflatex"] 1732111353.70218 "/home/lorran/github/LNCC/disciplinas/estatistica/trab1/escrita/main.tex" "main.pdf" "main" 1732111355.08125 0
   "/etc/texmf/web2c/texmf.cnf" 1729106050.91823 475 c0e671620eb5563b2130f56340a5fde8 ""
-  "/home/lorran/github/LNCC/disciplinas/estatistica/trab1/escrita/main.tex" 1731609308.94883 14392 6b41eb5542a095c20ebc38ef54123668 ""
+  "/home/lorran/github/LNCC/disciplinas/estatistica/trab1/escrita/main.tex" 1732111353.45567 17330 728b6a5fb939417dedcafc9751d933c7 ""
   "/usr/share/texlive/texmf-dist/fonts/map/fontname/texfonts.map" 1577235249 3524 cb3e574dea2d1052e39280babc910dc8 ""
   "/usr/share/texlive/texmf-dist/fonts/tfm/public/amsfonts/symbols/msam10.tfm" 1246382020 916 f87d7c45f9c908e672703b83b72241a3 ""
   "/usr/share/texlive/texmf-dist/fonts/tfm/public/amsfonts/symbols/msam5.tfm" 1246382020 924 9904cf1d39e9767e7a3622f2a125a565 ""
@@ -199,9 +199,9 @@
   "imgs/medvarT.png" 1731609292.41883 73976 63288373ea60db125c6bd08f73a57240 ""
   "imgs/medvarX.png" 1731609272.36884 71077 967e77639bb87eefbaa5089f0435b2d3 ""
   "imgs/medvarY.png" 1731609283.46884 90743 bdaf5f34e435d3c534de8e2738608679 ""
-  "main.aux" 1731609310.33883 3022 48a6e9b1919e02bc941e9b231730d609 "pdflatex"
+  "main.aux" 1732111354.75565 3022 162a705d5fd73ffe70efc94f94dbe6d8 "pdflatex"
   "main.bbl" 0 -1 0 "bibtex main"
-  "main.tex" 1731609308.94883 14392 6b41eb5542a095c20ebc38ef54123668 ""
+  "main.tex" 1732111353.45567 17330 728b6a5fb939417dedcafc9751d933c7 ""
   (generated)
   "main.aux"
   "main.log"

@@ -74,6 +74,8 @@ class PCAAnalysis:
         return self.transformed_data
   
     def plot_primeira_component(self, coeficiente, comp, larg, num_images=3):
+        """Plota resultado da media dos dados usando apenas uma dimensão do espaço"""
+
         coeficientes = coeficiente*[-1, 0, 1]
 
         fig, axes = plt.subplots(1, 3, figsize=(12, 5))
@@ -149,6 +151,7 @@ class PCAAnalysis:
 
     
     def reconstrucion_images(self, data = None, data_transf = None):
+        """Visualiza imagens no espaço original após truncamento"""
 
         if data_transf is None or data is None:
             data = self.data
@@ -156,8 +159,6 @@ class PCAAnalysis:
             data_mean = self.mean
         else:
             data_mean = self.mean
-            # data_mean = np.mean(data, axis=0)
-            #media ou data tirando media?
 
         data_reconstructed = data_mean + np.dot(data_transf, np.transpose(self.pca_base))
 
@@ -207,9 +208,6 @@ class PCAAnalysis:
         if self.pca_base is None:
             raise ValueError("O PCA ainda não foi ajustado. Execute o método 'fit()' antes.")            
 
-        #mean = np.mean(data, axis=0)
-
-        #data_mean = data - mean
         data_mean = data - self.mean
 
         data_transformed = np.dot(data_mean, self.pca_base)

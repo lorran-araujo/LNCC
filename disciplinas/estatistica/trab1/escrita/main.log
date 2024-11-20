@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.25 (TeX Live 2023/Debian) (preloaded format=pdflatex 2024.10.16)  14 NOV 2024 15:35
+This is pdfTeX, Version 3.141592653-2.6-1.40.25 (TeX Live 2023/Debian) (preloaded format=pdflatex 2024.10.16)  20 NOV 2024 11:02
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -963,7 +963,7 @@ pdfTeX warning (ext4): destination with the same identifier (name{table.0.2}) ha
                                                   \__shipout_drop_firstpage_...
 l.188 \end{table}
                  {/usr/share/texmf/fonts/enc/dvips/lm/lm-mathex.enc}]
-<imgs/hist.png, id=42, 729.927pt x 605.6226pt>
+<imgs/hist.png, id=41, 729.927pt x 605.6226pt>
 File: imgs/hist.png Graphic file (type png)
 <use imgs/hist.png>
 Package pdftex.def Info: imgs/hist.png  used on input line 203.
@@ -984,72 +984,73 @@ l.226
        <./imgs/hist.png>]
 LaTeX Font Info:    Font shape `T1/lmtt/bx/n' in size <9> not available
 (Font)              Font shape `T1/lmtt/b/n' tried instead on input line 233.
-<imgs/medvarQ.png, id=62, 1190.2869pt x 490.7133pt>
-File: imgs/medvarQ.png Graphic file (type png)
-<use imgs/medvarQ.png>
-Package pdftex.def Info: imgs/medvarQ.png  used on input line 277.
-(pdftex.def)             Requested size: 420.84865pt x 173.49686pt.
-<imgs/medvarX.png, id=63, 1179.4464pt x 490.7133pt>
-File: imgs/medvarX.png Graphic file (type png)
-<use imgs/medvarX.png>
-Package pdftex.def Info: imgs/medvarX.png  used on input line 284.
-(pdftex.def)             Requested size: 420.84865pt x 175.09172pt.
-<imgs/medvarY.png, id=64, 1203.2955pt x 490.7133pt>
-File: imgs/medvarY.png Graphic file (type png)
-<use imgs/medvarY.png>
-Package pdftex.def Info: imgs/medvarY.png  used on input line 291.
-(pdftex.def)             Requested size: 420.84865pt x 171.62492pt.
-<imgs/medvarT.png, id=65, 1183.7826pt x 494.3268pt>
-File: imgs/medvarT.png Graphic file (type png)
-<use imgs/medvarT.png>
-Package pdftex.def Info: imgs/medvarT.png  used on input line 298.
-(pdftex.def)             Requested size: 420.84865pt x 175.73991pt.
  [5
 pdfTeX warning (ext4): destination with the same identifier (name{figure.0.2}) has been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
                                                   \__shipout_drop_firstpage_...
-l.309 \textbf{Resolução:}
-                           ] [6
+l.276 
+      ]
+<imgs/medvarQ.png, id=101, 1190.2869pt x 490.7133pt>
+File: imgs/medvarQ.png Graphic file (type png)
+<use imgs/medvarQ.png>
+Package pdftex.def Info: imgs/medvarQ.png  used on input line 279.
+(pdftex.def)             Requested size: 420.84865pt x 173.49686pt.
+<imgs/medvarX.png, id=102, 1179.4464pt x 490.7133pt>
+File: imgs/medvarX.png Graphic file (type png)
+<use imgs/medvarX.png>
+Package pdftex.def Info: imgs/medvarX.png  used on input line 286.
+(pdftex.def)             Requested size: 420.84865pt x 175.09172pt.
+<imgs/medvarY.png, id=103, 1203.2955pt x 490.7133pt>
+File: imgs/medvarY.png Graphic file (type png)
+<use imgs/medvarY.png>
+Package pdftex.def Info: imgs/medvarY.png  used on input line 293.
+(pdftex.def)             Requested size: 420.84865pt x 171.62492pt.
+<imgs/medvarT.png, id=104, 1183.7826pt x 494.3268pt>
+File: imgs/medvarT.png Graphic file (type png)
+<use imgs/medvarT.png>
+Package pdftex.def Info: imgs/medvarT.png  used on input line 300.
+(pdftex.def)             Requested size: 420.84865pt x 175.73991pt.
+ [6
 pdfTeX warning (ext4): destination with the same identifier (name{figure.0.3}) has been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
                                                   \__shipout_drop_firstpage_...
-l.309 \textbf{Resolução:}
-                           
+l.318 A
+       o observar os histogramas, podemos concluir então sobre a média amo...
 pdfTeX warning (ext4): destination with the same identifier (name{figure.0.4}) has been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
                                                   \__shipout_drop_firstpage_...
-l.309 \textbf{Resolução:}
-                           
+l.318 A
+       o observar os histogramas, podemos concluir então sobre a média amo... <./imgs/medvarQ.png> <./imgs/medvarX.png>] [7
 pdfTeX warning (ext4): destination with the same identifier (name{figure.0.5}) has been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
                                                   \__shipout_drop_firstpage_...
-l.309 \textbf{Resolução:}
-                            <./imgs/medvarQ.png> <./imgs/medvarX.png> <./imgs/medvarY.png>]
-No file main.bbl.
-[7
+l.330     \item P
+                 ara \(n = 10\), a variância amostral começa a se estabili...
 pdfTeX warning (ext4): destination with the same identifier (name{figure.0.6}) has been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
                                                   \__shipout_drop_firstpage_...
-l.323 \end{document}
-                     <./imgs/medvarT.png>] (./main.aux)
+l.330     \item P
+                 ara \(n = 10\), a variância amostral começa a se estabili... <./imgs/medvarY.png> <./imgs/medvarT.png>]
+No file main.bbl.
+[8] (./main.aux)
  ***********
 LaTeX2e <2023-11-01> patch level 1
 L3 programming layer <2020/03/25>
  ***********
  ) 
 Here is how much of TeX's memory you used:
- 22451 strings out of 474222
- 356348 string characters out of 5748732
- 2114975 words of memory out of 5000000
+ 22468 strings out of 474222
+ 356524 string characters out of 5748732
+ 2113975 words of memory out of 5000000
  44187 multiletter control sequences out of 15000+600000
- 623778 words of font info for 147 fonts, out of 8000000 for 9000
+ 624442 words of font info for 155 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
  110i,12n,107p,1064b,1501s stack positions out of 10000i,1000n,20000p,200000b,200000s
 </usr/share/texmf/fonts/type1/public/lm/lmbx10.pfb></usr/share/texmf/fonts/type1/public/lm/lmex10.pfb></usr/share/texmf/fonts/type1/public/lm/lmmi10.pfb></usr/share/texmf/fonts/type1/public/lm/lmmi7.pfb></usr/share/texmf/fonts/type1/public/lm/lmr10.pfb></usr/share/texmf/fonts/type1/public/lm/lmr12.pfb></usr/share/texmf/fonts/type1/public/lm/lmr6.pfb></usr/share/texmf/fonts/type1/public/lm/lmr7.pfb></usr/share/texmf/fonts/type1/public/lm/lmr8.pfb></usr/share/texmf/fonts/type1/public/lm/lmri10.pfb></usr/share/texmf/fonts/type1/public/lm/lmssbx10.pfb></usr/share/texmf/fonts/type1/public/lm/lmsy10.pfb></usr/share/texmf/fonts/type1/public/lm/lmtk10.pfb></usr/share/texmf/fonts/type1/public/lm/lmtt10.pfb></usr/share/texmf/fonts/type1/public/lm/lmtt9.pfb>
-Output written on main.pdf (7 pages, 633168 bytes).
+Output written on main.pdf (8 pages, 636006 bytes).
 PDF statistics:
- 211 PDF objects out of 1000 (max. 8388607)
- 156 compressed objects within 2 object streams
- 52 named destinations out of 1000 (max. 500000)
+ 215 PDF objects out of 1000 (max. 8388607)
+ 159 compressed objects within 2 object streams
+ 53 named destinations out of 1000 (max. 500000)
  42522 words of extra memory for PDF output out of 42996 (max. 10000000)
 
