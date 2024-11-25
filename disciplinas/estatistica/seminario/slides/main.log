@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.25 (TeX Live 2023/Debian) (preloaded format=pdflatex 2024.10.16)  15 NOV 2024 14:04
+This is pdfTeX, Version 3.141592653-2.6-1.40.25 (TeX Live 2023/Debian) (preloaded format=pdflatex 2024.10.16)  25 NOV 2024 11:16
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -1019,7 +1019,7 @@ No file main.bbl.
 Package biblatex Info: Reference section=0 on input line 27.
 Package biblatex Info: Reference segment=0 on input line 27.
 (./main.nav)
-<assets/img/background.png, id=28, 2228.325pt x 1626.075pt>
+<assets/img/background.png, id=40, 2228.325pt x 1626.075pt>
 File: assets/img/background.png Graphic file (type png)
 <use assets/img/background.png>
 Package pdftex.def Info: assets/img/background.png  used on input line 28.
@@ -1029,168 +1029,193 @@ Package pdftex.def Info: assets/img/background.png  used on input line 28.
 {/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map}{/usr/share/texlive/texmf-dist/fonts/enc/dvips/carlito/crlt_zisnlb.enc} <./assets/img/background.png> <./assets/img/logo_RGB.png>]
 \openout2 = `tex/example/beamerLNCC-example.aux'.
 
- (./tex/example/beamerLNCC-example.tex
-LaTeX Font Info:    Trying to load font information for U+msa on input line 9.
+ (./tex/example/beamerLNCC-example.tex (./main.toc
+LaTeX Font Info:    Trying to load font information for U+msa on input line 1.
  (/usr/share/texlive/texmf-dist/tex/latex/amsfonts/umsa.fd
 File: umsa.fd 2013/01/14 v3.01 AMS symbols A
 )
-LaTeX Font Info:    Trying to load font information for U+msb on input line 9.
+LaTeX Font Info:    Trying to load font information for U+msb on input line 1.
  (/usr/share/texlive/texmf-dist/tex/latex/amsfonts/umsb.fd
 File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 )
-LaTeX Font Info:    Trying to load font information for OT1+Caladea-TLF on input line 9.
+LaTeX Font Info:    Trying to load font information for OT1+Caladea-TLF on input line 1.
  (/usr/share/texlive/texmf-dist/tex/latex/caladea/OT1Caladea-TLF.fd
 File: OT1Caladea-TLF.fd 2014/08/17 (autoinst) Font definitions for OT1/Caladea-TLF.
 )
 LaTeX Font Info:    Font shape `OT1/Caladea-TLF/m/n' will be
-(Font)              scaled to size 10.95pt on input line 9.
+(Font)              scaled to size 10.95pt on input line 1.
 LaTeX Font Info:    Font shape `OT1/Caladea-TLF/m/n' will be
-(Font)              scaled to size 8.0pt on input line 9.
+(Font)              scaled to size 8.0pt on input line 1.
 LaTeX Font Info:    Font shape `OT1/Caladea-TLF/m/n' will be
-(Font)              scaled to size 6.0pt on input line 9.
+(Font)              scaled to size 6.0pt on input line 1.
 LaTeX Font Info:    Font shape `OT1/Caladea-TLF/m/it' will be
-(Font)              scaled to size 10.95pt on input line 9.
+(Font)              scaled to size 10.95pt on input line 1.
 LaTeX Font Info:    Font shape `OT1/Caladea-TLF/m/it' will be
-(Font)              scaled to size 8.0pt on input line 9.
+(Font)              scaled to size 8.0pt on input line 1.
 LaTeX Font Info:    Font shape `OT1/Caladea-TLF/m/it' will be
-(Font)              scaled to size 6.0pt on input line 9.
- [2
+(Font)              scaled to size 6.0pt on input line 1.
+) [2
 
-
-] (./main.toc) [3
 
  <./assets/img/Logo_RGB_negative.png>]
-LaTeX Font Info:    Trying to load font information for TS1+Crlt-OsF on input line 23.
+LaTeX Font Info:    Trying to load font information for TS1+Crlt-OsF on input line 9.
  (/usr/share/texlive/texmf-dist/tex/latex/carlito/TS1Crlt-OsF.fd
 File: TS1Crlt-OsF.fd 2022/10/05 (autoinst) Font definitions for TS1/Crlt-OsF.
-) [4
+) [3
 
-{/usr/share/texlive/texmf-dist/fonts/enc/dvips/carlito/crlt_j4hweq.enc}]
-LaTeX Font Info:    Font shape `OT1/Caladea-TLF/b/n' will be
-(Font)              scaled to size 10.95pt on input line 42.
-LaTeX Font Info:    Font shape `OT1/Caladea-TLF/b/n' will be
-(Font)              scaled to size 8.0pt on input line 42.
-LaTeX Font Info:    Font shape `OT1/Caladea-TLF/b/n' will be
-(Font)              scaled to size 6.0pt on input line 42.
- [5
+{/usr/share/texlive/texmf-dist/fonts/enc/dvips/carlito/crlt_j4hweq.enc}{/usr/share/texlive/texmf-dist/fonts/enc/dvips/caladea/cld_prieif.enc}] [4
 
-{/usr/share/texlive/texmf-dist/fonts/enc/dvips/caladea/cld_prieif.enc}]
-\openout4 = `main.vrb'.
-
- (./main.vrb) [6
+] (./main.toc) [5
 
 ]
-\openout4 = `main.vrb'.
-
- (./main.vrb) [7
-
-]
-\openout4 = `main.vrb'.
-
- (./main.vrb) [8
-
-] (./main.vrb) [9
-
-] (./main.vrb) [10
-
-] (./main.toc) [11
-
-]
+<tex/example/imgs/dados.png, id=93, 414.8298pt x 312.2064pt>
+File: tex/example/imgs/dados.png Graphic file (type png)
+<use tex/example/imgs/dados.png>
+Package pdftex.def Info: tex/example/imgs/dados.png  used on input line 38.
+(pdftex.def)             Requested size: 191.20518pt x 143.90251pt.
 LaTeX Font Info:    Font shape `OT1/Caladea-TLF/m/n' will be
-(Font)              scaled to size 5.0pt on input line 101.
-LaTeX Font Info:    Font shape `OT1/Caladea-TLF/b/n' will be
-(Font)              scaled to size 5.0pt on input line 101.
-LaTeX Font Info:    Font shape `OT1/Caladea-TLF/m/it' will be
-(Font)              scaled to size 5.0pt on input line 101.
-\openout4 = `main.vrb'.
-
- (./main.vrb) [12
-
-]
-\openout4 = `main.vrb'.
-
- (./main.vrb) [13
-
-]
-\openout4 = `main.vrb'.
-
- (./main.vrb
+(Font)              scaled to size 9.0pt on input line 38.
 LaTeX Font Info:    Font shape `OT1/Caladea-TLF/m/n' will be
-(Font)              scaled to size 9.0pt on input line 14.
-LaTeX Font Info:    Font shape `OT1/Caladea-TLF/b/n' will be
-(Font)              scaled to size 9.0pt on input line 14.
+(Font)              scaled to size 5.0pt on input line 38.
 LaTeX Font Info:    Font shape `OT1/Caladea-TLF/m/it' will be
-(Font)              scaled to size 9.0pt on input line 14.
-) [14
+(Font)              scaled to size 9.0pt on input line 38.
+LaTeX Font Info:    Font shape `OT1/Caladea-TLF/m/it' will be
+(Font)              scaled to size 5.0pt on input line 38.
+ [6
 
-] (./main.vrb) [15
-
-]
-\openout4 = `main.vrb'.
-
- (./main.vrb
-<assets/img/logo_RGB.png, id=152, 1403.99532pt x 1671.24374pt>
-File: assets/img/logo_RGB.png Graphic file (type png)
-<use assets/img/logo_RGB.png>
-Package pdftex.def Info: assets/img/logo_RGB.png  used on input line 16.
-(pdftex.def)             Requested size: 119.50279pt x 142.24509pt.
-) [16
-
- <./assets/img/logo_RGB.png>]
-\openout4 = `main.vrb'.
-
- (./main.vrb) [17
+ <./tex/example/imgs/dados.png>]
+LaTeX Font Info:    Font shape `OT1/Caladea-TLF/b/n' will be
+(Font)              scaled to size 10.95pt on input line 58.
+LaTeX Font Info:    Font shape `OT1/Caladea-TLF/b/n' will be
+(Font)              scaled to size 8.0pt on input line 58.
+LaTeX Font Info:    Font shape `OT1/Caladea-TLF/b/n' will be
+(Font)              scaled to size 6.0pt on input line 58.
+ [7
 
 ]
-<assets/img/background_negative.png, id=164, 2228.325pt x 1626.075pt>
-File: assets/img/background_negative.png Graphic file (type png)
-<use assets/img/background_negative.png>
-Package pdftex.def Info: assets/img/background_negative.png  used on input line 233.
-(pdftex.def)             Requested size: 350.89505pt x 256.0748pt.
+<tex/example/imgs/medias_sep.png, id=112, 413.74574pt x 328.22626pt>
+File: tex/example/imgs/medias_sep.png Graphic file (type png)
+<use tex/example/imgs/medias_sep.png>
+Package pdftex.def Info: tex/example/imgs/medias_sep.png  used on input line 82.
+(pdftex.def)             Requested size: 179.25114pt x 142.20131pt.
+LaTeX Font Info:    Font shape `OT1/Caladea-TLF/b/n' will be
+(Font)              scaled to size 9.0pt on input line 82.
+LaTeX Font Info:    Font shape `OT1/Caladea-TLF/b/n' will be
+(Font)              scaled to size 5.0pt on input line 82.
+
+Overfull \vbox (16.25764pt too high) detected at line 82
+ []
+
+[8
+
+ <./tex/example/imgs/medias_sep.png>] [9
+
+] [10
+
+] [11
+
+]
+File: tex/example/imgs/medias_sep.png Graphic file (type png)
+<use tex/example/imgs/medias_sep.png>
+Package pdftex.def Info: tex/example/imgs/medias_sep.png  used on input line 153.
+(pdftex.def)             Requested size: 179.25114pt x 142.20131pt.
+<tex/example/imgs/sep_real.png, id=136, 420.3705pt x 330.033pt>
+File: tex/example/imgs/sep_real.png Graphic file (type png)
+<use tex/example/imgs/sep_real.png>
+Package pdftex.def Info: tex/example/imgs/sep_real.png  used on input line 153.
+(pdftex.def)             Requested size: 179.25114pt x 140.73302pt.
+ [12
+
+ <./tex/example/imgs/sep_real.png>]
+LaTeX Font Info:    Font shape `OT1/Caladea-TLF/b/it' will be
+(Font)              scaled to size 10.95pt on input line 171.
+LaTeX Font Info:    Font shape `OT1/Caladea-TLF/b/it' will be
+(Font)              scaled to size 8.0pt on input line 171.
+LaTeX Font Info:    Font shape `OT1/Caladea-TLF/b/it' will be
+(Font)              scaled to size 6.0pt on input line 171.
+ [13
+
+] [14
+
+] (./main.toc) [15
+
+] [16
+
+] (./main.toc) [17
+
+]
+File: tex/example/imgs/dados.png Graphic file (type png)
+<use tex/example/imgs/dados.png>
+Package pdftex.def Info: tex/example/imgs/dados.png  used on input line 221.
+(pdftex.def)             Requested size: 179.25114pt x 134.90355pt.
  [18
 
- <./assets/img/background_negative.png>]
-\openout4 = `main.vrb'.
-
- (./main.vrb) [19
-
 ]
-LaTeX Font Info:    Trying to load font information for OMS+cmtt on input line 260.
-LaTeX Font Info:    No file OMScmtt.fd. on input line 260.
+<tex/example/imgs/proj_norm.png, id=187, 420.6114pt x 328.8285pt>
+File: tex/example/imgs/proj_norm.png Graphic file (type png)
+<use tex/example/imgs/proj_norm.png>
+Package pdftex.def Info: tex/example/imgs/proj_norm.png  used on input line 238.
+(pdftex.def)             Requested size: 179.25114pt x 140.1341pt.
+<tex/example/imgs/lda-norm.png, id=188, 462.528pt x 172.7253pt>
+File: tex/example/imgs/lda-norm.png Graphic file (type png)
+<use tex/example/imgs/lda-norm.png>
+Package pdftex.def Info: tex/example/imgs/lda-norm.png  used on input line 238.
+(pdftex.def)             Requested size: 179.25114pt x 66.93826pt.
+ [19
 
+ <./tex/example/imgs/proj_norm.png> <./tex/example/imgs/lda-norm.png>]
+<tex/example/imgs/dados_nao_norm.png, id=197, 414.8298pt x 312.2064pt>
+File: tex/example/imgs/dados_nao_norm.png Graphic file (type png)
+<use tex/example/imgs/dados_nao_norm.png>
+Package pdftex.def Info: tex/example/imgs/dados_nao_norm.png  used on input line 270.
+(pdftex.def)             Requested size: 179.25114pt x 134.90355pt.
 
-LaTeX Font Warning: Font shape `OMS/cmtt/m/n' undefined
-(Font)              using `OMS/cmsy/m/n' instead
-(Font)              for symbol `textbraceleft' on input line 260.
+Overfull \vbox (8.99268pt too high) detected at line 270
+ []
 
-<assets/img/background_alternative.jpg, id=178, 4641.34pt x 3481.005pt>
-File: assets/img/background_alternative.jpg Graphic file (type jpg)
-<use assets/img/background_alternative.jpg>
-Package pdftex.def Info: assets/img/background_alternative.jpg  used on input line 260.
-(pdftex.def)             Requested size: 341.4283pt x 256.0748pt.
 [20
 
- <./assets/img/background_alternative.jpg>]
-LaTeX Font Info:    Font shape `OT1/Caladea-TLF/m/n' will be
-(Font)              scaled to size 10.0pt on input line 280.
-LaTeX Font Info:    Trying to load font information for U+yfrak on input line 280.
- (/usr/share/texlive/texmf-dist/tex/latex/mfnfss/uyfrak.fd
-File: Uyfrak.fd 2000/08/02 v2.1k YH Fraktur definitions
-) [21
+ <./tex/example/imgs/dados_nao_norm.png>]
+<tex/example/imgs/lda_nao_norm.png, id=204, 466.1415pt x 172.7253pt>
+File: tex/example/imgs/lda_nao_norm.png Graphic file (type png)
+<use tex/example/imgs/lda_nao_norm.png>
+Package pdftex.def Info: tex/example/imgs/lda_nao_norm.png  used on input line 287.
+(pdftex.def)             Requested size: 179.25114pt x 66.42169pt.
+<tex/example/imgs/proj_nao_norm.png, id=205, 414.8298pt x 328.8285pt>
+File: tex/example/imgs/proj_nao_norm.png Graphic file (type png)
+<use tex/example/imgs/proj_nao_norm.png>
+Package pdftex.def Info: tex/example/imgs/proj_nao_norm.png  used on input line 287.
+(pdftex.def)             Requested size: 179.25114pt x 142.0859pt.
+ [21
 
-]
-\openout4 = `main.vrb'.
+ <./tex/example/imgs/lda_nao_norm.png> <./tex/example/imgs/proj_nao_norm.png>]
+<tex/example/imgs/dados_breast.png, id=213, 406.1574pt x 328.8285pt>
+File: tex/example/imgs/dados_breast.png Graphic file (type png)
+<use tex/example/imgs/dados_breast.png>
+Package pdftex.def Info: tex/example/imgs/dados_breast.png  used on input line 318.
+(pdftex.def)             Requested size: 179.25114pt x 145.1215pt.
+ [22
 
- (./main.vrb) [22
+ <./tex/example/imgs/dados_breast.png>]
+<tex/example/imgs/lda_breast.png, id=220, 462.528pt x 172.7253pt>
+File: tex/example/imgs/lda_breast.png Graphic file (type png)
+<use tex/example/imgs/lda_breast.png>
+Package pdftex.def Info: tex/example/imgs/lda_breast.png  used on input line 325.
+(pdftex.def)             Requested size: 358.50229pt x 133.88443pt.
+ [23
 
-] (./main.toc) [23
+ <./tex/example/imgs/lda_breast.png>] (./main.toc) [24
 
-] [24
+] [25
+
+] (./main.toc) [26
+
+] [27
 
 ])
 LaTeX Font Info:    Font shape `OT1/Crlt-OsF/m/sl' in size <14.4> not available
 (Font)              Font shape `OT1/Crlt-OsF/m/it' tried instead on input line 33.
- [25
+ [28
 
 
 
@@ -1209,29 +1234,25 @@ LaTeX Font Info:    Font shape `OT1/Crlt-OsF/m/sl' in size <14.4> not available
 LaTeX2e <2023-11-01> patch level 1
 L3 programming layer <2024-01-22>
  ***********
-
-
-LaTeX Font Warning: Some font shapes were not available, defaults substituted.
-
 Package rerunfilecheck Info: File `main.out' has not changed.
-(rerunfilecheck)             Checksum: CFB8EA9DD86BD89D9A0C7F7371C78793;299.
+(rerunfilecheck)             Checksum: 8B5AEB6F029734F94DCE7D01DF1D4D72;748.
 Package logreq Info: Writing requests to 'main.run.xml'.
 \openout1 = `main.run.xml'.
 
  ) 
 Here is how much of TeX's memory you used:
- 32701 strings out of 474222
- 648929 string characters out of 5748732
- 1936975 words of memory out of 5000000
- 54255 multiletter control sequences out of 15000+600000
- 633515 words of font info for 103 fonts, out of 8000000 for 9000
+ 32730 strings out of 474222
+ 649363 string characters out of 5748732
+ 1934975 words of memory out of 5000000
+ 54292 multiletter control sequences out of 15000+600000
+ 638271 words of font info for 110 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 128i,15n,123p,743b,1070s stack positions out of 10000i,1000n,20000p,200000b,200000s
-</usr/share/texlive/texmf-dist/fonts/type1/huerta/caladea/Caladea-Bold.pfb></usr/share/texlive/texmf-dist/fonts/type1/huerta/caladea/Caladea-Italic.pfb></usr/share/texlive/texmf-dist/fonts/type1/huerta/caladea/Caladea-Regular.pfb></usr/share/texlive/texmf-dist/fonts/type1/google/carlito/Crlt-Bold.pfb></usr/share/texlive/texmf-dist/fonts/type1/google/carlito/Crlt-Italic.pfb></usr/share/texlive/texmf-dist/fonts/type1/google/carlito/Crlt-Regular.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy8.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy9.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmtt10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmtt9.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/symbols/msam10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/symbols/msbm10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/yfonts-t1/yfrak.pfb>
-Output written on main.pdf (25 pages, 4457294 bytes).
+ 128i,13n,123p,743b,1012s stack positions out of 10000i,1000n,20000p,200000b,200000s
+</usr/share/texlive/texmf-dist/fonts/type1/huerta/caladea/Caladea-Bold.pfb></usr/share/texlive/texmf-dist/fonts/type1/huerta/caladea/Caladea-Italic.pfb></usr/share/texlive/texmf-dist/fonts/type1/huerta/caladea/Caladea-Regular.pfb></usr/share/texlive/texmf-dist/fonts/type1/google/carlito/Crlt-Bold.pfb></usr/share/texlive/texmf-dist/fonts/type1/google/carlito/Crlt-Italic.pfb></usr/share/texlive/texmf-dist/fonts/type1/google/carlito/Crlt-Regular.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmex10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi8.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmmib10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy8.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/symbols/msam10.pfb>
+Output written on main.pdf (28 pages, 640236 bytes).
 PDF statistics:
- 301 PDF objects out of 1000 (max. 8388607)
- 217 compressed objects within 3 object streams
- 54 named destinations out of 1000 (max. 500000)
- 121 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 344 PDF objects out of 1000 (max. 8388607)
+ 249 compressed objects within 3 object streams
+ 63 named destinations out of 1000 (max. 500000)
+ 162 words of extra memory for PDF output out of 10000 (max. 10000000)
 

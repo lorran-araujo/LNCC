@@ -1,3 +1,6 @@
-\beamer@sectionintoc {1}{Introduction}{3}{0}{1}
-\beamer@sectionintoc {2}{Personalization}{11}{0}{2}
-\beamer@sectionintoc {3}{Summary}{23}{0}{3}
+\beamer@sectionintoc {1}{Introdução}{2}{0}{1}
+\beamer@sectionintoc {2}{Como funciona (2D)}{5}{0}{2}
+\beamer@sectionintoc {3}{Hipóteses Implícitas}{15}{0}{3}
+\beamer@sectionintoc {4}{Aplicações}{17}{0}{4}
+\beamer@sectionintoc {5}{Considerações Finais}{24}{0}{5}
+\beamer@sectionintoc {6}{Referências}{26}{0}{6}
