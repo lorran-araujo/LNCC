@@ -1,12 +1,12 @@
 # Fdb version 4
-["biber main"] 0 "main.bcf" "main.bbl" "main" 1732544177.7619 0
+["biber main"] 0 "main.bcf" "main.bbl" "main" 1732546261.86575 0
   "main.bcf" 0 -1 0 "pdflatex"
   "referencias.bib" 0 -1 0 ""
   (generated)
   "main.bbl"
   "main.blg"
   (rewritten before read)
-["pdflatex"] 1732544175.35361 "/home/lorran/github/LNCC/disciplinas/estatistica/seminario/slides/main.tex" "main.pdf" "main" 1732544177.7622 0
+["pdflatex"] 1732546259.04527 "/home/lorran/github/LNCC/disciplinas/estatistica/seminario/slides/main.tex" "main.pdf" "main" 1732546261.8661 0
   "/etc/texmf/web2c/texmf.cnf" 1729106050.91823 475 c0e671620eb5563b2130f56340a5fde8 ""
   "/home/lorran/github/LNCC/disciplinas/estatistica/seminario/slides/main.tex" 1732297609.38168 850 0a40fea80599da123c861bfc7dd10616 ""
   "/usr/share/texlive/texmf-dist/fonts/enc/dvips/caladea/cld_prieif.enc" 1408564761 2909 0d9a00ce3f1df725b182b15dd24bf4a5 ""
@@ -276,15 +276,15 @@
   "assets/img/logo_RGB.png" 1731688131.85608 67194 6dc2f609704ddf229909c74effef9d4c ""
   "assets/style/LNCCcolor.sty" 1731688131.60359 3072 43d65e671071a2b6e79253e87f0fd280 ""
   "assets/style/beamerthemeLNCC.sty" 1731688131.61921 10414 a3c1ae15793f9c2d0e5305e5236b74cc ""
-  "main.aux" 1732544177.58486 861 e59c58eca1629ec09ae503ca378b47cf "pdflatex"
+  "main.aux" 1732546261.64754 861 e59c58eca1629ec09ae503ca378b47cf "pdflatex"
   "main.bbl" 0 -1 0 "biber main"
-  "main.nav" 1732544177.59486 3773 4636a927696dc830c0205a96fa54159f "pdflatex"
-  "main.out" 1732544177.58486 748 8b5aeb6f029734f94dce7d01df1d4d72 "pdflatex"
-  "main.run.xml" 1732544177.59486 2306 99ee891a89ab4a2e31fb65124543f1d9 "pdflatex"
+  "main.nav" 1732546261.64754 3773 4636a927696dc830c0205a96fa54159f "pdflatex"
+  "main.out" 1732546261.64754 748 8b5aeb6f029734f94dce7d01df1d4d72 "pdflatex"
+  "main.run.xml" 1732546261.64754 2306 99ee891a89ab4a2e31fb65124543f1d9 "pdflatex"
   "main.tex" 1732297609.38168 850 0a40fea80599da123c861bfc7dd10616 ""
-  "main.toc" 1732544177.59486 318 36c8c726e67ef14bcaa5614bd624354c "pdflatex"
-  "tex/example/beamerLNCC-example.aux" 1732544177.57486 8948 7264a35988d1489b2ec72221781f3f28 "pdflatex"
-  "tex/example/beamerLNCC-example.tex" 1732544175.08486 11874 8262a358e09caf08e8ab14095ac12c4b ""
+  "main.toc" 1732546261.64754 318 36c8c726e67ef14bcaa5614bd624354c "pdflatex"
+  "tex/example/beamerLNCC-example.aux" 1732546261.62754 8948 7264a35988d1489b2ec72221781f3f28 "pdflatex"
+  "tex/example/beamerLNCC-example.tex" 1732546258.71736 11860 1cd0e395e00bb6652cb583bbda540c39 ""
   "tex/example/imgs/dados.png" 1732294276.29189 44478 f91b8ddeb612ae7c10b0681f74c57c02 ""
   "tex/example/imgs/dados_breast.png" 1732297323.1617 41400 73a0c46ad97f70e8f3a10f0aaab90c97 ""
   "tex/example/imgs/dados_nao_norm.png" 1732541200.83617 36879 890455eebd16129a9db00ba0c68a87f6 ""
