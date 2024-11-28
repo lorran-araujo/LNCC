@@ -76,7 +76,8 @@ class PCAAnalysis:
     def plot_primeira_component(self, coeficiente, comp, larg, num_images=3):
         """Plota resultado da media dos dados usando apenas uma dimensão do espaço"""
 
-        coeficientes = coeficiente*[-1, 0, 1]
+        coeficientes = [x * coeficiente for x in [-1,0,1]]
+        #coeficientes = coeficiente*[-1, 0, 1]
 
         fig, axes = plt.subplots(1, 3, figsize=(12, 5))
 
@@ -88,7 +89,7 @@ class PCAAnalysis:
 
         plt.show()
     
-    def plot_explained_variance(self):
+    def plot_explained_variance(self, prop = 0.95):
         """Plota o espectro de variância explicada por cada componente principal."""
 
         if self.eigenvalues is None:
@@ -97,9 +98,9 @@ class PCAAnalysis:
         variancia_explicada = self.eigenvalues / np.sum(self.eigenvalues)
         variancia_explicada_acumulada = np.cumsum(variancia_explicada)
 
-        self.n_components = np.argmax((variancia_explicada_acumulada) >= 0.95) + 1
+        self.n_components = np.argmax((variancia_explicada_acumulada) >= prop) + 1
 
-        print(f"Número de componentes que representam 95% da variância dos dados: {self.n_components}")
+        print(f"Número de componentes que representam {prop*100:.2f}% da variância dos dados: {self.n_components}")
 
         plt.figure(figsize=(10, 5))
         plt.bar(range(len(variancia_explicada)), variancia_explicada, alpha=0.6, label='Variância Explicada Individual')
