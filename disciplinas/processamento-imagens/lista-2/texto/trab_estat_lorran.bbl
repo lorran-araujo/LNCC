@@ -1,0 +1,64 @@
+\begin{thebibliography}{10}
+
+\bibitem{pillow}
+{\sc Contributors, P.}
+\newblock Pillow documentation.
+\newblock \url{https://pillow.readthedocs.io/}, 2024.
+\newblock Accessed: 2024-08-22.
+
+\bibitem{numpy}
+{\sc Developers, N.}
+\newblock Numpy documentation.
+\newblock \url{https://numpy.org/doc/}, 2024.
+\newblock Accessed: 2024-08-22.
+
+\bibitem{jain}
+{\sc Jain, A.~K.}
+\newblock {\em Fundamentals of Digital Image Processing}.
+\newblock Prentice Hall, Englewood Cliffs, NJ, 1989.
+
+\bibitem{scikit-learn}
+{\sc learn Developers, S.}
+\newblock Scikit-learn documentation.
+\newblock \url{https://scikit-learn.org/stable/}, 2024.
+\newblock Accessed: 2024-08-22.
+
+\bibitem{miranda2023abordagens}
+{\sc Miranda, L. C.~P.}
+\newblock Abordagens computacionais para calcular componentes principais ponderadas com aplica{\c{c}}{\~o}es em an{\'a}lise de imagens de faces humanas, 2023.
+
+\bibitem{opencv}
+{\sc {OpenCV Team}}.
+\newblock Opencv documentation.
+\newblock \url{https://docs.opencv.org/}.
+\newblock Accessed: 2024-08-22.
+
+\bibitem{matplotlib}
+{\sc Team, M.~D.}
+\newblock Matplotlib documentation.
+\newblock \url{https://matplotlib.org/stable/contents.html}, 2024.
+\newblock Accessed: 2024-08-22.
+
+\bibitem{FEI}
+{\sc Thomaz, C.~E.}
+\newblock Fei face database.
+\newblock \url{https://fei.edu.br/~cet/facedatabase.html}, 2024.
+\newblock Accessed: 2024-08-14.
+
+\bibitem{scikit-image}
+{\sc van~der Walt, S., Schönberger, J., Nunez-Iglesias, J., Boulogne, F., Warner, J., Yager, N., Gouillart, E., Yu, T., and the scikit-image contributors}.
+\newblock {\em scikit-image: Image processing in Python}, 2014.
+\newblock Accessed: 2024-11-27.
+
+\bibitem{scipy}
+{\sc Virtanen, P., Gommers, R., Oliphant, T., Haberland, M., Reddy, T., Cournapeau, D., Burovski, E., Peterson, P., Weckesser, W., Bright, J., van~der Walt, S., Brett, M., Wilson, J., Millman, K., Mayorov, N., Nelson, A., Jones, E., Kern, R., Larson, E., Carey, C., Polat, I., Feng, Y., Moore, E., Vand~erPlas, J., Laxalde, D., Perktold, J., Cimrman, R., Henriksen, I., Quintero, E., Harris, C., Archibald, A., Ribeiro, A., Pedregosa, F., van Mulbregt, P., and Contributors, S.~.}
+\newblock {\em SciPy: Open source scientific tools for Python}, 2020.
+\newblock Accessed: 2024-11-27.
+
+\bibitem{seaborn}
+{\sc Waskom, M., et~al.}
+\newblock Seaborn: statistical data visualization.
+\newblock \url{https://seaborn.pydata.org/}, 2024.
+\newblock Accessed: 2024-08-22.
+
+\end{thebibliography}

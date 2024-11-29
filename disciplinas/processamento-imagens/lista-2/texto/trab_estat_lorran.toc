@@ -1,0 +1,7 @@
+\babel@toc {brazil}{}\relax 
+\contentsline {section}{\numberline {1}\textbf {Introdução}}{2}{section.1}%
+\contentsline {section}{\numberline {2}\textbf {Questão 1}}{2}{section.2}%
+\contentsline {section}{\numberline {3}\textbf {Questão 2}}{5}{section.3}%
+\contentsline {section}{\numberline {4}\textbf {Questão 3}}{10}{section.4}%
+\contentsline {section}{\numberline {5}Questão 4}{13}{section.5}%
+\contentsline {section}{\numberline {6}Questão 5}{17}{section.6}%

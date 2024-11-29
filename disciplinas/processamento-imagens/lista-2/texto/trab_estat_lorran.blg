@@ -1,48 +1,51 @@
 This is BibTeX, Version 0.99d (TeX Live 2023/Debian)
 Capacity: max_strings=200000, hash_size=200000, hash_prime=170003
 The top-level auxiliary file: trab_estat_lorran.aux
-I found no \citation commands---while reading file trab_estat_lorran.aux
-I found no \bibdata command---while reading file trab_estat_lorran.aux
-I found no \bibstyle command---while reading file trab_estat_lorran.aux
-You've used 0 entries,
-            0 wiz_defined-function locations,
-            83 strings with 508 characters,
-and the built_in function-call counts, 0 in all, are:
-= -- 0
-> -- 0
+The style file: acm.bst
+Illegal, another \bibstyle command---line 10 of file trab_estat_lorran.aux
+ : \bibstyle
+ :          {acm}
+I'm skipping whatever remains of this command
+Database file #1: Bibliografia.bib
+You've used 11 entries,
+            2253 wiz_defined-function locations,
+            578 strings with 5761 characters,
+and the built_in function-call counts, 3749 in all, are:
+= -- 317
+> -- 292
 < -- 0
-+ -- 0
-- -- 0
-* -- 0
-:= -- 0
-add.period$ -- 0
-call.type$ -- 0
-change.case$ -- 0
++ -- 119
+- -- 108
+* -- 267
+:= -- 668
+add.period$ -- 39
+call.type$ -- 11
+change.case$ -- 83
 chr.to.int$ -- 0
-cite$ -- 0
-duplicate$ -- 0
-empty$ -- 0
-format.name$ -- 0
-if$ -- 0
+cite$ -- 11
+duplicate$ -- 97
+empty$ -- 246
+format.name$ -- 108
+if$ -- 735
 int.to.chr$ -- 0
-int.to.str$ -- 0
-missing$ -- 0
-newline$ -- 0
-num.names$ -- 0
-pop$ -- 0
-preamble$ -- 0
-purify$ -- 0
+int.to.str$ -- 11
+missing$ -- 2
+newline$ -- 64
+num.names$ -- 22
+pop$ -- 124
+preamble$ -- 1
+purify$ -- 75
 quote$ -- 0
-skip$ -- 0
+skip$ -- 69
 stack$ -- 0
-substring$ -- 0
-swap$ -- 0
+substring$ -- 55
+swap$ -- 24
 text.length$ -- 0
 text.prefix$ -- 0
 top$ -- 0
-type$ -- 0
+type$ -- 42
 warning$ -- 0
-while$ -- 0
-width$ -- 0
-write$ -- 0
-(There were 3 error messages)
+while$ -- 22
+width$ -- 13
+write$ -- 124
+(There was 1 error message)
