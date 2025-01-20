@@ -135,3 +135,5 @@ disciplinas/processamento-imagens/trab-final/oxford_pet_dataset/annotations/._tr
 *.jpg
 pesquisa/test_seg/oxford_pet_dataset/annotations/trimaps/Abyssinian_92.png
 *.png
+pesquisa/test_deep/database/cats_and_dogs_filtered.zip
+pesquisa/test_deep/database/cats_and_dogs_filtered.zip
