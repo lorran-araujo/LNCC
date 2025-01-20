@@ -134,3 +134,4 @@ disciplinas/processamento-imagens/trab-final/oxford_pet_dataset/images/Abyssinia
 disciplinas/processamento-imagens/trab-final/oxford_pet_dataset/annotations/._trimaps
 *.jpg
 pesquisa/test_seg/oxford_pet_dataset/annotations/trimaps/Abyssinian_92.png
+*.png
