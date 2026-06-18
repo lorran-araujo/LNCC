@@ -1,6 +1,6 @@
-# Materiais do Mestrado
+# Materiais do Mestrado/Doutorado
 
-Este repositório contém materiais, notas e recursos utilizados ao longo do meu curso de mestrado em Modelagem Computacional no Laboratório de Computação Científica (LNCC). O objetivo é organizar e compartilhar tudo o que foi aprendido e desenvolvido durante o programa.
+Este repositório contém materiais, notas e recursos utilizados ao longo do meu curso de mestrado e doutorado em Modelagem Computacional no Laboratório de Computação Científica (LNCC). O objetivo é organizar e compartilhar tudo o que foi aprendido e desenvolvido durante o programa.
 
 ## Estrutura do Repositório
 
