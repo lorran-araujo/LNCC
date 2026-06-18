@@ -1,0 +1,212 @@
+\documentclass[aspectratio=169, 11pt]{beamer}
+\usepackage[utf8]{inputenc}
+\usepackage[portuguese]{babel}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{booktabs}
+\usepackage{graphicx}
+\usepackage{tcolorbox}
+
+% --- Customização de Cores e Estilo (Paleta Acadêmica e Moderna) ---
+\usetheme{Boadilla}
+\usecolortheme{whale}
+
+\definecolor{darkblue}{RGB}{29, 53, 87}
+\definecolor{lightblue}{RGB}{69, 123, 157}
+\definecolor{accentbg}{RGB}{241, 250, 238}
+
+\setbeamercolor{palette primary}{bg=darkblue, fg=white}
+\setbeamercolor{palette secondary}{bg=lightblue, fg=white}
+\setbeamercolor{palette tertiary}{bg=darkblue, fg=white}
+\setbeamercolor{structure}{fg=darkblue}
+\setbeamercolor{title}{fg=white, bg=darkblue}
+
+% Remove símbolos de navegação padrão do beamer
+\setbeamertemplate{navigation symbols}{}
+
+% --- Informações do Título ---
+\title[Estudo Dirigido: Clássico-Quântico]{Análise de Abordagens Clássico-Quânticas no Contexto da Inteligência Artificial Aplicadas ao Processamento de Imagens}
+\subtitle{Apresentação de Conclusão de Estudo Dirigido}
+\author[Lorran de A. D. Soares]{Lorran de Araújo Durães Soares}
+\institute[LNCC]{Laboratório Nacional de Computação Científica --- LNCC}
+\date{\today}
+
+\begin{document}
+
+% Slide 1: Capa
+\begin{frame}[plain]
+    \titlepage
+\end{frame}
+
+% Slide 2: Introdução e Objetivos
+\begin{frame}{Introdução e Objetivos}
+    \begin{tcolorbox}[colback=accentbg, colframe=darkblue, title=Objetivo Principal]
+        Introduzir os conceitos fundamentais de \textbf{Computação Quântica} no contexto de \textbf{Deep Learning} para mapear e identificar lacunas na literatura, focando principalmente no domínio do processamento e análise de imagens.
+    \end{tcolorbox}
+    
+    \vspace{0.3cm}
+    \textbf{Principais vertentes de interesse:}
+    \begin{itemize}
+        \item Modelos aplicados à \textbf{segmentação semântica} de imagens.
+        \item Desafios práticos e cenários complexos (ex: dados de \textbf{Sensoriamento Remoto}).
+        \item Transição teórica entre abordagens clássicas e novos paradigmas quânticos.
+    \end{itemize}
+\end{frame}
+
+% Slide 3: Fundamentos Matemáticos Estudados (Álgebra Linear)
+\begin{frame}{Fundamentos de Álgebra Linear Aplicada}
+    O entendimento da mecânica quântica computacional foi consolidado através do estudo teórico rigoroso e da realização de exercícios práticos cobrindo os seguintes tópicos:
+    
+    \vspace{0.2cm}
+    \begin{columns}[T]
+        \begin{column}{0.5\textwidth}
+            \begin{itemize}
+                \item Base e independência linear
+                \item Operadores lineares e matrizes
+                \item Matrizes de Pauli ($\sigma_x, \sigma_y, \sigma_z$)
+                \item Produtos internos e espaços vetoriais
+            \end{itemize}
+        \end{column}
+        \begin{column}{0.5\textwidth}
+            \begin{itemize}
+                \item Autovalores e autovetores
+                \item Operadores Hermitianos e Adjuntos
+                \item Produto Tensorial ($\otimes$)
+                \item Funções operador, comutador e anti-comutador
+            \end{itemize}
+        \end{column}
+    \end{columns}
+    \vspace{0.4cm}
+    \centering
+    \textit{\small O aporte conceitual básico fundamentou-se na resolução dirigida de problemas analíticos.}
+\end{frame}
+
+% Slide 4: Ciclo de Seminários Temáticos
+\begin{frame}{Ciclo de Seminários Realizados}
+    Com o intuito de construir a base conceitual necessária para decodificar artigos modernos da interseção IA-Quântica, foram conduzidos seminários sobre:
+    
+    \vspace{0.3cm}
+    \begin{itemize}
+        \item \textbf{Redes Neurais Convencionais:} Estruturas básicas de Deep Learning.
+        \item \textbf{Redes Convolucionais (CNNs), Transformada de Fourier e Aplicações Quânticas:} Filtragem espacial e sua contrapartida quântica.
+        \item \textbf{Generative Adversarial Networks (GANs):} Modelagem gerativa aplicada.
+        \item \textbf{Mecanismos de Atenção e Transformers:} O estado da arte clássico em visão computacional (ex: \textit{Vision Transformers}).
+    \end{itemize}
+\end{frame}
+
+% Slide 5: Exploração da Literatura (Artigos Estudados)
+\begin{frame}{Exploração da Literatura}
+    Análise crítica e mapeamento dos artigos da fronteira do conhecimento:
+    
+    \vspace{0.3cm}
+    \begin{itemize}
+        \item \textbf{HQViT (Hybrid Quantum Vision Transformer):}
+        \begin{itemize}
+            \item \textit{Objetivo:} Investigar a integração de circuitos quânticos parametrizados (PQCs) atuando conjuntamente com arquiteturas Vision Transformers (ViTs).
+            \item \textit{Foco:} Avaliar a viabilidade de compressão/mapeamento de dados em espaços de Hilbert para representação de imagens estruturadas.
+        \end{itemize}
+        \vfill
+        \item \textbf{Discussão da Literatura Correlata:}
+        \begin{itemize}
+            \item Levantamento das tendências de design de blocos quânticos acoplados a backbones de deep learning clássico.
+        \end{itemize}
+    \end{itemize}
+\end{frame}
+
+% Slide 6: Conclusões Obtidas
+\begin{frame}{Conclusões do Estudo Dirigido}
+    \begin{itemize}
+        \item \textbf{O Gargalo do Hardware Atual (Era NISQ):}
+        \begin{itemize}
+            \item Nas áreas de processamento de imagens, ainda não supera o estado da arte atual da literatura, alcançados pelos modelos Transformers e Modelos Fundacionais.
+            \item A computação quântica pura enfrenta grandes limitações para escalar em tarefas complexas de predição densa pixel-a-pixel (\textbf{segmentação semântica}).
+            \item O alto volume de dados exige muitos qubits, agravando problemas de ruído e asfixia de gradientes (\textit{Barren Plateaus}) na otimização.
+        \end{itemize}
+        \vfill
+        \item \textbf{Direcionamento para Mecanismos Híbridos:}
+        \begin{itemize}
+            \item O foco atual da literatura está no design de arquiteturas híbridas. Utiliza-se um número razoável de qubits para acelerar ou substituir gargalos computacionais clássicos específicos, explorando eficientemente a vantagem quântica local.
+            \item Estudos mais específicos tem alcançado melhores resultados, como versões Quânticas da UNet.
+        \end{itemize}
+    \end{itemize}
+\end{frame}
+
+% Slide 7: Possibilidades de Contribuição Acadêmica
+\begin{frame}{Oportunidades de Contribuição Científica}
+    A partir das lacunas mapeadas, foram identificadas duas principais frentes abertas:
+    
+    \vspace{0.2cm}
+    \begin{block}{1. Arquiteturas Híbridas de Baixa Dimensionalidade Quântica}
+        Desenvolver e aplicar estratégias que consigam lidar com tarefas de alta complexidade dimensional (como segmentação densa) utilizando poucos qubits estruturados.
+    \end{block}
+    
+    \begin{block}{2. Aprendizado Semi-Supervisionado Quântico}
+        Abordagem pouquíssimo explorada na literatura de Quantum ML. Há um forte potencial para adaptar e integrar os pilares estudados no Mestrado, tais como:
+        \begin{itemize}
+            \item Aprendizado por \textbf{Consistência} em representações clássico-quânticas.
+            \item Estratégias de \textbf{Contraste} aplicadas a espaços latentes quânticos.
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+% Slide 8: Diretrizes Acadêmicas e Linhas de Ação Futura
+% Slide 8: Diretrizes Acadêmicas e Linhas de Ação Futura
+% \begin{frame}{Diretrizes para Continuidade da Pesquisa}
+
+% Para os desdobramentos pós-estudo dirigido, mapeamos três linhas estratégicas considerando \textbf{lacunas reais da literatura} e \textbf{viabilidade de execução}:
+
+% \vspace{0.15cm}
+
+% \begin{enumerate}
+
+%     \item \textbf{Integração Quântica no Estado da Arte Clássico}
+%     \begin{itemize}
+%         \item Investigar arquiteturas topo de linha (Mamba, SegFormer, SAM) em segmentação semântica de sensoriamento remoto.
+%         \item \textcolor{orange}{\textbf{Limitação:}} HQF-Net e HQ-UNet (CVPR'26) superam apenas baselines fracos (U-Net); ficam atrás de Transformer/Mamba puros nos mesmos benchmarks.
+%         \item \textcolor{red}{\textbf{Dificuldade:}} Circuitos quânticos rodam em \textit{simuladores clássicos} (era NISQ); ganho real em hardware quântico ainda não demonstrado em imagens de alta dimensão.
+%     \end{itemize}
+
+%     \vfill
+
+%     \item \textbf{Regimes de Escassez de Rótulos com Circuitos Parametrizados}
+%     \begin{itemize}
+%         \item Avaliar \textit{few-shot} e aprendizado semi-supervisionado em visão computacional para sensoriamento remoto.
+%         \item \textcolor{orange}{\textbf{Limitação:}} Literatura de QML em \textit{few-shot} é escassa; modelos clássicos (SAM + adaptadores, SegFormer com \textit{prompt tuning}) já dominam esse cenário.
+%         \item \textcolor{red}{\textbf{Dificuldade:}} Justificar vantagem quântica sobre métodos de fundação pré-treinados exige experimentos controlados de alto custo computacional.
+%     \end{itemize}
+
+%     \vfill
+% \end{enumerate}
+
+% \end{frame}
+
+% \begin{frame}
+%     \begin{itemize}
+%         \item \textbf{{\color{teal}Proposta Acessível:} Operadores Quânticos em Módulos de Atenção Leves}
+%         \begin{itemize}
+%             \item Inserir circuitos parametrizados \textit{shallow} nos mecanismos de atenção de redes leves (ex.: MobileViT, EfficientSAM) para segmentação em bordas e regiões ambíguas.
+%             \item \textcolor{teal}{\textbf{Vantagem:}} Componente quântico restrito ao bottleneck reduz custo de simulação; gap de literatura claro; comparação justa com baselines existentes é viável.
+%             \item \textcolor{teal}{\textbf{Viabilidade:}} Frameworks como PennyLane + PyTorch permitem prototipagem rápida; datasets públicos (LandCover.ai, LoveDA) já usados nos papers recentes como referência direta.
+%         \end{itemize}
+%     \end{itemize}
+% \end{frame}
+
+% Slide 9: Agradecimentos e Discussão
+\begin{frame}
+    \centering
+    \vspace{1cm}
+    {\Large \textbf{Agradecimentos}}
+    
+    \vspace{0.8cm}
+    \normalsize
+    Gostaria de agradecer imensamente pela parceria, discussões de alto nível e tempo dedicado ao longo deste estudo dirigido aos professores e colegas:
+    
+    \vspace{0.5cm}
+    \textbf{\Large Said $\cdot$ Gustavo $\cdot$ Gilson}
+    
+    \vspace{1cm}
+    \small \textit{Abro para a discussão sobre as possibilidades de continuidade e definição das frentes de pesquisa.}
+\end{frame}
+
+\end{document}
