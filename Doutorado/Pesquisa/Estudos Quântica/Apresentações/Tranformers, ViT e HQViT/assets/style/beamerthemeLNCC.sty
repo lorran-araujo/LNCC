@@ -1,0 +1,336 @@
+% beamerthemeLNCC.sty - Beamer theme for presentations of the National Laboratory for Scientific Computing (LNCC).
+%
+% This file defines the unofficial Beamer theme for LNCC presentations, based on the LNCC Brand Identity Manual (v1.1, April 2023),
+% available at: https://www.gov.br/lncc/pt-br/acesso-a-informacao/institucional/manual-de-marca-lncc-v-1-1-2023.pdf.
+%
+% Adapted by: José Renato Duarte Fajardo, LNCC, 2024.
+%
+% Inspired by the adaptation for Politecnico di Torino presentations, developed by Mattia Ippoliti and Andrea Gasparini.
+% 
+% Original template by Federico Zenith, federico.zenith@sintef.no.
+% Derived (through several iterations) from Håvard Berland's beamerthementnu class.
+%
+% This program is free software: you can redistribute it and/or modify
+% it under the terms of the GNU General Public License as published by
+% the Free Software Foundation, either version 3 of the License, or
+% (at your option) any later version.
+%
+% This program is distributed in the hope that it will be useful,
+% but WITHOUT ANY WARRANTY; without even the implied warranty of
+% MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+% GNU General Public License for more details.
+%
+% You should have received a copy of the GNU General Public License
+% along with this program. If not, see <http://www.gnu.org/licenses/>.
+%
+% TODO:
+% - Make a better title page
+%   - be able to include more than one author
+%   - be able to add advisor and co-advisor
+%   - be able to change the date
+% - Make a better \backmatter
+% - Make a better footline
+%   - Make a better page counter
+%     - remove the page counter from the title page, chaper pages, table of content, etc.
+%     - add a page counter in the bottom right corner
+%   - Add references in the frame itself in the footer, automatically
+% - Remove the subtitle from the table of content page
+% - Add a acknowledgment page
+
+
+\ProvidesPackage{beamerthemeLNCC}[2024/08/29]
+
+\RequirePackage{etoolbox}
+\RequirePackage{tikz}
+
+% Force 16:9 aspect ratio
+\RequirePackage{geometry}
+\geometry{paperwidth=16cm,paperheight=9cm}
+
+% Caladea is a Cambria clone, Carlito a Calibri clone
+\RequirePackage{caladea,carlito}
+\renewcommand{\familydefault}{\sfdefault}
+
+\RequirePackage{graphicx,./assets/style/LNCCcolor}
+
+% No navigation symbols
+\setbeamertemplate{navigation symbols}{}
+
+\newcommand{\@footlineauthor}{\insertauthor \enspace$\vert$\enspace}
+\newcommand{\@footlinepayoff}{\@footlineauthor\inserttitle}
+\newcommand{\footlinepayoff}[1]{\renewcommand{\@footlinepayoff}{#1}}
+
+% Define footline content
+\setbeamertemplate{footline}{%
+  \begin{beamercolorbox}[wd=\textwidth,ht=5mm,dp=3mm,rightskip=1cm,leftskip=1cm]{footline}
+  \insertframenumber/\inserttotalframenumber
+  \ifstrempty{\@footlinepayoff}{}{%
+    \usebeamerfont{footline}\hfill\@footlinepayoff
+  }
+  \end{beamercolorbox}
+}
+
+% Set footline AND coordinate blocks with it
+\newcommand{\footlinecolor}[1]{% if #1 is empty, makes footline transparent
+  \ifstrempty{#1}{%
+    \footlinepayoff{}
+    \setbeamercolor{footline}{fg=LNCCdarkergrey, bg=}
+    \setbeamercolor{block title}{fg=white,bg=LNCCmainblue}
+    \setbeamercolor{block body}{fg=white,bg=LNCCmainblue}
+  }{
+    \footlinepayoff{\@footlineauthor\inserttitle}
+    \setbeamercolor{footline}{fg=white,bg=#1}
+    \setbeamercolor{block title}{fg=white,bg=#1}
+    \setbeamercolor{block body}{fg=white,bg=#1}
+  }%
+}
+\footlinecolor{} % Default: no footline
+
+\pgfdeclareimage[width=0.09\paperwidth]{logo}{assets/img/logo_RGB}
+\pgfdeclareimage[width=0.09\paperwidth]{whitelogo}{assets/img/logo_RGB_negative}
+\newcommand{\@logo}{logo}
+
+% Set colours
+% NOTE! Beamer colors should be set in the preamble. It often works fine in the 
+%       document itself, but NOT for normal text foreground.
+%       \themecolor should only be called from the preamble.
+\newcommand{\themecolor}[1]{
+	\ifstrequal{#1}{main}{%
+        \setbeamercolor{footline}{fg=white}
+		\setbeamercolor{normal text}{fg=white,bg=LNCCmainblue}
+		\setbeamercolor{structure}{fg=white}
+		\renewcommand{\@logo}{whitelogo}
+		\setbeamercolor{block title}{fg=LNCCmainblue,bg=LNCClightergrey}
+		\setbeamercolor{block body}{fg=LNCCdarkergrey,bg=LNCClightergrey}
+	}{%
+        \setbeamercolor{footline}{fg=LNCCdarkergrey}
+		\setbeamercolor{normal text}{fg=LNCCdarkergrey,bg=white}
+		\setbeamercolor{structure}{fg=LNCCmainblue}
+		\renewcommand{\@logo}{logo}
+		\setbeamercolor{block title}{fg=white,bg=LNCCmainblue}
+		\setbeamercolor{block body}{fg=LNCCdarkergrey,bg=LNCClightergrey}
+	}
+}
+\themecolor{white} % Default: white theme
+
+\setbeamercolor{title}{fg=LNCCmainblue}
+\setbeamercolor{alerted text}{fg=LNCCorange}
+\setbeamercolor{author}{fg=black}
+\setbeamercolor{date}{fg=black}
+
+\setbeamerfont{author}{size=\normalsize}
+\setbeamerfont{date}{size=\scriptsize}
+
+\setbeamerfont{email}{size=\normalsize}
+\setbeamercolor{email}{fg=LNCCdarkergrey}
+
+
+\setbeamerfont{title}{series=\bfseries}
+\setbeamerfont{subtitle}{series=\mdseries,size=\footnotesize}
+\setbeamerfont{frametitle}{series=\bfseries}
+\setbeamerfont{framesubtitle}{series=\mdseries}
+\setbeamerfont{footline}{size=\normalsize}
+\setbeamerfont{block title}{series=\centering\bfseries}
+
+% Code to get prettier boxes
+\setbeamertemplate{blocks}[rounded]
+
+% Bullets in several levels
+\setbeamertemplate{itemize item}{\textbullet}
+\setbeamertemplate{itemize subitem}{\textemdash}
+\setbeamertemplate{itemize subsubitem}{\ensuremath{\circ}}
+
+\newenvironment{colorblock}[3][white]{%
+	\begingroup
+	\setbeamercolor{block title}{fg=#1,bg=#2}
+	\setbeamercolor{block body} {fg=#1,bg=#2}
+	\begin{block}{#3}
+	}{%
+	\end{block}
+	\endgroup
+}
+
+% Put the logo in each slide's top left area
+\setbeamertemplate{headline}{\hspace{0.06\textwidth}\pgfuseimage{\@logo}}
+
+% Define frame title and subtitle layout
+\setbeamertemplate{frametitle}{%
+  \vspace*{-3.5ex}
+  \begin{beamercolorbox}[leftskip=2cm]{frametitle}%
+    \usebeamerfont{frametitle}\insertframetitle\\
+    \usebeamerfont{framesubtitle}\insertframesubtitle
+  \end{beamercolorbox}
+}
+
+
+\def\@courseLabel{}
+
+\newcommand{\course}[1]{\def\@courseLabel{#1}}
+
+% Define the title page
+\setbeamertemplate{title page}{%
+  \vskip0pt plus 1filll%
+  % Reposition the box in an inelegant way - but it works!
+  \hspace{-12mm}
+  \vspace{20mm}
+  \begin{beamercolorbox}[wd=0.8\textwidth,sep=7.6pt,leftskip=8mm]{title}%
+    {\usebeamerfont{title}\inserttitle}
+  
+    {\usebeamerfont{subtitle}\insertsubtitle}
+
+    {\usebeamerfont{subtitle}\@courseLabel}
+
+    \vspace{2mm}
+    
+    {\usebeamerfont{author}\usebeamercolor[fg]{author}\textbf{\insertauthor}}
+
+    \vspace{2mm}
+
+    {\usebeamerfont{institute}\usebeamercolor[fg]{author}\insertinstitute}
+
+    {\usebeamerfont{email}\usebeamercolor[fg]{email}\insertemail}
+  
+    {\usebeamerfont{date}\usebeamercolor[fg]{date}\insertdate}
+  \end{beamercolorbox}
+}
+
+% Define slide splitting dimensions (e.g. title and chapter slides)
+\newcommand{\TikzSplitSlide}[1]{%
+  \rule{0.56\paperwidth}{0pt}%
+  \begin{tikzpicture}
+    \clip (-0.1\paperwidth,-0.5\paperheight) -- 
+          ( 0.5\paperwidth,-0.5\paperheight) -- 
+          ( 0.5\paperwidth, 0.5\paperheight) -- 
+          ( 0.1\paperwidth, 0.5\paperheight) -- cycle; 
+    \node at (0.2\paperwidth,0) {%
+      \includegraphics[height=\paperheight]{#1}%
+    };
+  \end{tikzpicture}
+}
+
+\newbool{splittitle}
+\newcommand{\@TitleBackground}{}
+\newcommand{\titlebackground}{\@ifstar{\SplitBackground}{\FullBackground}}
+\newcommand{\FullBackground}[1]{\renewcommand{\@TitleBackground}{#1}}
+\newcommand{\SplitBackground}[1]{%
+	\booltrue{splittitle}%
+	\renewcommand{\@TitleBackground}{#1}%
+}
+
+% Overwrite the maketitle command for the title page
+\renewcommand{\maketitle}{
+\begingroup
+  \ifdefempty{\@TitleBackground}{}{% Skip if \@TitleBackground is empty
+    \setbeamertemplate{background}{%
+      \ifbool{splittitle}{%
+        \TikzSplitSlide{\@TitleBackground}
+      }{% Normal, full-screen background
+        \includegraphics[height=\paperheight]{\@TitleBackground}
+      }
+    }
+  }
+  \begin{frame}%
+  \titlepage%
+  \end{frame}%
+\endgroup
+}
+
+\makeatletter
+    \newenvironment{withoutheadline}{
+        \setbeamertemplate{headline}[default]
+        \def\beamer@entrycode{\vspace*{-\headheight}}
+    }{}
+\makeatother
+
+% Define chapter environment
+\newenvironment{chapter}[3][]{% Args: image (optional), color, frame title
+  \begingroup
+  \themecolor{main}
+  \setbeamertemplate{footline}{}
+  \ifstrempty{#2}{
+    \setbeamercolor{frametitle}{fg=white}
+    \setbeamercolor{normal text}{fg=white,bg=LNCCmainblue}
+  }{
+    \setbeamercolor{frametitle}{fg=white}
+    \setbeamercolor{normal text}{fg=white,bg=#2}
+  }
+  \ifstrempty{#1}{}{\setbeamertemplate{background}{\TikzSplitSlide{#1}}}
+  \setbeamertemplate{frametitle}{%
+    \vspace*{8ex}
+    \begin{beamercolorbox}[wd=0.45\textwidth]{frametitle}
+      \usebeamerfont{frametitle}\insertframetitle\\
+      \usebeamerfont{framesubtitle}\insertframesubtitle
+    \end{beamercolorbox}
+  }
+  \begin{frame}{#3}
+  \hspace*{0.05\textwidth}%
+  \minipage{0.35\textwidth}%
+  \usebeamercolor[fg]{normal text}%
+}{%
+  \endminipage
+  \end{frame}
+  \endgroup
+}
+
+% Define sidepic environment
+\newenvironment{sidepic}[2]{% Args: image, frame title
+  \begingroup
+  \setbeamertemplate{background}{%
+  \hspace*{0.6\paperwidth}%
+  \includegraphics[height=\paperheight]{#1}%
+  }
+  \setbeamertemplate{frametitle}{% Same as normal, but with right skip
+    \vspace*{-3.5ex}
+    \begin{beamercolorbox}[leftskip=2cm,rightskip=0.4\textwidth]{frametitle}%
+      \usebeamerfont{frametitle}\insertframetitle\\
+      \usebeamerfont{framesubtitle}\insertframesubtitle
+    \end{beamercolorbox}
+  }
+  \begin{frame}{#2}
+  \minipage{0.6\textwidth}%
+}{%
+  \endminipage
+  \end{frame}
+  \endgroup
+}
+
+% Define backmatter
+\newcommand{\backmatter}[1][]{
+\begingroup
+  \themecolor{main}
+  \begin{frame}[c]
+    \centering
+    \begin{minipage}{\textwidth}
+      \usebeamercolor[fg]{normal text}
+      \centering
+      \ifstrequal{#1}{notitle}{}{
+        \Huge \inserttitle
+        \vspace{5mm}
+      }
+      \Large \textsl{\\ Thank you for listening! \\ Any questions?}
+    \end{minipage}
+  \end{frame}
+\endgroup
+}
+
+% Define sectioning and table of contents
+\AtBeginSection[]
+{
+    \begingroup
+    \themecolor{main}
+    \begin{frame}{Table of Contents}
+        \tableofcontents[currentsection]
+    \end{frame}
+    \endgroup
+}
+
+% style of section presented in the table of contents
+\setbeamertemplate{section in toc}{$\blacktriangleright$~\inserttocsection}
+
+% automate subtitle of each frame
+\makeatletter
+    \pretocmd\beamer@checkframetitle{\framesubtitle{\thesection \, \secname}}
+\makeatother
+
+% avoid numbering of frames that are breaked into multiply slides
+\setbeamertemplate{frametitle continuation}{}

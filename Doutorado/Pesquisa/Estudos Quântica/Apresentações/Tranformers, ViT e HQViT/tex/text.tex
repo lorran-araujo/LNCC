@@ -1,0 +1,441 @@
+\section{Motivação}
+
+\begin{frame}{O Problema}
+    \textbf{Como uma rede neural entende uma imagem?}
+    \begin{itemize}
+        \item Uma imagem possui informação local: bordas, texturas, formas e cores.
+        \item Mas a decisão final depende também de \textbf{relações globais}: partes distantes podem estar conectadas semanticamente.
+        \item Em classificação, queremos responder: quais regiões são mais importantes para identificar a classe?
+    \end{itemize}
+    \vspace{0.4em}
+    \textbf{Ideia central da apresentação:} atenção permite modelar relações entre partes da entrada; o HQViT investiga se parte desse mecanismo pode ser feita com circuitos quânticos.
+\end{frame}
+
+% \begin{frame}{De Imagens Para Representações Numéricas}
+%     \begin{figure}
+%         \caption{Uma imagem pode ser vista como uma matriz de valores.}
+%         \centering
+%         \includegraphics[height=0.58\textheight]{resources/imgs/dados.png}
+%     \end{figure}
+% \end{frame}
+
+\section{Atenção e Transformers}
+
+\begin{frame}{Intuição Do Mecanismo De Atenção}
+    \textbf{Atenção} é uma forma de ponderar informação.
+    \begin{itemize}
+        \item Nem todos os elementos da entrada contribuem igualmente para uma decisão.
+        \item O modelo aprende \textbf{para onde olhar} e \textbf{quanto peso dar} a cada parte.
+        \item Em uma imagem, isso significa relacionar regiões diferentes: por exemplo, roda, farol e carroceria.
+    \end{itemize}
+    \vspace{0.4em}
+    \textbf{Pergunta didática:} dado um elemento da entrada, quais outros elementos ajudam a interpretá-lo?
+\end{frame}
+
+\begin{frame}{Exemplo De Atenção Em Texto}
+    Considere a frase: \textit{``I swam across the river to get to the other bank.''}
+
+    \vspace{0.3em}
+    Queremos entender a semântica da palavra \textbf{bank}. Nesse contexto, ela significa margem do rio, não banco financeiro.
+    \begin{enumerate}
+        \item A frase é separada em unidades chamadas \textbf{tokens}: $t_1, t_2, \ldots, t_n$.
+        \item Cada token é representado por um vetor numérico: $\mathbf{v}_1, \mathbf{v}_2, \ldots, \mathbf{v}_n \in \mathbb{R}^d$.
+        \item O mecanismo de atenção calcula pesos $w_{i1}, w_{i2}, \ldots, w_{in}$, indicando a relevância de cada token para interpretar o token $i$.
+        \item A saída é uma nova representação contextual: $\mathbf{y}_1, \mathbf{y}_2, \ldots, \mathbf{y}_n$.
+    \end{enumerate}
+    \[
+        \mathbf{y}_i = \sum_{j=1}^{n} w_{ij}\mathbf{v}_j
+    \]
+    \vspace{0.3em}
+    Palavras como \textit{river}, \textit{swam} e \textit{across} devem receber maior peso para definir o significado de \textit{bank}.
+\end{frame}
+
+\begin{frame}{Como calcular os pesos da atenção?}
+    \small
+    \begin{columns}
+        \begin{column}{0.5\textwidth}
+            Para medir a relevância dos tokens em relação ao token $i$:
+
+            \begin{enumerate}
+                \item Calculamos as similaridades:
+                \[
+                    s_{ij} = \mathbf{v}_i^\top \mathbf{v}_j,
+                    \quad j = 1, \ldots, n
+                \]
+                \item Normalizamos com \textit{softmax}:
+                \[
+                    w_{ij} = \frac{e^{s_{ij}}}{\sum_{k=1}^{n} e^{s_{ik}}}
+                \]
+                \item Com isso, obtemos:
+                \[
+                    \sum_{j=1}^{n} w_{ij} = 1,
+                    \quad 0 \leq w_{ij} \leq 1
+                \]
+            \end{enumerate}
+
+            A representação contextual é:
+            \[
+                \mathbf{y}_i = \sum_{j=1}^{n} w_{ij}\mathbf{v}_j
+            \]
+        \end{column}
+        \begin{column}{0.55\textwidth}
+            \begin{figure}
+            \centering
+            \includegraphics[height=0.8\textheight]{resources/imgs/y3_attention_new.png}
+            \caption{Esquematização do cálculo de $\mathbf{y}_i$.}
+            \end{figure}
+        \end{column}
+    \end{columns}
+\end{frame}
+
+\begin{frame}{Como Inserir Aprendizagem No Cálculo Dos Pesos?}
+    No Transformer, os vetores usados na atenção não são fixos: eles são aprendidos por projeções treináveis.
+    \[
+        Q = XM_Q, \quad K = XM_K, \quad V = XM_V
+    \]
+    \begin{itemize}
+        \item $Q$ e $K$ definem \textbf{quais tokens devem se relacionar}.
+        \item $V$ contém a \textbf{informação que será combinada} após calcular a relevância.
+    \end{itemize}
+
+    Primeiro calculamos a matriz de pesos de atenção:
+    \[
+        W = \text{softmax}\!\left(\frac{QK^\top}{\sqrt{d_k}}\right)
+    \]
+    Depois usamos esses pesos para combinar os valores:
+    \[
+        Y = WV
+        \quad \Rightarrow \quad
+        \mathbf{y}_i = \sum_{j=1}^{n} A_{ij}\mathbf{v}_j
+    \]
+
+    Assim, $A_{ij}$ indica quanto o token $j$ contribui para a representação final do token $i$.
+\end{frame}
+
+\begin{frame}
+    \begin{figure}
+        \centering
+        \includegraphics[height=0.8\textheight]{resources/imgs/y3_attention_learning.png}
+        \caption{Esquematização do cálculo de $\mathbf{y}_i$ com pesos aprendíveis.}
+    \end{figure}
+\end{frame}
+
+\begin{frame}{O Que É Um Transformer?}
+    Um \textbf{Transformer} é uma arquitetura neural que usa atenção como mecanismo principal para construir representações contextuais.
+    \begin{itemize}
+        \item A atenção transforma cada token em um vetor mais rico, levando em conta os outros tokens.
+        \item O Transformer empilha vários blocos de atenção, refinando essas representações camada por camada.
+        \item Cada bloco combina \textbf{Self-Attention}, normalização, conexões residuais e redes \textit{feed-forward}.
+        \item Assim, o modelo aprende não apenas relações diretas entre tokens, mas composições cada vez mais abstratas.
+    \end{itemize}
+    \vspace{0.4em}
+    \textbf{Ideia central:} atenção diz como os elementos interagem; o Transformer organiza essas interações em uma rede profunda treinável.
+\end{frame}
+
+
+\begin{frame}{Arquitetura}
+    \begin{figure}
+        \centering
+        \includegraphics[height=0.85\textheight]{resources/imgs/transformers.png}
+        %\caption{Esquematização da arquitetura da rede Transformer.}
+    \end{figure}
+\end{frame}
+
+\section{Transformers Para Imagens}
+
+\begin{frame}{Como Aplicar Transformers Em Imagens?}
+    Transformers foram originalmente pensados para sequências. Uma imagem precisa ser transformada em sequência.
+    \begin{enumerate}
+        \item A imagem é dividida em pequenos blocos, chamados \textbf{patches}.
+        \item Cada patch é vetorizado e projetado para um \textbf{embedding}.
+        \item A sequência de embeddings é processada por blocos de atenção.
+    \end{enumerate}
+    \vspace{0.3em}
+    Assim, uma imagem passa a ser tratada como uma sequência de partes visuais.
+\end{frame}
+
+\begin{frame}{Vision Transformer (ViT)}
+    \begin{figure}
+        \caption{Visão geral do Vision Transformer.}
+        \centering
+        \includegraphics[height=0.8\textheight]{resources/imgs/ViT0.png}
+        \centering \\
+        \tiny Fonte: \cite{dosovitskiy2020image}.
+    \end{figure}
+\end{frame}
+
+\begin{frame}{Pipeline Do ViT Clássico}
+    \begin{enumerate}
+        \item \textbf{Divisão em patches}: a imagem $\mathbf{x} \in \mathbb{R}^{H \times W \times C}$ é dividida em $T$ partes.
+        \item \textbf{Embedding linear}: cada patch vira um vetor de dimensão $d$.
+        \item \textbf{Positional Encoding}: adiciona informação de posição.
+        \item \textbf{Self-Attention}: compara todos os patches entre si.
+        \item \textbf{MLP Head}: produz a classe final.
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}{O Gargalo Do ViT}
+    O custo principal está no cálculo de atenção:
+    \[
+        QK^\top
+    \]
+    \begin{itemize}
+        \item Se há $T$ patches, cada patch é comparado com todos os outros.
+        \item A complexidade cresce de forma \textbf{quadrática}: $\mathcal{O}(T^2 d)$.
+        \item Imagens maiores geram mais patches e tornam o treinamento mais caro.
+    \end{itemize}
+    \vspace{0.4em}
+    \textbf{Pergunta central:} é possível reduzir esse custo mantendo boa capacidade de representação?
+\end{frame}
+
+\section{A Arquitetura HQViT}
+
+\begin{frame}{Da Atenção Clássica À Atenção Quântica}
+    No ViT clássico, a etapa cara é calcular a matriz de atenção:
+    \[
+        A = \text{softmax}\!\left(\frac{QK^\top}{\sqrt{d_k}}\right)
+    \]
+    \begin{itemize}
+        \item $QK^\top$ mede a similaridade entre consultas e chaves.
+        \item Essa comparação é feita para muitos pares de tokens/patches.
+        \item O \textbf{HQViT} desloca essa etapa para um módulo de atenção quântica \cite{zhang2025hqvit}.
+    \end{itemize}
+    \vspace{0.4em}
+    \textbf{Ideia central:} manter a estrutura híbrida, mas usar computação quântica no cálculo dos coeficientes de atenção.
+\end{frame}
+
+\begin{frame}{Por Que Usar Computação Quântica Aqui?}
+    A parte quântica entra como uma ferramenta para representar, transformar e comparar vetores.
+    \begin{itemize}
+        \item \textbf{Amplitude encoding}: codifica um vetor clássico nas amplitudes de um estado quântico.
+        \[
+            |\psi\rangle = \sum_{i=0}^{2^n - 1} x_i |i\rangle
+        \]
+        \item \textbf{Circuitos variacionais}: aplicam transformações treináveis ao estado codificado.
+        \item \textbf{Medições}: extraem probabilidades ou similaridades para retornar ao fluxo clássico.
+    \end{itemize}
+    \vspace{0.3em}
+    O objetivo não é quantumizar toda a rede, mas atacar seletivamente o bloco mais caro: a atenção.
+\end{frame}
+
+\begin{frame}{Ideia Do HQViT}
+    O \textbf{HQViT} é um Vision Transformer híbrido clássico-quântico.
+    \begin{itemize}
+        \item A entrada é preparada classicamente e codificada em um estado quântico.
+        \item Circuitos variacionais fazem o papel das projeções aprendíveis de atenção.
+        \item Similaridades entre estados quânticos geram os coeficientes de atenção.
+        \item Camadas clássicas continuam responsáveis pelo pós-processamento e pela classificação.
+    \end{itemize}
+    \vspace{0.4em}
+    \textbf{Escolha de projeto:} usar recursos quânticos onde há maior custo computacional, mantendo o restante da arquitetura simples.
+\end{frame}
+
+\begin{frame}{Processamento Da Imagem Inteira}
+    \textbf{Diferencial chave:} o módulo quântico recebe a imagem como um único estado global.
+    \begin{itemize}
+        \item A imagem é organizada como um \textbf{whole-image embedding} e codificada por amplitude encoding:
+        \[
+            |\psi\rangle = \sum_{i=0}^{T-1}\sum_{l=0}^{d-1} x_{i,l}|i\rangle|l\rangle
+        \]
+        \item O estado tem dois subsistemas: $|i\rangle$ guarda o \textbf{índice do token/patch}; $|l\rangle$ guarda a \textbf{informação interna} daquele token.
+        \item Os circuitos $U_Q$ e $U_K$ transformam o estado global, mas a medição usa os índices $i$ e $j$ para extrair relações entre tokens.
+        \item Assim, a atenção estima scores para pares de tokens:
+        \[
+            a_{ij} = |\langle q_i | k_j \rangle|^2
+        \]
+    \end{itemize}
+    \vspace{0.3em}
+    O circuito vê a imagem inteira, mas a matriz de atenção continua descrevendo relações entre tokens/patches, não relações pixel-a-pixel.
+\end{frame}
+
+\begin{frame}{$Q$, $K$ e $V$ Como Circuitos Variacionais}
+    No Transformer clássico, matrizes treináveis geram $Q$, $K$ e $V$ a partir da entrada.
+    No HQViT, esse papel é assumido por circuitos quânticos parametrizados:
+    \[
+        |\psi_Q\rangle = U_Q|\psi\rangle,
+        \quad
+        |\psi_K\rangle = U_K|\psi\rangle,
+        \quad
+        |\psi_V\rangle = U_V|\psi\rangle
+    \]
+    \begin{itemize}
+        \item $U_Q$, $U_K$ e $U_V$ são circuitos variacionais treináveis.
+        \item Eles transformam a representação global da imagem em estados análogos a Query, Key e Value.
+        \item Os parâmetros dos circuitos são ajustados durante o treinamento do modelo híbrido.
+    \end{itemize}
+    \vspace{0.3em}
+    Assim, a parte quântica substitui as projeções lineares da atenção por transformações treináveis em estados quânticos.
+\end{frame}
+
+\begin{frame}{Quantum Self-Attention: O Que Comparar?}
+    A atenção precisa medir quanto o token $j$ é relevante para o token $i$.
+    \begin{itemize}
+        \item No Transformer clássico, isso vem de uma similaridade entre $q_i$ e $k_j$.
+        \item No HQViT, $q_i$ e $k_j$ são estados quânticos:
+        \[
+            |q_i\rangle \quad \text{e} \quad |k_j\rangle
+        \]
+        \item A similaridade desejada é o overlap entre esses estados:
+        \[
+            a_{ij} = |\langle q_i | k_j \rangle|^2
+        \]
+    \end{itemize}
+    \vspace{0.3em}
+    Problema: esse produto interno não pode ser lido diretamente de um computador quântico.
+\end{frame}
+
+\begin{frame}{SWAP Test: A Ideia Da Ancilla}
+    O \textbf{SWAP Test} usa um qubit auxiliar, chamado \textbf{ancilla}, para estimar se dois estados são parecidos.
+    \begin{itemize}
+        \item A ancilla começa em $|0\rangle$ e não representa imagem, patch ou classe.
+        \item Ela funciona como um ``sensor'' da similaridade entre $|q_i\rangle$ e $|k_j\rangle$.
+        \item O circuito cria uma correlação entre a ancilla e o efeito de trocar os dois estados.
+        \item Se trocar os estados quase não muda o sistema, eles são parecidos.
+    \end{itemize}
+
+    \vspace{0.3em}
+    A medição da ancilla não retorna a similaridade em uma única execução: ela retorna apenas $0$ ou $1$.
+    A similaridade aparece na \textbf{frequência} com que o resultado $0$ ocorre.
+\end{frame}
+
+\begin{frame}{SWAP Test: Passo A Passo}
+    Para comparar $|q_i\rangle$ e $|k_j\rangle$, o circuito aplica:
+    \begin{enumerate}
+        \item \textbf{Preparação}: começamos com
+        \[
+            |0\rangle|q_i\rangle|k_j\rangle
+        \]
+        onde o primeiro qubit é a ancilla.
+        \item \textbf{Hadamard na ancilla}: coloca a ancilla em superposição.
+        \item \textbf{Controlled-SWAP}: se a ancilla está em $|1\rangle$, troca $|q_i\rangle$ e $|k_j\rangle$.
+        \item \textbf{Novo Hadamard}: faz as duas possibilidades interferirem.
+        \item \textbf{Medição}: mede apenas a ancilla, obtendo $0$ ou $1$.
+    \end{enumerate}
+    \vspace{0.2em}
+    Essa interferência converte a similaridade entre os estados em uma probabilidade mensurável.
+\end{frame}
+
+\begin{frame}{Estimando $P(0)$ Por Repetição}
+    Uma execução do circuito produz apenas uma amostra:
+    \[
+        \text{ancilla} \in \{0,1\}
+    \]
+    Por isso, repetimos o mesmo circuito muitas vezes, chamadas \textbf{shots}.
+    \begin{itemize}
+        \item Se rodamos $S$ shots e a ancilla sai como $0$ em $N_0$ deles, estimamos:
+        \[
+            P(0) \approx \frac{N_0}{S}
+        \]
+        \item Em simulações e hardware real, $S$ pode ser escolhido conforme precisão e custo.
+        \item Valores comuns são da ordem de centenas a milhares de shots, por exemplo $S=1000$ ou $S=10000$.
+    \end{itemize}
+    \vspace{0.2em}
+    Quanto maior $S$, menor o ruído estatístico da estimativa, mas maior o custo de execução.
+\end{frame}
+
+\begin{frame}{Do SWAP Test Ao Score De Atenção}
+    O SWAP Test é construído para que a probabilidade $P(0)$ satisfaça:
+    \[
+        P(0) = \frac{1 + |\langle q_i | k_j \rangle|^2}{2}
+    \]
+    \begin{itemize}
+        \item Se $|q_i\rangle$ e $|k_j\rangle$ são iguais, então $|\langle q_i | k_j \rangle|^2 = 1$ e $P(0)=1$.
+        \item Se são ortogonais, então $|\langle q_i | k_j \rangle|^2 = 0$ e $P(0)=0.5$.
+        \item Logo, podemos recuperar a similaridade por:
+        \[
+            a_{ij} = |\langle q_i | k_j \rangle|^2 = 2P(0)-1
+        \]
+    \end{itemize}
+    \vspace{0.3em}
+    Esse $a_{ij}$ entra na matriz de atenção como o score quântico entre os tokens $i$ e $j$.
+\end{frame}
+
+\begin{frame}{Como O Score Quântico Entra Na Atenção?}
+    Depois de estimar os scores quânticos, o restante da atenção segue a mesma lógica do Transformer.
+    \[
+        \alpha_{ij} = \frac{e^{a_{ij}}}{\sum_{m=1}^{n} e^{a_{im}}}
+    \]
+    \[
+        \mathbf{y}_i = \sum_{j=1}^{n} \alpha_{ij}\mathbf{v}_j
+    \]
+    \begin{itemize}
+        \item A parte quântica estima as relações entre tokens.
+        \item O softmax normaliza essas relações como pesos de atenção.
+        \item Os pesos combinam os valores $V$ e retornam uma representação clássica para as próximas camadas.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{Arquitetura e Fluxo Híbrido}
+    \begin{columns}
+        \begin{column}{0.62\textwidth}
+            \begin{figure}
+                \centering
+                \includegraphics[height=0.72\textheight]{resources/imgs/HQViT.png}
+                \centering \\
+                \tiny Fonte: \cite{zhang2025hqvit}.
+            \end{figure}
+        \end{column}
+        \begin{column}{0.42\textwidth}
+            \small
+            \[
+                \text{Imagem}
+                \rightarrow
+                |\psi\rangle
+                \rightarrow
+                \text{Atenção quântica}
+                \rightarrow
+                \text{Classe}
+            \]
+            \begin{itemize}
+                \item Preparação e classificação continuam clássicas.
+                \item O módulo quântico calcula os coeficientes de atenção.
+                \item O modelo combina otimização clássica com circuitos treináveis.
+            \end{itemize}
+        \end{column}
+    \end{columns}
+\end{frame}
+
+\section{Experimentos e Discussão}
+
+\begin{frame}{Datasets e Simulação}
+    \textbf{Datasets reportados no trabalho:}
+    \begin{itemize}
+        \item \textbf{MNIST}: benchmark principal de dígitos manuscritos.
+        \item \textbf{Fashion-MNIST}: imagens simples, mas mais desafiadoras semanticamente.
+        \item \textbf{CIFAR-10}: usado em versões redimensionadas para reduzir custo quântico.
+    \end{itemize}
+    \vspace{0.3em}
+    \textbf{Ferramentas:} simulações com PennyLane e backends como \texttt{default.qubit}, além de testes considerando ruído.
+\end{frame}
+
+\begin{frame}{Vantagens Potenciais}
+    \begin{itemize}
+        \item \textbf{Eficiência de parâmetros}: VQCs podem representar transformações expressivas com poucos parâmetros.
+        \item \textbf{Atenção global}: o modelo explora uma representação quântica da imagem inteira.
+        \item \textbf{Hibridização seletiva}: usa computação quântica apenas onde ela pode trazer benefício.
+        \item \textbf{Resultados promissores}: o paper reporta ganhos em benchmarks como MNIST frente a baselines quânticos.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{Limitações e Cuidados}
+    \begin{itemize}
+        \item \textbf{Ruído quântico}: hardware NISQ ainda sofre com erros de portas e medições.
+        \item \textbf{Preparação de estado}: amplitude encoding é compacto em qubits, mas pode ser caro em profundidade de circuito.
+        \item \textbf{Escalabilidade}: imagens grandes exigem circuitos maiores e mais difíceis de simular.
+        \item \textbf{Tempo de execução}: hardware quântico atual ainda é lento para inferência em larga escala.
+    \end{itemize}
+\end{frame}
+
+\section{Conclusão}
+
+\begin{frame}{Conclusão}
+    \textbf{Mensagem principal:}
+    \begin{itemize}
+        \item Atenção permite modelar relações entre partes da entrada.
+        \item ViTs aplicam esse princípio a imagens, mas sofrem com custo quadrático.
+        \item O HQViT propõe substituir parte da atenção por circuitos quânticos variacionais.
+        \item A abordagem é promissora, mas ainda experimental e limitada pelo hardware atual.
+    \end{itemize}
+    \vspace{0.4em}
+    \textbf{Trabalhos futuros:} explorar segmentação semântica, sensoriamento remoto e treinamento consciente de hardware.
+\end{frame}

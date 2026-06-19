@@ -1,0 +1,57 @@
+% LNCCcolor.sty - Color definitions for the National Laboratory for Scientific Computing (LNCC) presentations and documents.
+%
+% This file implements the official color scheme of LNCC, based on the LNCC Brand Identity Manual (v1.1, April 2023),
+% available at: https://www.gov.br/lncc/pt-br/acesso-a-informacao/institucional/manual-de-marca-lncc-v-1-1-2023.pdf.
+%
+% The colors are defined according to the guidelines provided in the manual, ensuring compliance with the visual identity standards.
+%
+% Adapted by: José Renato Duarte Fajardo, LNCC, 2024.
+
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{LNCCcolor}[v1.1]
+
+\RequirePackage{xcolor}
+
+% Main color
+\definecolor{LNCCmainblue}{RGB/cmyk}{                0,  94, 161 / 100,  52,   2,  12} % PANTONE 2945 PC
+
+% Shades of the main color
+\definecolorset{RGB/cmyk}{LNCC}{}{lighteraltblue,  157, 214, 246 /  42,   2,   0,   0;%
+                                  lightaltblue,     69, 148, 209 /  71,  31,   0,   0;%
+                                  altblue,          31, 128, 195 /  81,  41,   0,   0;%
+                                  darkaltblue,       0,  68, 109 / 100,  71,  32,  20;%
+                                  darkeraltblue,    16,  36,  56 / 100,  80,  48,  58}
+
+
+
+% Secondary colors
+\definecolorset{RGB/cmyk}{LNCC}{}{green,             36, 176, 148 /  74,   0,  52,   0;% PANTONE 3359 PC
+                                  yellow,           237, 186,   0 /   2,  24, 100,   7;% PANTONE 110 PC
+                                  orange,           234,  88,  12 /   0,  76, 100,   0;% PANTONE 1665 PC
+                                  purple,           146,  40, 133 /  52,  96,   0,   0}% PANTONE 254 PC
+
+% Shades of the secondary colors
+% lighter
+\definecolorset{RGB/cmyk}{LNCC}{}{lightgreen,      122, 198, 189 /  55,   0,  31,   0;%
+                                  lightyellow,     240, 204,  72 /   8,  18,  80,   0;%
+                                  lightorange,     255, 114,  38 /   0,  66,  85,   0;%
+                                  lightpurple,     179,  94, 161 /  34,  73,   0,   0}
+
+% darker
+\definecolorset{RGB/cmyk}{LNCC}{}{darkgreen,        22, 112,  94 /  85,  31,  64,  21;%
+                                  darkyellow,      186, 146,   0 /  24,  36, 100,  13;%
+                                  darkorange,      158,  58,   4 /  26,  83, 100,  23;%
+                                  darkpurple,       66,  23,  63 /  74, 100,  37,  49}
+
+% Neutral colors
+\definecolorset{RGB/cmyk}{LNCC}{}{lightergray,     229, 228, 228 /  12,   9,  10,   0;%
+                                  lightgray,       175, 176, 177 /  23,  16,  17,  21;%
+                                  gray,            126, 129, 130 /  34,  24,  24,  42;%
+                                  darkgray,         81,  86,  87 /  44,  31,  31,  62;%
+                                  darkergray,       40,  45,  45 /  55,  39,  38,  83}
+
+\colorlet{LNCClightergrey}{LNCClightergray}
+\colorlet{LNCClightgrey}{LNCClightgray}
+\colorlet{LNCCgrey}{LNCCgray}
+\colorlet{LNCCdarkgrey}{LNCCdarkgray}
+\colorlet{LNCCdarkergrey}{LNCCdarkergray}
