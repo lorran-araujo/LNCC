@@ -55,6 +55,8 @@ def create_scheduler(config: dict, optimizer: torch.optim.Optimizer) -> torch.op
 
     raise ValueError(f"Unsupported scheduler: {scheduler_name}")
 
+def teste():
+    return 0
 
 def resolve_device(config: dict) -> torch.device:
     requested_device = config["training"].get("device", "auto")
