@@ -52,18 +52,32 @@ class SupervisedTrainer(BaseTrainer):
         self.history: list[dict[str, float]] = []
 
     def train(self) -> None:
-        epochs = int(self.config["training"].get("epochs", 10))
+        training_config = self.config["training"]
+        epochs = int(training_config.get("epochs", 10))
+        early_stopping = bool(training_config.get("early_stopping", False))
+        patience = int(training_config.get("patience", 10))
+        min_delta = float(training_config.get("min_delta", 0.0))
+        epochs_without_improvement = 0
+        print(f"Treinamento supervisionado iniciado por {epochs} epoca(s)")
+        if early_stopping:
+            print(f"Early stopping ativado: patience={patience}, min_delta={min_delta}")
         self._write_metrics_header()
 
         for epoch in range(1, epochs + 1):
+            print(f"Iniciando epoca {epoch}/{epochs}")
             train_loss, train_acc = self.train_epoch(epoch)
+            print(f"Validando epoca {epoch}/{epochs}")
             val_loss, val_acc = self.evaluate(self.val_loader, desc="val")
 
             if self.scheduler is not None:
                 self.scheduler.step()
 
-            is_best = val_acc > self.best_val_acc
-            self.best_val_acc = max(self.best_val_acc, val_acc)
+            is_best = val_acc > self.best_val_acc + min_delta
+            if is_best:
+                self.best_val_acc = val_acc
+                epochs_without_improvement = 0
+            else:
+                epochs_without_improvement += 1
             save_checkpoint(
                 self.checkpoint_dir / "last.pt",
                 self.model,
@@ -72,6 +86,7 @@ class SupervisedTrainer(BaseTrainer):
                 {"val_acc": val_acc, "val_loss": val_loss},
             )
             if is_best:
+                print(f"Novo melhor checkpoint encontrado na epoca {epoch}: val_acc={val_acc:.4f}")
                 save_checkpoint(
                     self.checkpoint_dir / "best.pt",
                     self.model,
@@ -95,15 +110,28 @@ class SupervisedTrainer(BaseTrainer):
                 f"epoch={epoch:03d} lr={lr:.6g} train_loss={train_loss:.4f} "
                 f"train_acc={train_acc:.4f} val_loss={val_loss:.4f} val_acc={val_acc:.4f}"
             )
+            if early_stopping:
+                print(f"Early stopping: {epochs_without_improvement}/{patience} epoca(s) sem melhora")
+                if epochs_without_improvement >= patience:
+                    print(f"Early stopping acionado na epoca {epoch}. Melhor val_acc={self.best_val_acc:.4f}")
+                    break
 
+        print("Gerando graficos de loss e acuracia")
         self.plot_training_curves()
+        print("Carregando melhor checkpoint para avaliacao final")
         self.load_best_checkpoint()
+        print("Avaliando conjunto de teste")
         test_loss, test_acc, predictions, targets = self.evaluate_with_predictions(self.test_loader, desc="test")
+        print("Salvando metricas de teste")
         self.save_test_metrics(test_loss, test_acc)
+        print("Salvando predicoes de teste")
         self.save_test_predictions(predictions, targets)
+        print("Gerando matriz de confusao")
         self.plot_confusion_matrix(predictions, targets)
+        print("Gerando exemplos de predicao")
         self.save_prediction_examples()
         print(f"test_loss={test_loss:.4f} test_acc={test_acc:.4f}")
+        print(f"Execucao finalizada. Resultados salvos em: {self.output_dir}")
 
     def train_epoch(self, epoch: int) -> tuple[float, float]:
         self.model.train()
@@ -170,6 +198,7 @@ class SupervisedTrainer(BaseTrainer):
             writer = csv.writer(file)
             writer.writerow(["test_loss", "test_acc"])
             writer.writerow([test_loss, test_acc])
+        print(f"Metricas de teste salvas em: {self.output_dir / 'test_metrics.csv'}")
 
     def save_test_predictions(self, predictions: torch.Tensor, targets: torch.Tensor) -> None:
         with (self.output_dir / "test_predictions.csv").open("w", newline="") as file:
@@ -188,6 +217,7 @@ class SupervisedTrainer(BaseTrainer):
                         true_index == pred_index,
                     ]
                 )
+        print(f"Predicoes de teste salvas em: {self.output_dir / 'test_predictions.csv'}")
 
     def plot_training_curves(self) -> None:
         epochs = [item["epoch"] for item in self.history]
@@ -202,6 +232,7 @@ class SupervisedTrainer(BaseTrainer):
         plt.tight_layout()
         plt.savefig(self.plots_dir / "loss.png", dpi=150)
         plt.close()
+        print(f"Grafico de loss salvo em: {self.plots_dir / 'loss.png'}")
 
         plt.figure(figsize=(8, 5))
         plt.plot(epochs, [item["train_acc"] for item in self.history], label="train_acc")
@@ -213,6 +244,7 @@ class SupervisedTrainer(BaseTrainer):
         plt.tight_layout()
         plt.savefig(self.plots_dir / "accuracy.png", dpi=150)
         plt.close()
+        print(f"Grafico de acuracia salvo em: {self.plots_dir / 'accuracy.png'}")
 
     def plot_confusion_matrix(self, predictions: torch.Tensor, targets: torch.Tensor) -> None:
         num_classes = len(self.class_names)
@@ -225,6 +257,7 @@ class SupervisedTrainer(BaseTrainer):
             writer.writerow(["true/pred"] + self.class_names)
             for class_name, row in zip(self.class_names, matrix.tolist(), strict=True):
                 writer.writerow([class_name] + row)
+        print(f"Matriz de confusao CSV salva em: {self.output_dir / 'confusion_matrix.csv'}")
 
         figure_size = max(8, min(18, num_classes * 0.45))
         plt.figure(figsize=(figure_size, figure_size))
@@ -239,6 +272,7 @@ class SupervisedTrainer(BaseTrainer):
         plt.tight_layout()
         plt.savefig(self.plots_dir / "confusion_matrix.png", dpi=150)
         plt.close()
+        print(f"Imagem da matriz de confusao salva em: {self.plots_dir / 'confusion_matrix.png'}")
 
     @torch.no_grad()
     def save_prediction_examples(self) -> None:
@@ -271,6 +305,7 @@ class SupervisedTrainer(BaseTrainer):
         plt.tight_layout()
         plt.savefig(self.plots_dir / "prediction_examples.png", dpi=150)
         plt.close()
+        print(f"Exemplos de predicao salvos em: {self.plots_dir / 'prediction_examples.png'}")
 
     def _denormalize(self, images: torch.Tensor) -> torch.Tensor:
         mean = torch.tensor([0.4914, 0.4822, 0.4465]).view(1, 3, 1, 1)

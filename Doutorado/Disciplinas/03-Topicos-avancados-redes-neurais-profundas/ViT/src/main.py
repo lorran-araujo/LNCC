@@ -82,17 +82,32 @@ def resolve_device(config: dict) -> torch.device:
 
 def main() -> None:
     args = parse_args()
+    print(f"[1/8] Carregando configuracao: {args.config}")
     config = load_config(args.config)
+
+    print("[2/8] Configurando seed")
     set_seed(int(config.get("seed", 42)))
 
+    print("[3/8] Preparando diretorio de saida")
     output_dir = prepare_output_dir(config, args.config)
+
+    print("[4/8] Baixando/carregando dataset")
     train_loader, val_loader, test_loader, dataset_info = create_dataloaders(config)
+
+    print("[5/8] Criando modelo")
     model = create_model(config, num_classes=dataset_info.num_classes, image_size=dataset_info.input_size)
+
+    print("[6/8] Criando otimizador")
     optimizer = create_optimizer(config, model)
+
+    print("[7/8] Criando scheduler")
     scheduler = create_scheduler(config, optimizer)
+
+    print("[8/8] Selecionando dispositivo")
     device = resolve_device(config)
     print(f"Using device: {device}")
 
+    print("Iniciando treinamento")
     trainer = SupervisedTrainer(
         model=model,
         train_loader=train_loader,

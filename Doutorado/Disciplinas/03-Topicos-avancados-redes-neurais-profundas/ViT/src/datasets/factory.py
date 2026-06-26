@@ -24,6 +24,12 @@ def create_dataloaders(config: dict) -> tuple[DataLoader, DataLoader, DataLoader
     num_workers = int(dataset_config.get("num_workers", 4))
     val_split = float(dataset_config.get("val_split", 0.1))
 
+    print(
+        f"Dataset: {dataset_config.get('name', 'CIFAR10')} | root={root} | "
+        f"image_size={image_size} | batch_size={batch_size} | num_workers={num_workers}"
+    )
+    print("Preparando transformacoes de treino e avaliacao")
+
     train_transform = transforms.Compose(
         [
             transforms.Resize((image_size, image_size)),
@@ -42,12 +48,14 @@ def create_dataloaders(config: dict) -> tuple[DataLoader, DataLoader, DataLoader
     )
 
     if name == "cifar10":
+        print("Baixando/carregando CIFAR-10")
         train_dataset = datasets.CIFAR10(root=root, train=True, download=True, transform=train_transform)
         eval_dataset = datasets.CIFAR10(root=root, train=True, download=True, transform=eval_transform)
         test_dataset = datasets.CIFAR10(root=root, train=False, download=True, transform=eval_transform)
         num_classes = 10
         class_names = train_dataset.classes
     elif name == "cifar100":
+        print("Baixando/carregando CIFAR-100")
         train_dataset = datasets.CIFAR100(root=root, train=True, download=True, transform=train_transform)
         eval_dataset = datasets.CIFAR100(root=root, train=True, download=True, transform=eval_transform)
         test_dataset = datasets.CIFAR100(root=root, train=False, download=True, transform=eval_transform)
@@ -59,6 +67,7 @@ def create_dataloaders(config: dict) -> tuple[DataLoader, DataLoader, DataLoader
     val_size = int(len(train_dataset) * val_split)
     train_size = len(train_dataset) - val_size
     seed = int(config.get("seed", 42))
+    print(f"Criando splits: treino={train_size}, validacao={val_size}, teste={len(test_dataset)}")
     train_subset, _ = random_split(
         train_dataset,
         [train_size, val_size],
@@ -90,6 +99,11 @@ def create_dataloaders(config: dict) -> tuple[DataLoader, DataLoader, DataLoader
         shuffle=False,
         num_workers=num_workers,
         pin_memory=True,
+    )
+
+    print(
+        f"Dataloaders prontos: {len(train_loader)} batches de treino, "
+        f"{len(val_loader)} de validacao, {len(test_loader)} de teste"
     )
 
     return train_loader, val_loader, test_loader, DatasetInfo(
