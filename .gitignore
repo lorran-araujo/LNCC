@@ -139,3 +139,8 @@ pesquisa/test_deep/database/cats_and_dogs_filtered.zip
 pesquisa/test_deep/database/cats_and_dogs_filtered.zip
 Doutorado/Disciplinas/03-Topicos-avancados-redes-neurais-profundas/exps_quanticos/.venv
 Doutorado/Disciplinas/03-Topicos-avancados-redes-neurais-profundas/lista1/.venv
+*.gz
+Doutorado/Disciplinas/03-Topicos-avancados-redes-neurais-profundas/lista1/data/MNIST/raw/t10k-images-idx3-ubyte
+Doutorado/Disciplinas/03-Topicos-avancados-redes-neurais-profundas/lista1/data/MNIST/raw/t10k-labels-idx1-ubyte
+Doutorado/Disciplinas/03-Topicos-avancados-redes-neurais-profundas/lista1/data/MNIST/raw/train-images-idx3-ubyte
+Doutorado/Disciplinas/03-Topicos-avancados-redes-neurais-profundas/lista1/data/MNIST/raw/train-labels-idx1-ubyte
