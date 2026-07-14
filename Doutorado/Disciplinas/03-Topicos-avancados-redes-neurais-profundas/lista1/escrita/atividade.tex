@@ -1,0 +1,423 @@
+\documentclass[10pt,a4paper]{article}
+
+\usepackage[portuguese]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{geometry}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\usepackage{enumitem}
+\usepackage{booktabs}
+\usepackage{caption}
+\usepackage{subcaption}
+\usepackage{float}
+\usepackage{natbib}
+\usepackage{setspace}
+\usepackage{parskip}
+\usepackage{fancyhdr}
+
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+
+\geometry{margin=2.5cm}
+\onehalfspacing
+
+\pagestyle{fancy}
+\fancyhf{}
+\fancyfoot[C]{\small lorran@posgrad.lncc.br}
+\fancyfoot[R]{\thepage}
+\renewcommand{\headrulewidth}{0pt}
+
+\makeatletter
+\newcommand{\subtitle}[1]{\gdef\@subtitle{#1}}
+\newcommand{\@subtitle}{}
+\renewcommand{\maketitle}{%
+  \begin{center}
+    {\LARGE\bfseries \@title \par}
+    \vskip 0.5em
+    {\large \@subtitle \par}
+    \vskip 1em
+    {\large \@author \par}
+    \vskip 1em
+    {\large \@date \par}
+  \end{center}
+  \par
+  \vskip 1.5em
+}
+\makeatother
+
+\newtheorem{theorem}{Teorema}[section]
+\newtheorem{definition}{Definição}[section]
+\newtheorem{proposition}{Proposição}[section]
+\newtheorem{example}{Exemplo}[section]
+
+\title{1ª Lista de Exercícios}
+\subtitle{Tópicos Avançados de Redes Neurais Profundas e Aplicações \\ Prof. Gilson Antonio Giraldi}
+\author{Lorran de Araújo Durães Soares}
+\date{\today}
+
+\begin{document}
+
+\maketitle
+
+% \begin{abstract}
+% Escreva aqui o resumo da atividade (150-250 palavras).
+% \end{abstract}
+
+% \noindent\textbf{Palavras-chave:} palavra1, palavra2, palavra3
+
+\section*{Introdução}
+
+Este documento apresenta a resolução da primeira lista de exercícios da disciplina \textit{Tópicos Avançados em Redes Neurais Profundas e Aplicações}, ministrada pelo professor Gilson Antonio Giraldi. A lista é composta por três questões, que serão apresentadas ao longo deste documento, seguidas de suas respectivas resoluções.
+
+O código desenvolvido para a realização dos exercícios está disponível no repositório \url{https://github.com/lorrantwo/LNCC}. A implementação foi desenvolvida em arquivos \textit{Jupyter Notebook} (formato \texttt{.ipynb}), utilizando bibliotecas como NumPy \cite{harris2020numpy} para manipulação de tensores, Matplotlib \cite{hunter2007matplotlib} para visualização dos resultados e PyTorch \cite{paszke2019pytorch} para a definição, treinamento e avaliação dos modelos de inteligência artificial.
+
+\section{GANs para Parabolóide}
+
+\textbf{Questão 1: }Considere o parabolóide $P \subset \mathbb{R}^3$ representado por:
+\begin{equation}
+S : \mathbb{R}^2 \longrightarrow P; \quad S(x_1, x_2) = (x_1, x_2, x_1^2 + x_2^2 + 1)
+\label{eq:paraboloid}
+\end{equation}
+
+Construa o conjunto de dados:
+\[
+D = \{S(x_i^1, x_i^2) \in \mathbb{R}^3; \quad i = 1, \ldots, N\}
+\]
+
+\begin{itemize}
+    \item[(a)] Usando APENAS o conjunto de dados $D$, gere um modelo GAN que compute $S$;
+    \item[(b)] Tomando o gerador $G$, projete uma estratégia para avaliar a qualidade da representação através do erro quadrático médio (RMSE) e do erro absoluto médio (MAE). Discuta os resultados;
+    \item[(c)] Calcule $\nabla G$ através de diferenciação automática sobre um conjunto de pontos $Z$ no espaço latente. Tomando a expressão (\ref{eq:paraboloid}), calcule $\nabla S$ analiticamente sobre $Z$ e compare os resultados. Discuta seus achados.
+\end{itemize}
+
+\textbf{Resolução: }
+
+Primeiramente, para a resolução desta questão, foi gerado o conjunto de dados $D$ a partir do parabolóide definido na Equação~\ref{eq:paraboloid}. Utilizando a biblioteca NumPy~\cite{harris2020numpy}, foram amostrados 5000 pontos do domínio $\mathcal{X} = [-2,2] \times [-2,2]$ a partir de uma distribuição uniforme. Cada ponto $(x_1, x_2) \in \mathcal{X}$ foi mapeado pela função $S(x_1, x_2) = (x_1, x_2, x_1^2 + x_2^2 + 1)$, gerando o conjunto de dados $D = \{S(x_i^1, x_i^2)\}_{i=1}^{5000} \subset \mathbb{R}^3$. A Figura~\ref{fig:data1} ilustra os pontos amostrados no plano cartesiano e a superfície do parabolóide correspondente.
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.9\textwidth]{imgs/data1.png}
+  \caption{Pontos do domínio $\mathcal{X}$ amostrados uniformemente e o respectivo parabolóide gerado.}
+  \label{fig:data1}
+\end{figure}
+
+Desse conjunto, 80\% das amostras foram destinadas ao treinamento da GAN, enquanto os 20\% restantes foram utilizados como conjunto de teste. Como o conjunto de dados possui três coordenadas, sendo a terceira definida pela soma dos quadrados das duas primeiras acrescida de uma constante, seus valores tendem naturalmente a apresentar uma escala maior. Para minimizar esse desbalanceamento entre as variáveis de entrada, os dados foram normalizados utilizando a padronização Z-Score:
+
+\begin{equation}
+z = \frac{x - \mu}{\sigma},
+\label{eq:zscore}
+\end{equation}
+
+em que $\mu$ e $\sigma$ representam, respectivamente, a média e o desvio padrão de cada coordenada, calculados apenas sobre o conjunto de treinamento.
+
+Com os dados preparados, foi definida a arquitetura da GAN. A Figura~\ref{fig:gan1} apresenta as arquiteturas da rede Geradora e da rede Discriminadora, definidas empiricamente.
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.8\textwidth]{imgs/arquitetura_GAN_1.png}
+  \caption{Arquiteturas da rede Geradora e da rede Discriminadora.}
+  \label{fig:gan1}
+\end{figure}
+
+A rede Geradora possui cinco camadas totalmente conectadas: uma camada de entrada com dimensão 2, correspondente ao espaço latente, três camadas ocultas com 128 neurônios cada e uma camada de saída com três neurônios, correspondentes às coordenadas $(x_1, x_2, x_3)$ do parabolóide gerado.
+
+A rede Discriminadora também possui três camadas ocultas com 128 neurônios cada. As camadas intermediárias utilizam a função de ativação LeakyReLU, definida na Equação~\ref{eq:leakyrelu}:
+
+\begin{equation}
+\text{LeakyReLU}(x)=\max(\alpha x,x),
+\label{eq:leakyrelu}
+\end{equation}
+
+com $\alpha = 0.2$. A camada de saída possui um único neurônio, seguido pela função de ativação sigmoide, definida na Equação~\ref{eq:sigmoid}:
+
+\begin{equation}
+\sigma(x)=\frac{1}{1+e^{-x}}.
+\label{eq:sigmoid}
+\end{equation}
+
+A saída do discriminador, denotada por $D(x)\in[0,1]$, representa a probabilidade de uma amostra pertencer ao conjunto de dados reais. Valores próximos de 1 indicam maior confiança de que a amostra seja real, enquanto valores próximos de 0 indicam que ela foi gerada pela rede Geradora.
+
+Para a otimização de ambas as redes foi utilizado o algoritmo Adam, definido pelas Equações~\ref{eq:adam1}--\ref{eq:adam4}, com taxa de aprendizado igual a $10^{-4}$ e parâmetros $\beta_1 = 0.9$ e $\beta_2 = 0.999$, definidos empiricamente.
+
+\begin{align}
+m_t &= \beta_1 m_{t-1} + (1-\beta_1)g_t,
+\label{eq:adam1}\\
+v_t &= \beta_2 v_{t-1} + (1-\beta_2)g_t^2,
+\label{eq:adam2}\\
+\hat{m}_t &= \frac{m_t}{1-\beta_1^t}, \qquad
+\hat{v}_t = \frac{v_t}{1-\beta_2^t},
+\label{eq:adam3}\\
+\theta_{t+1} &= \theta_t - \eta\frac{\hat{m}_t}{\sqrt{\hat{v}_t}+\varepsilon},
+\label{eq:adam4}
+\end{align}
+
+em que $g_t$ representa o gradiente da função de custo em relação aos parâmetros $\theta$, $\eta$ é a taxa de aprendizado e $\varepsilon$ é uma constante utilizada para garantir estabilidade numérica.
+
+A função de custo utilizada no treinamento da GAN foi baseada na
+\textit{Binary Cross-Entropy} (BCE), uma função de erro empregada em
+problemas de classificação binária. Considerando um rótulo verdadeiro
+$y \in \{0,1\}$ e a probabilidade estimada pela rede $\hat{y}$, a BCE é
+definida como:
+
+\begin{equation}
+\mathcal{L}_{BCE}(y,\hat{y})
+=
+-\left[
+y\log(\hat{y})
++
+(1-y)\log(1-\hat{y})
+\right].
+\label{eq:bce}
+\end{equation}
+
+No treinamento da GAN, o discriminador é responsável por classificar
+amostras reais como pertencentes à classe $y=1$ e amostras geradas pelo
+gerador como pertencentes à classe $y=0$. Dessa forma, a função de custo
+do discriminador, obtida a partir da BCE, é dada por:
+
+\begin{equation}
+\mathcal{L}_D
+=
+-\frac{1}{B}
+\sum_{i=1}^{B}
+\left[
+\log(D(x^{(i)}))
++
+\log(1-D(G(z^{(i)})))
+\right],
+\label{eq:loss_discriminator}
+\end{equation}
+
+onde $x^{(i)}$ representa uma amostra real do conjunto de treinamento,
+$z^{(i)}$ representa um vetor amostrado do espaço latente e $B$ é o
+tamanho do lote.
+
+Por outro lado, durante a atualização da rede Geradora, o objetivo é
+produzir amostras que sejam classificadas pelo discriminador como reais.
+Assim, a função de custo do gerador é definida por:
+
+\begin{equation}
+\mathcal{L}_G
+=
+-\frac{1}{B}
+\sum_{i=1}^{B}
+\log(D(G(z^{(i)}))).
+\label{eq:loss_generator}
+\end{equation}
+
+O treinamento foi realizado durante 300 épocas, utilizando $k=1$, em que $k$ representa o número de atualizações da rede Discriminadora realizadas para cada atualização da rede Geradora em cada lote (\textit{batch}) de treinamento. Durante o treinamento, a rede Geradora recebe como entrada vetores latentes $z \in \mathbb{R}^{d}$, amostrados da distribuição uniforme $p_z = U(-2,2)$. Esses vetores pertencem a um espaço latente independente do espaço dos dados e são utilizados como fonte de aleatoriedade para a geração de novas amostras. A partir desses vetores, a rede Geradora aprende uma transformação capaz de produzir amostras que seguem a distribuição dos dados reais. O procedimento completo de treinamento adotado é apresentado no Algoritmo~\ref{alg:gan_train}.
+
+\begin{algorithm}[H]
+\caption{Treinamento da GAN}
+\label{alg:gan_train}
+\begin{algorithmic}[1]
+
+\Require Conjunto de treinamento $D$, gerador $G$, discriminador $D$, número de épocas $N$, tamanho do lote $B$, número de atualizações do discriminador $k=1$
+\For{época $=1$ até $N$}
+    \For{cada lote $\{x^{(i)}\}_{i=1}^{B}$}
+
+        \For{$j=1$ até $k$}
+            \State Amostrar um lote de exemplos reais $\{x^{(i)}\}_{i=1}^{B}$
+            \State Amostrar um lote de vetores latentes $\{z^{(i)}\}_{i=1}^{B}\sim p_z$
+            \State Gerar amostras falsas $\hat{x}^{(i)} = G(z^{(i)})$
+            \State Calcular
+            \[
+            \mathcal{L}_D
+            =
+            -\frac{1}{B}
+            \sum_{i=1}^{B}
+            \left[
+            \log D(x^{(i)})
+            +
+            \log\left(1-D(\hat{x}^{(i)})\right)
+            \right]
+            \]
+            \State Atualizar os parâmetros da rede Discriminadora utilizando Adam
+        \EndFor
+
+        \State Amostrar um novo lote de vetores latentes $\{z^{(i)}\}_{i=1}^{B}\sim p_z$
+        \State Gerar amostras falsas $\hat{x}^{(i)} = G(z^{(i)})$
+        \State Calcular
+        \[
+        \mathcal{L}_G
+        =
+        -\frac{1}{B}
+        \sum_{i=1}^{B}
+        \log D(\hat{x}^{(i)})
+        \]
+        \State Atualizar os parâmetros da rede Geradora utilizando Adam
+
+    \EndFor
+\EndFor
+
+\end{algorithmic}
+\end{algorithm}
+
+Após o treinamento, a Figura~\ref{fig:loss_gan1} apresenta a evolução da função de custo das redes Geradora e Discriminadora ao longo das épocas. Observa-se que, nas primeiras iterações, a perda da rede Geradora aumenta, indicando que a rede Discriminadora consegue distinguir com facilidade as amostras reais das amostras geradas. À medida que o treinamento evolui, a rede Geradora passa a produzir amostras mais realistas, reduzindo gradualmente sua perda, enquanto a perda da rede Discriminadora tende a estabilizar. Esse comportamento é consistente com o processo esperado de treinamento de uma GAN.
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.5\textwidth]{imgs/loss_gan1.png}
+  \caption{Evolução das funções de perda da rede geradora e da rede discriminadora.}
+  \label{fig:loss_gan1}
+\end{figure}
+
+Logo após, o modelo treinado foi utilizado para gerar novas amostras a partir do conjunto de teste. A superfície produzida pela rede Geradora é apresentada na Figura~\ref{fig:paraboloides}. Visualmente, observa-se que a GAN foi capaz de aprender a geometria do parabolóide, produzindo uma superfície bastante semelhante àquela presente no conjunto de dados original.
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=\textwidth]{imgs/paraboloides.png}
+  \caption{Comparação entre paraboloide do dataset e o gerado pela rede.}
+  \label{fig:paraboloides}
+\end{figure}
+
+Com o intuito de analisar os resultados obtidos, novos vetores do espaço latente foram amostrados e fornecidos à rede Geradora para a criação de novas amostras. Como a GAN aprende a distribuição dos dados e não uma correspondência direta entre entrada e saída, a avaliação não foi realizada comparando pontos individuais gerados com pontos reais, mas sim verificando o erro geométrico das amostras geradas em relação à superfície esperada do parabolóide.
+
+Para isso, foi calculado o erro da superfície gerada utilizando as métricas \textit{Mean Absolute Error} (MAE), definida por:
+
+\begin{equation}
+\mathrm{MAE}
+=
+\frac{1}{N}
+\sum_{i=1}^{N}
+\left|
+e_i
+\right|,
+\label{eq:mae}
+\end{equation}
+
+e \textit{Root Mean Squared Error} (RMSE), definida como:
+
+\begin{equation}
+\mathrm{RMSE}
+=
+\sqrt{
+\frac{1}{N}
+\sum_{i=1}^{N}
+e_i^2
+},
+\label{eq:rmse}
+\end{equation}
+
+onde $e_i$ representa o erro geométrico entre o ponto gerado e a superfície ideal do parabolóide, dado por:
+
+\begin{equation}
+e_i =
+z_i - (x_i^2 + y_i^2 + 1).
+\label{eq:surface_error}
+\end{equation}
+
+Além disso, foram calculadas as versões relativas dessas métricas, normalizando os erros pelo valor médio da superfície gerada. Observa-se que a rede Geradora apresentou um erro geométrico absoluto de aproximadamente $0.35$ para a métrica MAE e $0.44$ para a métrica RMSE. Quando normalizados, esses valores correspondem a erros relativos de aproximadamente $14.05\%$ e $16.87\%$, respectivamente. Esses resultados indicam que a GAN foi capaz de aprender a estrutura geral do parabolóide, gerando amostras próximas à superfície real, embora ainda apresente um desvio geométrico devido à dificuldade inerente do treinamento adversarial. 
+
+Por fim, considere a parametrização analítica do parabolóide definida pela função
+$S:\mathbb{R}^{2}\rightarrow\mathbb{R}^{3}$,
+
+\begin{equation}
+S(x,y)=\left(x,y,x^{2}+y^{2}+1\right).
+\end{equation}
+
+Como essa função é diferenciável, seu jacobiano pode ser obtido analiticamente por
+
+\begin{equation}
+\nabla S(x,y)=
+\begin{bmatrix}
+1 & 0\\
+0 & 1\\
+2x & 2y
+\end{bmatrix}.
+\label{eq:jacobian_s}
+\end{equation}
+
+Da mesma forma, a rede Geradora define uma transformação
+$G:\mathcal{Z}\rightarrow\mathbb{R}^{3}$, que recebe vetores do espaço latente
+$\mathcal{Z}$ e produz pontos no espaço tridimensional. Seu jacobiano pode ser obtido por diferenciação automática, sendo dado por
+
+\begin{equation}
+\nabla G(z)=
+\frac{\partial G(z)}{\partial z}.
+\label{eq:jacobian_g}
+\end{equation}
+
+A comparação entre $\nabla S$ e $\nabla G$ permite investigar se o gerador aprendeu uma parametrização semelhante à função analítica do parabolóide. Caso isso ocorresse, seria esperado que as duas primeiras coordenadas produzidas pelo gerador reproduzissem aproximadamente as coordenadas do vetor latente, enquanto a terceira coordenada representasse a função $x^{2}+y^{2}+1$. Entretanto, o treinamento de uma GAN não impõe essa restrição. O objetivo do gerador é apenas transformar vetores do espaço latente em amostras cuja distribuição seja semelhante à distribuição dos dados reais, não existindo qualquer obrigação de preservar as coordenadas do espaço latente durante essa transformação.
+
+A Tabela~\ref{tab:res_grad1} apresenta a comparação entre os jacobianos da função analítica e da rede Geradora. Para quantificar a diferença entre os jacobianos, foi utilizada a norma de Frobenius da matriz diferença entre $\nabla G$ e $\nabla S$. Para cada ponto avaliado, essa métrica é definida por
+
+\begin{equation}
+\|\nabla G - \nabla S\|_F
+=
+\sqrt{
+\sum_{i=1}^{3}
+\sum_{j=1}^{2}
+\left(
+\frac{\partial G_i}{\partial z_j}
+-
+\frac{\partial S_i}{\partial x_j}
+\right)^2
+},
+\label{eq:frobenius}
+\end{equation}
+
+em que a norma de Frobenius corresponde à raiz quadrada da soma dos quadrados de todos os elementos da matriz diferença entre os jacobianos. Quanto menor esse valor, maior é a semelhança entre as transformações locais realizadas pela função analítica e pela rede Geradora. Como essa métrica é calculada para cada amostra avaliada, foi considerada a média dessas normas ao longo de todos os pontos analisados, obtendo-se uma medida global da discrepância entre os dois jacobianos.
+
+Observa-se que a norma média de Frobenius da diferença entre os jacobianos foi igual a 2,12, indicando diferenças significativas entre as duas transformações. Em particular, nota-se que as derivadas das duas primeiras coordenadas diferem substancialmente da parametrização analítica. Por exemplo, enquanto para a função $S$ tem-se $\partial x/\partial a = 1$ e $\partial y/\partial b = 1$, a rede Geradora apresentou valores médios próximos de $0,00$ e $-0,03$, respectivamente. De maneira semelhante, as derivadas cruzadas, que são nulas na parametrização analítica, assumiram valores elevados no gerador, como $\partial x/\partial b=-0,93$ e $\partial y/\partial a=-1,14$. Por outro lado, as derivadas associadas à terceira coordenada apresentaram diferenças relativamente menores, com valores médios de $-0,03$ e $-0,24$ para o gerador, enquanto a função analítica apresentou $-0,05$ e $-0,06$.
+
+\begin{table}[H]
+\centering
+\caption{Comparação entre os jacobianos da função analítica $S$ e da rede Geradora $G$.}
+\label{tab:res_grad1}
+
+\begin{tabular}{lcccccc}
+\toprule
+ & $\partial x/\partial a$ & $\partial x/\partial b$ & $\partial y/\partial a$ & $\partial y/\partial b$ & $\partial z/\partial a$ & $\partial z/\partial b$ \\
+\midrule
+$G(a,b)$ & 0.0010 & -0.9281 & -1.1413 & -0.0334 & -0.0333 & -0.2426 \\
+$S(a,b)$ & 1.0000 & 0.0000 & 0.0000 & 1.0000 & -0.0546 & -0.0631 \\
+$G-S$    & -0.9990 & -0.9281 & -1.1413 & -1.0334 & 0.0213 & -0.1795 \\
+\bottomrule
+\end{tabular}
+
+\vspace{0.3cm}
+
+\begin{tabular}{lc}
+\toprule
+Métrica & Valor \\
+\midrule
+Norma média de Frobenius & 2.1233 \\
+Desvio padrão & 0.1006 \\
+\bottomrule
+\end{tabular}
+
+\end{table}
+
+Esse comportamento pode ser visualizado na Figura~\ref{fig:desloc1}, que ilustra a correspondência entre os vetores do espaço latente e as duas primeiras coordenadas produzidas pelo gerador. Observa-se que os pontos não permanecem nas mesmas posições do espaço latente, evidenciando que a rede não aprendeu a identidade nas duas primeiras coordenadas. Em vez disso, o gerador aprendeu uma transformação não linear do espaço latente, utilizando os vetores apenas como uma fonte de aleatoriedade para produzir amostras pertencentes à distribuição do parabolóide. Esse resultado está de acordo com o objetivo do treinamento adversarial de uma GAN, que busca reproduzir a distribuição dos dados e não uma parametrização específica da superfície.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.55\textwidth]{imgs/desloc1.png}
+    \caption{Correspondência entre os vetores do espaço latente e as duas primeiras coordenadas produzidas pela rede Geradora. As setas indicam o deslocamento de cada vetor latente para as coordenadas $(x,y)$ geradas, evidenciando que a rede aprende uma transformação do espaço latente em vez de preservar sua parametrização.}
+    \label{fig:desloc1}
+\end{figure}
+
+Além desses fatores, deve-se considerar que reproduzir a geometria diferencial da superfície é uma tarefa mais complexa do que apenas reproduzir sua distribuição de pontos. A função objetivo de uma GAN clássica não impõe restrições para que o gerador preserve a estrutura local do \textit{manifold}, como seus gradientes ou espaços tangentes. Dessa forma, mesmo quando as amostras geradas pertencem aproximadamente ao parabolóide, pequenas oscilações locais podem fazer com que os gradientes diferenciem significativamente daqueles da superfície analítica \cite{li2021mrgan}. 
+
+\section{Questão 2 - GANs com Operações Convolucionais}
+
+Escolha uma base de dados de imagens e treine um modelo GAN sobre ela, com um gerador utilizando operações convolucionais.
+
+\begin{itemize}
+    \item[(a)] Considere dois critérios de parada diferentes e compare-os;
+    \item[(b)] Escolha duas métricas de qualidade de imagem e compare-as para analisar o resultado da GAN.
+\end{itemize}
+
+\section{Questão 3 - CNN para Estimativa de Idade}
+
+Utilize a base de dados UTKFace (\url{https://github.com/aicip/UTKFace}) ou outro repositório similar, e considere o problema de regressão de estimar a idade dada uma imagem facial usando um modelo CNN.
+
+Aplique teoria de invariância (ou equivariância) para melhorar os resultados.
+
+\bibliographystyle{plainnat}
+\bibliography{referencias}
+
+\end{document}
