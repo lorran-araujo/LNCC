@@ -1,0 +1,87 @@
+\documentclass[10pt,a4paper]{article}
+
+\usepackage[portuguese]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{geometry}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\usepackage{enumitem}
+\usepackage{booktabs}
+\usepackage{caption}
+\usepackage{subcaption}
+\usepackage{float}
+%\usepackage{natbib}
+\usepackage[numbers]{natbib}
+\usepackage{setspace}
+\usepackage{parskip}
+\usepackage{fancyhdr}
+
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+
+\usepackage{multirow}
+\usepackage{array}
+
+\geometry{margin=2.5cm}
+\onehalfspacing
+
+\pagestyle{fancy}
+\fancyhf{}
+\fancyfoot[C]{\small lorran@posgrad.lncc.br}
+\fancyfoot[R]{\thepage}
+\renewcommand{\headrulewidth}{0pt}
+
+\makeatletter
+\newcommand{\subtitle}[1]{\gdef\@subtitle{#1}}
+\newcommand{\@subtitle}{}
+\renewcommand{\maketitle}{%
+  \begin{center}
+    {\LARGE\bfseries \@title \par}
+    \vskip 0.5em
+    {\large \@subtitle \par}
+    \vskip 1em
+    {\large \@author \par}
+    \vskip 1em
+    {\large \@date \par}
+  \end{center}
+  \par
+  \vskip 1.5em
+}
+\makeatother
+
+\newtheorem{theorem}{Teorema}[section]
+\newtheorem{definition}{Definição}[section]
+\newtheorem{proposition}{Proposição}[section]
+\newtheorem{example}{Exemplo}[section]
+
+\title{Primeira Lista de Exercícios}
+\subtitle{Tópicos Avançados de Redes Neurais Profundas e Aplicações \\ Prof. Gilson Antonio Giraldi}
+\author{Lorran de Araújo Durães Soares}
+\date{\today}
+
+\begin{document}
+
+\maketitle
+
+% \begin{abstract}
+% Abstract.
+% \end{abstract}
+
+% \noindent\textbf{Palavras-chave:} palavra1, palavra2, palavra3
+
+\section*{Introdução}
+
+Este documento apresenta a resolução da primeira lista de exercícios da disciplina \textit{Tópicos Avançados em Redes Neurais Profundas e Aplicações}, ministrada pelo professor Gilson Antonio Giraldi. A lista é composta por três questões, que serão apresentadas ao longo deste documento, seguidas de suas respectivas resoluções.
+
+O código desenvolvido para a realização dos exercícios está disponível no repositório \url{https://github.com/lorrantwo/LNCC}. A implementação foi desenvolvida em arquivos \textit{Jupyter Notebook} (formato \texttt{.ipynb}), utilizando bibliotecas como NumPy \cite{harris2020numpy} para manipulação de tensores, Matplotlib \cite{hunter2007matplotlib} para visualização dos resultados e PyTorch \cite{paszke2019pytorch} para a definição, treinamento e avaliação dos modelos de inteligência artificial.
+
+\input{exercises/exercise1}
+\input{exercises/exercise2}
+\input{exercises/exercise3}
+
+\bibliographystyle{plainnat}
+\bibliography{referencias}
+
+\end{document}
