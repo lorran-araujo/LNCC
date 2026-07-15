@@ -1,8 +1,8 @@
-This is LuaHBTeX, Version 1.17.0 (TeX Live 2023/Debian)  (format=lualatex 2025.10.7)  14 JUL 2026 15:15
+This is LuaHBTeX, Version 1.17.0 (TeX Live 2023/Debian)  (format=lualatex 2025.10.7)  15 JUL 2026 10:50
  restricted system commands enabled.
  file:line:error style messages enabled.
-**/home/lorrantwo/Documentos/GitHub/LNCC/Doutorado/Disciplinas/03-Topicos-avancados-redes-neurais-profundas/lista1/escrita/atividade 2>/dev/null
-(/home/lorrantwo/Documentos/GitHub/LNCC/Doutorado/Disciplinas/03-Topicos-avancados-redes-neurais-profundas/lista1/escrita/atividade.tex
+**/home/lorrantwo/Documentos/GitHub/LNCC/Doutorado/Disciplinas/03-Topicos-avancados-redes-neurais-profundas/lista1/escrita/main 2>/dev/null
+(/home/lorrantwo/Documentos/GitHub/LNCC/Doutorado/Disciplinas/03-Topicos-avancados-redes-neurais-profundas/lista1/escrita/main.tex
 LaTeX2e <2023-11-01> patch level 1
 L3 programming layer <2024-01-22>
 Lua module: luaotfload 2023-08-31 3.26 Lua based OpenType font support
@@ -500,43 +500,58 @@ Document Style algorithmicx 1.2 - a greatly improved `algorithmic' style
 \ALG@tmplength=\skip71
 )
 Document Style - pseudocode environments for use with the `algorithmicx' style
+) (/usr/share/texlive/texmf-dist/tex/latex/multirow/multirow.sty
+Package: multirow 2021/03/15 v2.8 Span multiple rows of a table
+\multirow@colwidth=\skip72
+\multirow@cntb=\count307
+\multirow@dima=\skip73
+\bigstrutjot=\dimen186
+) (/usr/share/texlive/texmf-dist/tex/latex/tools/array.sty
+Package: array 2023/10/16 v2.5g Tabular extension package (FMi)
+\col@sep=\dimen187
+\ar@mcellbox=\box56
+\extrarowheight=\dimen188
+\NC@list=\toks37
+\extratabsurround=\skip74
+\backup@length=\skip75
+\ar@cellbox=\box57
 )
-\c@theorem=\count307
-\c@definition=\count308
-\c@proposition=\count309
-\c@example=\count310
+\c@theorem=\count308
+\c@definition=\count309
+\c@proposition=\count310
+\c@example=\count311
  (/usr/share/texlive/texmf-dist/tex/latex/l3backend/l3backend-luatex.def
 File: l3backend-luatex.def 2024-01-04 L3 backend support: PDF output (LuaTeX)
-\l__color_backend_stack_int=\count311
+\l__color_backend_stack_int=\count312
 Inserting `l3color' in `luaotfload.parse_color'.
-\l__pdf_internal_box=\box56
-) (./atividade.aux)
-\openout1 = atividade.aux
+\l__pdf_internal_box=\box58
+) (./main.aux)
+\openout1 = main.aux
 
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 60.
-LaTeX Font Info:    ... okay on input line 60.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 60.
-LaTeX Font Info:    ... okay on input line 60.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 60.
-LaTeX Font Info:    ... okay on input line 60.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 60.
-LaTeX Font Info:    ... okay on input line 60.
-LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 60.
-LaTeX Font Info:    Trying to load font information for TS1+cmr on input line 60.
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 64.
+LaTeX Font Info:    ... okay on input line 64.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 64.
+LaTeX Font Info:    ... okay on input line 64.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 64.
+LaTeX Font Info:    ... okay on input line 64.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 64.
+LaTeX Font Info:    ... okay on input line 64.
+LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 64.
+LaTeX Font Info:    Trying to load font information for TS1+cmr on input line 64.
  (/usr/share/texlive/texmf-dist/tex/latex/base/ts1cmr.fd
 File: ts1cmr.fd 2023/04/13 v2.5m Standard LaTeX font definitions
 )
-LaTeX Font Info:    ... okay on input line 60.
-LaTeX Font Info:    Checking defaults for TU/lmr/m/n on input line 60.
-LaTeX Font Info:    ... okay on input line 60.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 60.
-LaTeX Font Info:    ... okay on input line 60.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 60.
-LaTeX Font Info:    ... okay on input line 60.
-LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 60.
-LaTeX Font Info:    ... okay on input line 60.
-LaTeX Font Info:    Checking defaults for PU/pdf/m/n on input line 60.
-LaTeX Font Info:    ... okay on input line 60.
+LaTeX Font Info:    ... okay on input line 64.
+LaTeX Font Info:    Checking defaults for TU/lmr/m/n on input line 64.
+LaTeX Font Info:    ... okay on input line 64.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 64.
+LaTeX Font Info:    ... okay on input line 64.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 64.
+LaTeX Font Info:    ... okay on input line 64.
+LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 64.
+LaTeX Font Info:    ... okay on input line 64.
+LaTeX Font Info:    Checking defaults for PU/pdf/m/n on input line 64.
+LaTeX Font Info:    ... okay on input line 64.
 
 *geometry* driver: auto-detecting
 *geometry* detected driver: luatex
@@ -574,104 +589,170 @@ LaTeX Font Info:    ... okay on input line 60.
 
 (/usr/share/texlive/texmf-dist/tex/context/base/mkii/supp-pdf.mkii
 [Loading MPS to PDF converter (version 2006.09.02).]
-\scratchcounter=\count312
-\scratchdimen=\dimen186
-\scratchbox=\box57
-\nofMPsegments=\count313
-\nofMParguments=\count314
-\everyMPshowfont=\toks37
-\MPscratchCnt=\count315
-\MPscratchDim=\dimen187
-\MPnumerator=\count316
-\makeMPintoPDFobject=\count317
-\everyMPtoPDFconversion=\toks38
+\scratchcounter=\count313
+\scratchdimen=\dimen189
+\scratchbox=\box59
+\nofMPsegments=\count314
+\nofMParguments=\count315
+\everyMPshowfont=\toks38
+\MPscratchCnt=\count316
+\MPscratchDim=\dimen190
+\MPnumerator=\count317
+\makeMPintoPDFobject=\count318
+\everyMPtoPDFconversion=\toks39
 ) (/usr/share/texlive/texmf-dist/tex/latex/epstopdf-pkg/epstopdf-base.sty
 Package: epstopdf-base 2020-01-24 v2.11 Base part for package epstopdf
 Package epstopdf-base Info: Redefining graphics rule for `.eps' on input line 485.
  (/usr/share/texlive/texmf-dist/tex/latex/latexconfig/epstopdf-sys.cfg
 File: epstopdf-sys.cfg 2010/07/13 v1.3 Configuration of (r)epstopdf for TeX Live
 ))
-Package hyperref Info: Link coloring OFF on input line 60.
- (./atividade.out) (./atividade.out)
+Package hyperref Info: Link coloring OFF on input line 64.
+ (./main.out) (./main.out)
 \@outlinefile=\write3
 
-\openout3 = atividade.out
+\openout3 = main.out
 Package caption Info: Begin \AtBeginDocument code.
 Package caption Info: float package is loaded.
 Package caption Info: End \AtBeginDocument code.
 
 Couldn't patch \deferred@thm@head!
-LaTeX Font Info:    Trying to load font information for T1+lmtt on input line 74.
+LaTeX Font Info:    Trying to load font information for T1+lmtt on input line 78.
 (/usr/share/texmf/tex/latex/lm/t1lmtt.fd
 File: t1lmtt.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
 )
-LaTeX Font Info:    Trying to load font information for U+msa on input line 74.
+LaTeX Font Info:    Trying to load font information for U+msa on input line 78.
  (/usr/share/texlive/texmf-dist/tex/latex/amsfonts/umsa.fd
 File: umsa.fd 2013/01/14 v3.01 AMS symbols A
 )
-LaTeX Font Info:    Trying to load font information for U+msb on input line 74.
+LaTeX Font Info:    Trying to load font information for U+msb on input line 78.
  (/usr/share/texlive/texmf-dist/tex/latex/amsfonts/umsb.fd
 File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 )
-Overfull \hbox (2.89543pt too wide) in paragraph at lines 74--75
+
+Package natbib Warning: Citation `harris2020numpy' on page 1 undefined on input line 78.
+
+
+Package natbib Warning: Citation `hunter2007matplotlib' on page 1 undefined on input line 78.
+
+
+Package natbib Warning: Citation `paszke2019pytorch' on page 1 undefined on input line 78.
+
+
+Overfull \hbox (2.89543pt too wide) in paragraph at lines 78--79
 \T1/lmtt/m/n/10 com/lorrantwo/LNCC$[]\T1/lmr/m/n/10 . A im-ple-men-ta-ção foi de-sen-vol-vida em ar-qui-vos \T1/lmr/m/it/10 Jupy-ter No-te-book \T1/lmr/m/n/10 (for-mato \T1/lmtt/m/n/10 .ipynb\T1/lmr/m/n/10 ),
  []
 
-<imgs/data1.png, id=28, 926.5014pt x 426.393pt>
+(./exercises/exercise1.tex
+
+Package natbib Warning: Citation `harris2020numpy' on page 1 undefined on input line 22.
+
+<imgs/data1.png, id=12, 926.5014pt x 426.393pt>
 File: imgs/data1.png Graphic file (type png)
 <use imgs/data1.png>
-Package luatex.def Info: imgs/data1.png  used on input line 101.
+Package luatex.def Info: imgs/data1.png  used on input line 26.
 (luatex.def)             Requested size: 409.71692pt x 188.5634pt.
 [1
 
 {/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map}]
-<imgs/arquitetura_GAN_1.png, id=56, 1413.28pt x 770.88pt>
+<imgs/arquitetura_GAN_1.png, id=37, 1413.28pt x 770.88pt>
 File: imgs/arquitetura_GAN_1.png Graphic file (type png)
 <use imgs/arquitetura_GAN_1.png>
-Package luatex.def Info: imgs/arquitetura_GAN_1.png  used on input line 119.
+Package luatex.def Info: imgs/arquitetura_GAN_1.png  used on input line 44.
 (luatex.def)             Requested size: 364.19667pt x 198.6479pt.
  [2<./imgs/data1.png><./imgs/arquitetura_GAN_1.png>] [3]
-Package hyperref Info: bookmark level for unknown algorithm defaults to 0 on input line 213.
-<imgs/loss_gan1.png, id=87, 498.4221pt x 354.123pt>
+Package hyperref Info: bookmark level for unknown algorithm defaults to 0 on input line 138.
+<imgs/loss_gan1.png, id=68, 498.4221pt x 354.123pt>
 File: imgs/loss_gan1.png Graphic file (type png)
 <use imgs/loss_gan1.png>
-Package luatex.def Info: imgs/loss_gan1.png  used on input line 262.
+Package luatex.def Info: imgs/loss_gan1.png  used on input line 187.
 (luatex.def)             Requested size: 227.62206pt x 161.72598pt.
  [4]
-<imgs/paraboloides.png, id=98, 975.645pt x 403.9893pt>
+<imgs/paraboloides.png, id=79, 975.645pt x 403.9893pt>
 File: imgs/paraboloides.png Graphic file (type png)
 <use imgs/paraboloides.png>
-Package luatex.def Info: imgs/paraboloides.png  used on input line 271.
+Package luatex.def Info: imgs/paraboloides.png  used on input line 196.
 (luatex.def)             Requested size: 455.24411pt x 188.5065pt.
  [5<./imgs/loss_gan1.png><./imgs/paraboloides.png>] [6]
-<imgs/desloc1.png, id=122, 428.5611pt x 435.7881pt>
+
+LaTeX Warning: Reference `fig:desloc1' on page 7 undefined on input line 319.
+
+<imgs/desloc1.png, id=102, 428.5611pt x 435.7881pt>
 File: imgs/desloc1.png Graphic file (type png)
 <use imgs/desloc1.png>
-Package luatex.def Info: imgs/desloc1.png  used on input line 398.
+Package luatex.def Info: imgs/desloc1.png  used on input line 323.
 (luatex.def)             Requested size: 250.38564pt x 254.61249pt.
- [7] (./atividade.bbl [8<./imgs/desloc1.png>]) [9] (./atividade.aux)
+[7]
+
+Package natbib Warning: Citation `li2021mrgan' on page 8 undefined on input line 328.
+
+) (./exercises/exercise2.tex
+
+LaTeX Warning: Reference `fig:data2' on page 8 undefined on input line 12.
+
+[8<./imgs/desloc1.png>]
+<imgs/data2.png, id=114, 567.3195pt x 569.4876pt>
+File: imgs/data2.png Graphic file (type png)
+<use imgs/data2.png>
+Package luatex.def Info: imgs/data2.png  used on input line 22.
+(luatex.def)             Requested size: 273.14923pt x 274.19383pt.
+
+
+LaTeX Warning: Reference `fig:gan2' on page 9 undefined on input line 27.
+
+
+LaTeX Warning: Reference `tab:gan_architecture' on page 9 undefined on input line 33.
+
+[9<./imgs/data2.png>]
+<imgs/gan2.png, id=123, 1413.28pt x 770.88pt>
+File: imgs/gan2.png Graphic file (type png)
+<use imgs/gan2.png>
+Package luatex.def Info: imgs/gan2.png  used on input line 61.
+(luatex.def)             Requested size: 432.48051pt x 235.90027pt.
+) (./exercises/exercise3.tex) (./main.bbl [10<./imgs/gan2.png>])
+
+Package natbib Warning: There were undefined citations.
+
+[11] (./main.aux
+
+Package natbib Warning: Citation(s) may have changed.
+(natbib)                Rerun to get citations correct.
+
+)
  ***********
 LaTeX2e <2023-11-01> patch level 1
 L3 programming layer <2024-01-22>
  ***********
-Package rerunfilecheck Info: File `atividade.out' has not changed.
-(rerunfilecheck)             Checksum: 471ECD2D74718F9857E42DD4A2AC3E05;719.
+
+
+LaTeX Warning: There were undefined references.
+
+
+LaTeX Warning: Label(s) may have changed. Rerun to get cross-references right.
+
+
+Package rerunfilecheck Warning: File `main.out' has changed.
+(rerunfilecheck)                Rerun to get outlines right
+(rerunfilecheck)                or use package `bookmark'.
+
+Package rerunfilecheck Info: Checksums for `main.out':
+(rerunfilecheck)             Before: 379FBFF80247AB9592CB9B07BF022DAE;157
+(rerunfilecheck)             After:  E32C0F4C8251653922900FF7F654CD2B;647.
 )
 
 Here is how much of LuaTeX's memory you used:
- 15361 strings out of 476553
+ 15553 strings out of 476553
  125086,1977958 words of node,token memory allocated
- 761 words of node memory still in use:
-   7 hlist, 2 vlist, 2 rule, 2 glue, 4 kern, 2 sub_mlist, 1 glyph, 79 attribute, 60 glue_spec, 41 attribute_list, 1 write, 1 pdf_action nodes
-   avail lists: 2:955,3:314,4:23,5:450,6:80,7:8302,8:57,9:719,10:16,11:865
- 36987 multiletter control sequences out of 65536+600000
+ 778 words of node memory still in use:
+   7 hlist, 2 vlist, 2 rule, 2 glue, 4 kern, 2 sub_mlist, 1 glyph, 83 attribute, 61 glue_spec, 43 attribute_list, 1 write, 1 pdf_action nodes
+   avail lists: 1:1,2:949,3:285,4:25,5:441,6:72,7:8134,8:57,9:719,10:16,11:859
+ 37139 multiletter control sequences out of 65536+600000
  46 fonts using 2913543 bytes
- 72i,12n,75p,1084b,479s stack positions out of 10000i,1000n,20000p,200000b,200000s
-{/usr/share/texmf/fonts/enc/dvips/lm/lm-ec.enc}</usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmex10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi7.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr7.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy7.pfb></usr/share/texmf/fonts/type1/public/lm/lmbx10.pfb></usr/share/texmf/fonts/type1/public/lm/lmbx12.pfb></usr/share/texmf/fonts/type1/public/lm/lmr10.pfb></usr/share/texmf/fonts/type1/public/lm/lmr12.pfb></usr/share/texmf/fonts/type1/public/lm/lmr8.pfb></usr/share/texmf/fonts/type1/public/lm/lmr9.pfb></usr/share/texmf/fonts/type1/public/lm/lmri10.pfb></usr/share/texmf/fonts/type1/public/lm/lmtt10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/symbols/msbm10.pfb>
-Output written on atividade.pdf (9 pages, 2550242 bytes).
+ 72i,12n,75p,1107b,466s stack positions out of 10000i,1000n,20000p,200000b,200000s
+{/usr/share/texmf/fonts/enc/dvips/lm/lm-ec.enc}</usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmex10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi7.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr7.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy7.pfb></usr/share/texmf/fonts/type1/public/lm/lmbx10.pfb></usr/share/texmf/fonts/type1/public/lm/lmbx12.pfb></usr/share/texmf/fonts/type1/public/lm/lmr10.pfb></usr/share/texmf/fonts/type1/public/lm/lmr12.pfb></usr/share/texmf/fonts/type1/public/lm/lmr7.pfb></usr/share/texmf/fonts/type1/public/lm/lmr8.pfb></usr/share/texmf/fonts/type1/public/lm/lmr9.pfb></usr/share/texmf/fonts/type1/public/lm/lmri10.pfb></usr/share/texmf/fonts/type1/public/lm/lmtt10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/symbols/msbm10.pfb>
+Output written on main.pdf (11 pages, 3731741 bytes).
 
-PDF statistics: 201 PDF objects out of 1000 (max. 8388607)
- 162 compressed objects within 2 object streams
- 44 named destinations out of 1000 (max. 131072)
- 25 words of extra memory for PDF output out of 10000 (max. 100000000)
+PDF statistics: 206 PDF objects out of 1000 (max. 8388607)
+ 160 compressed objects within 2 object streams
+ 50 named destinations out of 1000 (max. 131072)
+ 9 words of extra memory for PDF output out of 10000 (max. 100000000)
 

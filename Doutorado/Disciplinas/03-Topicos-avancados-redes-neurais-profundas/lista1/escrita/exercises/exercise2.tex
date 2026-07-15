@@ -1,0 +1,68 @@
+\section{GANs com Operações Convolucionais}
+
+\textbf{Questão 2:} Escolha uma base de dados de imagens e treine um modelo GAN sobre ela, com um gerador utilizando operações convolucionais.
+
+\begin{itemize}
+    \item[(a)] Considere dois critérios de parada diferentes e compare-os;
+    \item[(b)] Escolha duas métricas de qualidade de imagem e compare-as para analisar o resultado da GAN.
+\end{itemize}
+
+\textbf{Resolução:}
+
+Para a realização deste experimento, foi utilizado o conjunto de dados \textit{MNIST} (\textit{Modified National Institute of Standards and Technology}) \cite{}, composto por imagens em escala de cinza de dígitos manuscritos. Cada imagem possui dimensão de $28 \times 28$ pixels e pertence a uma das dez classes correspondentes aos dígitos de $0$ a $9$. O conjunto de dados contém 70.000 imagens, sendo 60.000 destinadas ao treinamento e 10.000 ao teste. Neste trabalho, apenas o conjunto de treinamento foi utilizado para o treinamento da Rede Generativa Adversarial (GAN). A Figura~\ref{fig:data2} apresenta alguns exemplos de imagens presentes na base de dados.
+
+Como a camada de saída da rede geradora utiliza a função de ativação \textit{Tanh}, cujos valores pertencem ao intervalo $[-1,1]$, as imagens do MNIST, originalmente representadas no intervalo $[0,1]$, foram normalizadas para o intervalo $[-1,1]$ por meio da seguinte transformação:
+
+\begin{equation}
+x_{\text{norm}} = 2x - 1.
+\end{equation}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.6\textwidth]{imgs/data2.png}
+    \caption{Exemplos de imagens do conjunto de treinamento do MNIST.}
+    \label{fig:data2}
+\end{figure}
+
+Considerando que o problema envolve a geração de imagens, foi adotada uma arquitetura convolucional para a GAN, inspirada na estrutura proposta pelas DCGANs (\textit{Deep Convolutional Generative Adversarial Networks}). A arquitetura utilizada é ilustrada na Figura~\ref{fig:gan2}.
+
+A rede geradora recebe como entrada um vetor de ruído aleatório de dimensão 100, representado no formato $(100,1,1)$. A partir desse vetor, sucessivas camadas de convolução transposta (\textit{ConvTranspose2d}) realizam o aumento gradual da resolução espacial até produzir uma imagem sintética de dimensão $28 \times 28$. Entre as camadas convolucionais são empregadas camadas de \textit{Batch Normalization} e a função de ativação ReLU, enquanto a camada de saída utiliza a função \textit{Tanh}, garantindo que os valores gerados permaneçam no mesmo intervalo dos dados normalizados.
+
+A rede discriminadora recebe como entrada imagens reais ou sintéticas de dimensão $28 \times 28$ e realiza sucessivas operações de convolução para reduzir sua dimensão espacial e extrair características discriminativas. Nas camadas intermediárias é utilizada a função de ativação \textit{LeakyReLU} com coeficiente negativo igual a 0,2, além de uma camada de \textit{Batch Normalization}. A camada final produz um único valor escalar, indicando o grau de confiança da rede de que a imagem fornecida pertence ao conjunto de dados reais.
+
+A Tabela~\ref{tab:gan_architecture} resume a arquitetura completa das redes geradora e discriminadora implementadas neste trabalho. Os hiperparâmetros da arquitetura foram definidos empiricamente, a partir de experimentos envolvendo diferentes configurações de número de filtros, tamanhos de kernel e demais parâmetros das camadas convolucionais.
+
+\begin{table}[H]
+\centering
+\caption{Arquitetura da GAN utilizada nos experimentos.}
+\label{tab:gan_architecture}
+\renewcommand{\arraystretch}{1.2}
+\begin{tabular}{|c|c|c|c|c|c|}
+\hline
+\textbf{Rede} & \textbf{Camada} & \textbf{Filtros} & \textbf{Kernel} & \textbf{Stride} & \textbf{Padding} \\
+\hline
+\multirow{3}{*}{Geradora}
+& ConvTranspose2d & 256 & $7\times7$ & 1 & 0 \\
+& ConvTranspose2d & 128 & $4\times4$ & 2 & 1 \\
+& ConvTranspose2d & 1 & $4\times4$ & 2 & 1 \\
+\hline
+\multirow{3}{*}{Discriminadora}
+& Conv2d & 64 & $4\times4$ & 2 & 1 \\
+& Conv2d & 128 & $4\times4$ & 2 & 1 \\
+& Conv2d & 1 & $7\times7$ & 1 & 0 \\
+\hline
+\end{tabular}
+\end{table}
+
+Na rede geradora, as duas primeiras camadas convolucionais transpostas são seguidas por operações de \textit{Batch Normalization} e pela função de ativação ReLU. Já na camada de saída é utilizada a função \textit{Tanh}. Na rede discriminadora, a primeira camada convolucional é seguida por uma função \textit{LeakyReLU}; a segunda camada utiliza \textit{Batch Normalization} e \textit{LeakyReLU}; enquanto a camada final não emprega função de ativação, produzindo diretamente o escore utilizado pela função de perda durante o treinamento.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.95\textwidth]{imgs/gan2.png}
+    \caption{Arquitetura da GAN convolucional utilizada neste trabalho.}
+    \label{fig:gan2}
+\end{figure}
+
+O treinamento foi então realizado de maneira análoga ao descrito na questão anterior (veja \ref{cap:exercise1}), utilizando o otimizador Adam, com mesmos hiperparâmetros, e as mesmas funções de custo a serem minimizadas.
+
+Como estratégia de critérios de paradas adotados, utilizamos a estratégia de Early Stopping com patience igual a 5, ou seja, se não houvesse melhora do melhor resultado em 5 épocas o treinamento era encerrado. Como avaliar o resultado, foi empregada duas estratégias diferentes através de duas métricas diferentes que caracterizam os dois critérios de parada utilizadas. O primeiro treinava o modelo por 30 épocas sem parar, e o outro utilizava a métrica 
