@@ -1,4 +1,4 @@
-\begin{thebibliography}{4}
+\begin{thebibliography}{5}
 \providecommand{\natexlab}[1]{#1}
 \providecommand{\url}[1]{\texttt{#1}}
 \expandafter\ifx\csname urlstyle\endcsname\relax
@@ -15,6 +15,14 @@ John~D. Hunter.
 \newblock Matplotlib: A 2{D} graphics environment.
 \newblock \emph{Computing in Science \& Engineering}, 9\penalty0 (3):\penalty0
   90--95, 2007.
+
+\bibitem[LeCun et~al.(1998)LeCun, Bottou, Bengio, and
+  Haffner]{lecun1998gradient}
+Yann LeCun, L\'eon Bottou, Yoshua Bengio, and Patrick Haffner.
+\newblock Gradient-based learning applied to document recognition.
+\newblock \emph{Proceedings of the IEEE}, 86\penalty0 (11):\penalty0
+  2278--2324, 1998.
+\newblock \doi{10.1109/5.726791}.
 
 \bibitem[Li et~al.(2021)Li, Kailkhura, Anirudh, Zhang, Zhou, Liang, Han, and
   Varshney]{li2021mrgan}

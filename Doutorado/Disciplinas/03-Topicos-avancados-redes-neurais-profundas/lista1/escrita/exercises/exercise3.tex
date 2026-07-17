@@ -1,5 +1,177 @@
-\section{Questão 3 - CNN para Estimativa de Idade}
+\section{CNN para Estimativa de Idade}
 
-Utilize a base de dados UTKFace (\url{https://github.com/aicip/UTKFace}) ou outro repositório similar, e considere o problema de regressão de estimar a idade dada uma imagem facial usando um modelo CNN.
+\textbf{Questão 3:} Utilize a base de dados UTKFace (\url{https://github.com/aicip/UTKFace}) ou outro repositório similar, e considere o problema de regressão de estimar a idade dada uma imagem facial usando um modelo CNN. Aplique teoria de invariância (ou equivariância) para melhorar os resultados.
 
-Aplique teoria de invariância (ou equivariância) para melhorar os resultados.
+\textbf{Resolução:} 
+
+Na realização desta questão foi utilizado o conjunto de dados \textit{UTKFace}, composto por 23.708 imagens RGB de faces humanas com diferentes idades, gêneros e etnias. Cada imagem possui como rótulo a idade da pessoa retratada, permitindo que o problema seja tratado como uma tarefa de regressão.
+
+A Figura~\ref{fig:data3} apresenta a distribuição das amostras por faixas etárias. Observa-se um desbalanceamento significativo na base de dados, com uma elevada concentração de exemplos entre 20 e 29 anos, enquanto as faixas etárias mais elevadas, especialmente acima dos 80 anos, possuem uma quantidade substancialmente menor de amostras. Esse desbalanceamento pode influenciar diretamente o processo de aprendizado da rede, uma vez que modelos supervisionados tendem a apresentar melhor capacidade de generalização para regiões do espaço de dados mais representadas durante o treinamento. Consequentemente, espera-se um desempenho superior nas faixas etárias com maior número de exemplos e maiores erros para idades pouco representadas.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.7\textwidth]{imgs/data3.png}
+    \caption{Distribuição do número de imagens do conjunto UTKFace agrupadas por faixas etárias. Observa-se uma concentração de amostras em adultos jovens, principalmente entre 20 e 29 anos, enquanto as faixas etárias mais avançadas apresentam quantidade significativamente menor de exemplos.}
+    \label{fig:data3}
+\end{figure}
+
+O conjunto de dados foi dividido em três subconjuntos independentes, sendo 16.595 imagens destinadas ao treinamento, 1.556 imagens para validação e 3.557 imagens para teste. O conjunto de treinamento foi utilizado para o ajuste dos parâmetros da rede neural, enquanto o conjunto de validação foi empregado para monitorar o desempenho do modelo durante o treinamento e selecionar o melhor ponto de parada. Por fim, o conjunto de teste foi reservado exclusivamente para a avaliação final do modelo, garantindo uma estimativa imparcial de sua capacidade de generalização.
+
+Antes de serem fornecidas à rede, todas as imagens foram normalizadas canal a canal segundo
+
+\begin{equation}
+    x' = \frac{x-\mu}{\sigma},
+\end{equation}
+
+em que $\mu=0{,}5$ e $\sigma=0{,}5$ para os três canais RGB. Como os pixels já estavam representados no intervalo $[0,1]$, essa transformação mapeia seus valores para o intervalo $[-1,1]$, tornando a distribuição dos dados mais adequada ao treinamento da rede neural e favorecendo a estabilidade do processo de otimização.
+
+Como modelo de regressão foi utilizada uma rede neural convolucional (CNN), cuja arquitetura é composta por dois módulos principais. O primeiro consiste em uma sequência de blocos convolucionais responsáveis pela extração automática de características das imagens de entrada. Cada bloco é formado por uma camada convolucional, seguida por uma função de ativação ReLU e operações de redução da dimensionalidade espacial, permitindo que a rede aprenda representações hierárquicas das faces.
+
+Após a etapa de extração de características, é aplicado um operador de \textit{Adaptive Average Pooling}, que reduz os mapas de características para um vetor de tamanho fixo, independentemente das dimensões espaciais da entrada. Em seguida, esse vetor é processado por camadas totalmente conectadas (\textit{fully connected}), responsáveis por realizar a tarefa de regressão e estimar a idade da pessoa presente na imagem. Para reduzir o sobreajuste durante o treinamento, foi empregada uma camada de \textit{dropout} com taxa de 30\%.
+
+A Figura~\ref{fig:model3} apresenta a arquitetura utilizada neste trabalho, destacando os blocos convolucionais responsáveis pela extração de características e as camadas lineares responsáveis pela predição da idade.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{imgs/model3.png}
+    \caption{Arquitetura da rede neural convolucional utilizada para a regressão da idade. O modelo é composto por quatro blocos convolucionais para extração de características, seguidos por uma etapa de \textit{Adaptive Average Pooling} e camadas totalmente conectadas que produzem uma única saída correspondente à idade estimada.}
+    \label{fig:model3}
+\end{figure}
+
+O treinamento foi realizado de maneira análoga às questões anteriores, utilizando o otimizador Adam com seus hiperparâmetros padrão para minimizar a função de custo do modelo.
+
+Seja $f_{\theta}$ a rede neural parametrizada pelo conjunto de parâmetros $\theta$. Considerando um mini-lote de treinamento $B$, a função de custo utilizada corresponde ao Erro Quadrático Médio (\textit{Mean Squared Error -- MSE}), definido por
+
+\begin{equation}
+\mathcal{L}_{\mathrm{MSE}} =
+\frac{1}{|B|}
+\sum_{i=1}^{|B|}
+\left(
+y_i-f_{\theta}(x_i)
+\right)^2,
+\end{equation}
+
+em que $x_i$ representa a $i$-ésima imagem do mini-lote, $y_i$ corresponde à idade real associada a essa imagem e $f_{\theta}(x_i)$ é a idade estimada pela rede neural. Essa função penaliza quadraticamente erros de predição, atribuindo maior peso a estimativas mais distantes do valor real, sendo amplamente empregada em problemas de regressão. 
+
+Para explorar o princípio da invariância durante o treinamento da rede neural, foram avaliadas duas estratégias distintas baseadas na aplicação de transformações às imagens de entrada.
+
+\begin{itemize}
+
+\item \textbf{Aumentação dos dados:} nesta abordagem, cada imagem de entrada $x_i$ pode ser submetida, de forma aleatória, a um conjunto de transformações antes de ser apresentada à rede. As transformações utilizadas foram:
+
+\begin{itemize}
+    \item \textbf{Recorte aleatório com redimensionamento (\textit{Random Resized Crop}):} realiza um recorte aleatório preservando entre 85\% e 100\% da área original da imagem, permitindo pequenas variações na razão de aspecto antes do redimensionamento para o tamanho de entrada da rede.
+    
+    \item \textbf{Espelhamento horizontal aleatório (\textit{Random Horizontal Flip}):} inverte horizontalmente a imagem com probabilidade de 50\%, aumentando a variabilidade das poses sem alterar a idade da pessoa.
+
+    \item \textbf{Rotação aleatória (\textit{Random Rotation}):} aplica rotações aleatórias de até $\pm10^\circ$, tornando o modelo mais robusto a pequenas inclinações da cabeça.
+
+    \item \textbf{Variação de brilho, contraste, saturação e tonalidade (\textit{Color Jitter}):} modifica levemente as características fotométricas da imagem, simulando diferentes condições de iluminação e aquisição.
+\end{itemize}
+
+Seja $\mathcal{T}$ uma transformação pertencente ao conjunto descrito anteriormente. Nesse caso, a função de custo passa a ser dada por
+
+\begin{equation}
+\mathcal{L}_{\mathrm{MSE}}
+=
+\frac{1}{|B|}
+\sum_{i=1}^{|B|}
+\left(
+y_i-f_{\theta}(\mathcal{T}(x_i))
+\right)^2.
+\end{equation}
+
+A ideia central é que a idade estimada pela rede permaneça aproximadamente a mesma independentemente da transformação aplicada à imagem. Assim, deseja-se que
+
+\begin{equation}
+f_{\theta}(\mathcal{T}_1(x_i))
+\approx
+f_{\theta}(\mathcal{T}_2(x_i))
+\approx
+\cdots
+\approx
+f_{\theta}(\mathcal{T}_n(x_i))
+\approx
+f_{\theta}(x_i)
+\approx
+y_i,
+\end{equation}
+
+em que $\mathcal{T}_1,\ldots,\mathcal{T}_n$ representam diferentes transformações possíveis. Como essas transformações são aplicadas aleatoriamente durante o treinamento, uma mesma imagem pode sofrer diferentes modificações em épocas distintas ou até mesmo permanecer inalterada.
+
+\item \textbf{Regularização de Consistência:} diferentemente da abordagem anterior, nesta estratégia a imagem original continua sendo utilizada na função de custo supervisionada principal. Entretanto, uma versão transformada da mesma imagem é utilizada para construir um termo adicional de regularização que incentiva a rede a produzir predições consistentes para ambas as versões.
+
+A função de custo torna-se
+
+\begin{equation}
+\mathcal{L}
+=
+\frac{1}{|B|}
+\sum_{i=1}^{|B|}
+\left(
+y_i-f_{\theta}(x_i)
+\right)^2
++
+\lambda
+\frac{1}{|B|}
+\sum_{i=1}^{|B|}
+\left(
+f_{\theta}(\mathcal{T}(x_i))
+-
+f_{\theta}(x_i)
+\right)^2,
+\end{equation}
+
+em que o primeiro termo corresponde ao erro de regressão supervisionado e o segundo representa a perda de consistência. O hiperparâmetro $\lambda$ controla a contribuição desse termo durante o treinamento e, neste trabalho, foi fixado em $\lambda=0,5$.
+
+Dessa forma, além de minimizar o erro em relação ao rótulo verdadeiro, o modelo é explicitamente incentivado a produzir estimativas semelhantes para uma imagem e suas diferentes versões transformadas, tornando a rede mais robusta às variações presentes nos dados.
+\end{itemize}
+
+A partir dessas estratégias, foram considerados quatro cenários de treinamento, todos executados durante 50 épocas:
+
+\begin{itemize}
+    \item \textbf{M1:} treinamento convencional, sem aumentação de dados e sem regularização de consistência;
+    \item \textbf{M2:} treinamento utilizando apenas aumentação de dados;
+    \item \textbf{M3:} treinamento utilizando apenas regularização de consistência;
+    \item \textbf{M4:} treinamento utilizando simultaneamente aumentação de dados e regularização de consistência.
+\end{itemize}
+
+A Figura~\ref{fig:train3} apresenta a evolução da função de custo durante o treinamento para os quatro modelos considerados. Observa-se que os modelos M1 e M2 alcançam menores valores da função de custo ao longo das épocas quando comparados aos modelos M3 e M4. Entretanto, essa comparação deve ser feita com cautela, uma vez que os modelos M3 e M4 incluem um termo adicional de regularização por consistência na função objetivo. Dessa forma, a perda total desses modelos não representa apenas o erro de regressão, mas também a penalização associada à consistência das predições, tornando seus valores naturalmente mais elevados.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.65\textwidth]{imgs/train3.png}
+    \caption{Evolução da função de custo durante o treinamento dos quatro modelos avaliados. Os modelos M3 e M4 apresentam valores mais elevados devido à inclusão do termo de regularização por consistência na função objetivo.}
+    \label{fig:train3}
+\end{figure}
+
+Por outro lado, a Figura~\ref{fig:res3} apresenta a evolução do Erro Absoluto Médio (MAE, Equação~\ref{eq:mae}) calculado sobre o conjunto de validação. Observa-se que todos os modelos apresentam oscilações relativamente elevadas durante as primeiras épocas de treinamento, comportamento esperado enquanto a rede ainda está convergindo. Após aproximadamente a época 30, as curvas tornam-se mais estáveis, permitindo uma comparação mais consistente entre os métodos. Nota-se que o modelo M4 alcança os menores valores de MAE ao final do treinamento, enquanto o modelo convencional (M1) apresenta o pior desempenho entre as abordagens avaliadas.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.65\textwidth]{imgs/res3.png}
+    \caption{Evolução do Erro Absoluto Médio (MAE) no conjunto de validação durante o treinamento dos modelos M1 (baseline), M2 (aumentação de dados), M3 (regularização de consistência) e M4 (combinação das duas estratégias). Observa-se uma redução progressiva do erro ao longo das épocas, com o modelo M4 apresentando os menores valores ao final do treinamento.}
+    \label{fig:res3}
+\end{figure}
+
+A Figura~\ref{fig:res32} apresenta os valores finais de MAE e RMSE (Equação~\ref{eq:rmse}) obtidos sobre o conjunto de teste para cada modelo. Os resultados mostram que o modelo M4 obteve simultaneamente os menores valores para ambas as métricas, indicando maior precisão na estimativa da idade das pessoas. Em contrapartida, o modelo M1 apresentou os maiores erros, evidenciando o benefício da incorporação do princípio da invariância durante o treinamento.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.75\textwidth]{imgs/res32.png}
+    \caption{Valores finais de MAE e RMSE obtidos no conjunto de teste para os quatro modelos avaliados. O modelo M4 apresenta os menores valores para ambas as métricas, indicando melhor desempenho na tarefa de regressão da idade.}
+    \label{fig:res32}
+\end{figure}
+
+A Tabela~\ref{tab:res3} resume quantitativamente os resultados obtidos para os quatro modelos, incluindo os valores absolutos de MAE e RMSE, bem como a melhoria percentual em relação ao modelo baseline (M1). Observa-se que tanto a aumentação de dados quanto a regularização de consistência contribuem para reduzir os erros de predição, sendo a combinação das duas estratégias a que proporciona o melhor desempenho geral.
+
+Por fim, a Figura~\ref{fig:res33} apresenta exemplos de imagens pertencentes ao conjunto de teste, acompanhadas da idade real e das idades estimadas pelos modelos M1, M2, M3 e M4. De maneira geral, observa-se que os modelos que incorporam o princípio da invariância produzem estimativas mais próximas dos valores reais, especialmente o modelo M4, que apresenta maior consistência nas predições.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{imgs/res33.png}
+    \caption{Exemplos de imagens do conjunto de teste. Para cada imagem são apresentados a idade real e as idades estimadas pelos modelos M1 (baseline), M2 (aumentação de dados), M3 (regularização de consistência) e M4 (combinação das duas estratégias).}
+    \label{fig:res33}
+\end{figure}
+
+Os resultados obtidos demonstram a importância da incorporação do princípio da invariância no treinamento da rede neural. Enquanto o modelo M1 foi treinado apenas com o erro supervisionado, os demais modelos exploraram diferentes mecanismos para tornar as predições mais robustas a pequenas variações nas imagens de entrada. Como consequência, todos os modelos baseados em invariância apresentaram desempenho superior ao baseline. Em particular, o modelo M4, que combina aumentação de dados e regularização de consistência, obteve os melhores resultados em todas as métricas analisadas. Comparando as estratégias individualmente, observa-se que a regularização de consistência (M3) apresentou um desempenho ligeiramente superior ao obtido apenas com aumentação de dados (M2), embora ambas tenham contribuído para melhorar a capacidade de generalização da rede.

@@ -34,30 +34,61 @@
 \newlabel{fig:loss_gan1}{{3}{5}{Evolução das funções de perda da rede geradora e da rede discriminadora}{figure.caption.4}{}}
 \@writefile{lof}{\contentsline {figure}{\numberline {4}{\ignorespaces Comparação entre paraboloide do dataset e o gerado pela rede.}}{5}{figure.caption.5}\protected@file@percent }
 \newlabel{fig:paraboloides}{{4}{5}{Comparação entre paraboloide do dataset e o gerado pela rede}{figure.caption.5}{}}
-\newlabel{eq:mae}{{12}{5}{GANs para Parabolóide}{equation.1.12}{}}
+\newlabel{eq:mae}{{12}{6}{GANs para Parabolóide}{equation.1.12}{}}
 \newlabel{eq:rmse}{{13}{6}{GANs para Parabolóide}{equation.1.13}{}}
 \newlabel{eq:surface_error}{{14}{6}{GANs para Parabolóide}{equation.1.14}{}}
 \newlabel{eq:jacobian_s}{{16}{6}{GANs para Parabolóide}{equation.1.16}{}}
 \newlabel{eq:jacobian_g}{{17}{6}{GANs para Parabolóide}{equation.1.17}{}}
-\newlabel{eq:frobenius}{{18}{6}{GANs para Parabolóide}{equation.1.18}{}}
+\newlabel{eq:frobenius}{{18}{7}{GANs para Parabolóide}{equation.1.18}{}}
 \@writefile{lot}{\contentsline {table}{\numberline {1}{\ignorespaces Comparação entre os jacobianos da função analítica $S$ e da rede Geradora $G$.}}{7}{table.caption.6}\protected@file@percent }
 \newlabel{tab:res_grad1}{{1}{7}{Comparação entre os jacobianos da função analítica $S$ e da rede Geradora $G$}{table.caption.6}{}}
 \citation{li2021mrgan}
-\citation{}
+\citation{lecun1998gradient}
 \@writefile{lof}{\contentsline {figure}{\numberline {5}{\ignorespaces Correspondência entre os vetores do espaço latente e as duas primeiras coordenadas produzidas pela rede Geradora. As setas indicam o deslocamento de cada vetor latente para as coordenadas $(x,y)$ geradas, evidenciando que a rede aprende uma transformação do espaço latente em vez de preservar sua parametrização.}}{8}{figure.caption.7}\protected@file@percent }
 \newlabel{fig:desloc1}{{5}{8}{Correspondência entre os vetores do espaço latente e as duas primeiras coordenadas produzidas pela rede Geradora. As setas indicam o deslocamento de cada vetor latente para as coordenadas $(x,y)$ geradas, evidenciando que a rede aprende uma transformação do espaço latente em vez de preservar sua parametrização}{figure.caption.7}{}}
 \@writefile{toc}{\contentsline {section}{\numberline {2}GANs com Operações Convolucionais}{8}{section.2}\protected@file@percent }
 \@writefile{lof}{\contentsline {figure}{\numberline {6}{\ignorespaces Exemplos de imagens do conjunto de treinamento do MNIST.}}{9}{figure.caption.8}\protected@file@percent }
 \newlabel{fig:data2}{{6}{9}{Exemplos de imagens do conjunto de treinamento do MNIST}{figure.caption.8}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {7}{\ignorespaces Distribuição dos dados de treinamento por classes.}}{9}{figure.caption.9}\protected@file@percent }
+\newlabel{fig:data_distribution2}{{7}{9}{Distribuição dos dados de treinamento por classes}{figure.caption.9}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {2}{\ignorespaces Arquitetura da GAN utilizada nos experimentos.}}{10}{table.caption.10}\protected@file@percent }
+\newlabel{tab:gan_architecture}{{2}{10}{Arquitetura da GAN utilizada nos experimentos}{table.caption.10}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {8}{\ignorespaces Arquitetura da GAN convolucional utilizada neste trabalho.}}{10}{figure.caption.11}\protected@file@percent }
+\newlabel{fig:gan2}{{8}{10}{Arquitetura da GAN convolucional utilizada neste trabalho}{figure.caption.11}{}}
+\newlabel{eq:fid}{{20}{11}{GANs com Operações Convolucionais}{equation.2.20}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {9}{\ignorespaces Evolução das funções de custo normalizadas do gerador e do discriminador durante o treinamento da GAN para as duas estratégias de parada antecipada avaliadas: Early FID (M1) e estabilidade da acurácia do discriminador (M2). Observa-se que o treinamento utilizando M1 foi interrompido na época 26, enquanto o treinamento utilizando M2 prosseguiu até a época 59.}}{11}{figure.caption.12}\protected@file@percent }
+\newlabel{fig:loss_gan2}{{9}{11}{Evolução das funções de custo normalizadas do gerador e do discriminador durante o treinamento da GAN para as duas estratégias de parada antecipada avaliadas: Early FID (M1) e estabilidade da acurácia do discriminador (M2). Observa-se que o treinamento utilizando M1 foi interrompido na época 26, enquanto o treinamento utilizando M2 prosseguiu até a época 59}{figure.caption.12}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {10}{\ignorespaces Evolução da métrica Fréchet Inception Distance (FID) ao longo do treinamento para as estratégias Early FID (M1) e estabilidade da acurácia do discriminador (M2). Valores menores indicam maior similaridade entre as distribuições das imagens reais e geradas.}}{12}{figure.caption.13}\protected@file@percent }
+\newlabel{fig:FID2}{{10}{12}{Evolução da métrica Fréchet Inception Distance (FID) ao longo do treinamento para as estratégias Early FID (M1) e estabilidade da acurácia do discriminador (M2). Valores menores indicam maior similaridade entre as distribuições das imagens reais e geradas}{figure.caption.13}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {11}{\ignorespaces Evolução da acurácia do discriminador no conjunto de validação durante o treinamento da GAN para as estratégias Early FID (M1) e estabilidade da acurácia do discriminador (M2). A região final da curva de M2 apresenta menor variação entre épocas, satisfazendo o critério de estabilidade utilizado para a parada antecipada.}}{12}{figure.caption.14}\protected@file@percent }
+\newlabel{fig:disc_acc2}{{11}{12}{Evolução da acurácia do discriminador no conjunto de validação durante o treinamento da GAN para as estratégias Early FID (M1) e estabilidade da acurácia do discriminador (M2). A região final da curva de M2 apresenta menor variação entre épocas, satisfazendo o critério de estabilidade utilizado para a parada antecipada}{figure.caption.14}{}}
+\newlabel{fig:res21}{{12a}{13}{Imagens geradas pelo modelo treinado utilizando o critério de parada antecipada baseado no FID (M1).\\}{figure.caption.15}{}}
+\newlabel{sub@fig:res21}{{a}{13}{Imagens geradas pelo modelo treinado utilizando o critério de parada antecipada baseado no FID (M1).\\}{figure.caption.15}{}}
+\newlabel{fig:res22}{{12b}{13}{Imagens geradas pelo modelo treinado utilizando o critério de estabilidade da acurácia do discriminador (M2)}{figure.caption.15}{}}
+\newlabel{sub@fig:res22}{{b}{13}{Imagens geradas pelo modelo treinado utilizando o critério de estabilidade da acurácia do discriminador (M2)}{figure.caption.15}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {12}{\ignorespaces Exemplos de dígitos sintéticos produzidos pelos modelos obtidos utilizando os dois critérios de parada antecipada. Visualmente, observa-se que o modelo treinado com o critério M2 produz amostras mais consistentes, com menor quantidade de artefatos e melhor definição dos dígitos.}}{13}{figure.caption.15}\protected@file@percent }
+\newlabel{fig:res2}{{12}{13}{Exemplos de dígitos sintéticos produzidos pelos modelos obtidos utilizando os dois critérios de parada antecipada. Visualmente, observa-se que o modelo treinado com o critério M2 produz amostras mais consistentes, com menor quantidade de artefatos e melhor definição dos dígitos}{figure.caption.15}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {3}{\ignorespaces Comparação entre os diferentes critérios de parada.}}{13}{table.caption.16}\protected@file@percent }
+\newlabel{tab:fid_results}{{3}{13}{Comparação entre os diferentes critérios de parada}{table.caption.16}{}}
+\newlabel{tab:fid_results}{{3}{13}{Comparação entre os diferentes critérios de parada}{table.caption.16}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {3}CNN para Estimativa de Idade}{13}{section.3}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {13}{\ignorespaces Distribuição do número de imagens do conjunto UTKFace agrupadas por faixas etárias. Observa-se uma concentração de amostras em adultos jovens, principalmente entre 20 e 29 anos, enquanto as faixas etárias mais avançadas apresentam quantidade significativamente menor de exemplos.}}{14}{figure.caption.17}\protected@file@percent }
+\newlabel{fig:data3}{{13}{14}{Distribuição do número de imagens do conjunto UTKFace agrupadas por faixas etárias. Observa-se uma concentração de amostras em adultos jovens, principalmente entre 20 e 29 anos, enquanto as faixas etárias mais avançadas apresentam quantidade significativamente menor de exemplos}{figure.caption.17}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {14}{\ignorespaces Arquitetura da rede neural convolucional utilizada para a regressão da idade. O modelo é composto por quatro blocos convolucionais para extração de características, seguidos por uma etapa de \textit  {Adaptive Average Pooling} e camadas totalmente conectadas que produzem uma única saída correspondente à idade estimada.}}{15}{figure.caption.18}\protected@file@percent }
+\newlabel{fig:model3}{{14}{15}{Arquitetura da rede neural convolucional utilizada para a regressão da idade. O modelo é composto por quatro blocos convolucionais para extração de características, seguidos por uma etapa de \textit {Adaptive Average Pooling} e camadas totalmente conectadas que produzem uma única saída correspondente à idade estimada}{figure.caption.18}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {15}{\ignorespaces Evolução da função de custo durante o treinamento dos quatro modelos avaliados. Os modelos M3 e M4 apresentam valores mais elevados devido à inclusão do termo de regularização por consistência na função objetivo.}}{17}{figure.caption.19}\protected@file@percent }
+\newlabel{fig:train3}{{15}{17}{Evolução da função de custo durante o treinamento dos quatro modelos avaliados. Os modelos M3 e M4 apresentam valores mais elevados devido à inclusão do termo de regularização por consistência na função objetivo}{figure.caption.19}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {16}{\ignorespaces Evolução do Erro Absoluto Médio (MAE) no conjunto de validação durante o treinamento dos modelos M1 (baseline), M2 (aumentação de dados), M3 (regularização de consistência) e M4 (combinação das duas estratégias). Observa-se uma redução progressiva do erro ao longo das épocas, com o modelo M4 apresentando os menores valores ao final do treinamento.}}{18}{figure.caption.20}\protected@file@percent }
+\newlabel{fig:res3}{{16}{18}{Evolução do Erro Absoluto Médio (MAE) no conjunto de validação durante o treinamento dos modelos M1 (baseline), M2 (aumentação de dados), M3 (regularização de consistência) e M4 (combinação das duas estratégias). Observa-se uma redução progressiva do erro ao longo das épocas, com o modelo M4 apresentando os menores valores ao final do treinamento}{figure.caption.20}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {17}{\ignorespaces Valores finais de MAE e RMSE obtidos no conjunto de teste para os quatro modelos avaliados. O modelo M4 apresenta os menores valores para ambas as métricas, indicando melhor desempenho na tarefa de regressão da idade.}}{18}{figure.caption.21}\protected@file@percent }
+\newlabel{fig:res32}{{17}{18}{Valores finais de MAE e RMSE obtidos no conjunto de teste para os quatro modelos avaliados. O modelo M4 apresenta os menores valores para ambas as métricas, indicando melhor desempenho na tarefa de regressão da idade}{figure.caption.21}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {18}{\ignorespaces Exemplos de imagens do conjunto de teste. Para cada imagem são apresentados a idade real e as idades estimadas pelos modelos M1 (baseline), M2 (aumentação de dados), M3 (regularização de consistência) e M4 (combinação das duas estratégias).}}{19}{figure.caption.22}\protected@file@percent }
+\newlabel{fig:res33}{{18}{19}{Exemplos de imagens do conjunto de teste. Para cada imagem são apresentados a idade real e as idades estimadas pelos modelos M1 (baseline), M2 (aumentação de dados), M3 (regularização de consistência) e M4 (combinação das duas estratégias)}{figure.caption.22}{}}
 \bibstyle{plainnat}
 \bibdata{referencias}
-\@writefile{lot}{\contentsline {table}{\numberline {2}{\ignorespaces Arquitetura da GAN utilizada nos experimentos.}}{10}{table.caption.9}\protected@file@percent }
-\newlabel{tab:gan_architecture}{{2}{10}{Arquitetura da GAN utilizada nos experimentos}{table.caption.9}{}}
-\@writefile{lof}{\contentsline {figure}{\numberline {7}{\ignorespaces Arquitetura da GAN convolucional utilizada neste trabalho.}}{10}{figure.caption.10}\protected@file@percent }
-\newlabel{fig:gan2}{{7}{10}{Arquitetura da GAN convolucional utilizada neste trabalho}{figure.caption.10}{}}
-\@writefile{toc}{\contentsline {section}{\numberline {3}Questão 3 - CNN para Estimativa de Idade}{10}{section.3}\protected@file@percent }
 \bibcite{harris2020numpy}{{1}{2020}{{Harris et~al.}}{{}}}
 \bibcite{hunter2007matplotlib}{{2}{2007}{{Hunter}}{{}}}
-\bibcite{li2021mrgan}{{3}{2021}{{Li et~al.}}{{Li, Kailkhura, Anirudh, Zhang, Zhou, Liang, Han, and Varshney}}}
-\bibcite{paszke2019pytorch}{{4}{2019}{{Paszke et~al.}}{{}}}
-\gdef \@abspage@last{11}
+\bibcite{lecun1998gradient}{{3}{1998}{{LeCun et~al.}}{{LeCun, Bottou, Bengio, and Haffner}}}
+\bibcite{li2021mrgan}{{4}{2021}{{Li et~al.}}{{Li, Kailkhura, Anirudh, Zhang, Zhou, Liang, Han, and Varshney}}}
+\bibcite{paszke2019pytorch}{{5}{2019}{{Paszke et~al.}}{{}}}
+\gdef \@abspage@last{20}
