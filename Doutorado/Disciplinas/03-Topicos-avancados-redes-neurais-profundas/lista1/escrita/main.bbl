@@ -1,9 +1,17 @@
-\begin{thebibliography}{5}
+\begin{thebibliography}{7}
 \providecommand{\natexlab}[1]{#1}
 \providecommand{\url}[1]{\texttt{#1}}
 \expandafter\ifx\csname urlstyle\endcsname\relax
   \providecommand{\doi}[1]{doi: #1}\else
   \providecommand{\doi}{doi: \begingroup \urlstyle{rm}\Url}\fi
+
+\bibitem[Goodfellow et~al.(2014)Goodfellow, Pouget-Abadie, Mirza, Xu,
+  Warde-Farley, Ozair, Courville, and Bengio]{goodfellow2014gan}
+Ian Goodfellow, Jean Pouget-Abadie, Mehdi Mirza, Bing Xu, David Warde-Farley,
+  Sherjil Ozair, Aaron Courville, and Yoshua Bengio.
+\newblock Generative adversarial nets.
+\newblock In \emph{Advances in Neural Information Processing Systems},
+  volume~27, 2014.
 
 \bibitem[Harris et~al.(2020)]{harris2020numpy}
 Charles~R. Harris et~al.
@@ -39,5 +47,11 @@ Adam Paszke et~al.
   library.
 \newblock In \emph{Advances in Neural Information Processing Systems 32}, pages
   8024--8035, 2019.
+
+\bibitem[Radford et~al.(2016)Radford, Metz, and Chintala]{radford2016dcgan}
+Alec Radford, Luke Metz, and Soumith Chintala.
+\newblock Unsupervised representation learning with deep convolutional
+  generative adversarial networks.
+\newblock In \emph{International Conference on Learning Representations}, 2016.
 
 \end{thebibliography}
