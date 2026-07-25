@@ -144,3 +144,5 @@ Doutorado/Disciplinas/03-Topicos-avancados-redes-neurais-profundas/lista1/data/M
 Doutorado/Disciplinas/03-Topicos-avancados-redes-neurais-profundas/lista1/data/MNIST/raw/t10k-labels-idx1-ubyte
 Doutorado/Disciplinas/03-Topicos-avancados-redes-neurais-profundas/lista1/data/MNIST/raw/train-images-idx3-ubyte
 Doutorado/Disciplinas/03-Topicos-avancados-redes-neurais-profundas/lista1/data/MNIST/raw/train-labels-idx1-ubyte
+*.pyc
+Doutorado/Disciplinas/03-Topicos-avancados-redes-neurais-profundas/diffusion/.venv

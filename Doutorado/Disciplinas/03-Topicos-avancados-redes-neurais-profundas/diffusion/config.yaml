@@ -1,0 +1,22 @@
+# ---------- Treinamento ----------
+data_dir: "./data/mnist_images"
+output_dir: "./checkpoints"
+
+image_size: 28
+batch_size: 64
+epochs: 10
+
+lr: 0.0002
+
+timesteps: 1000
+base_channels: 128
+
+num_workers: 4
+save_every: 25
+
+# ---------- Geração ----------
+checkpoint: "./checkpoints/diffusion_final.pt"
+sample_output_dir: "./samples"
+
+num_images: 20
+save_intermediates: 100
