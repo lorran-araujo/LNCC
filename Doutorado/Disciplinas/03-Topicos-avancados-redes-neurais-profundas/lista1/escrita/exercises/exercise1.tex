@@ -23,7 +23,7 @@ Primeiramente, para a resolução desta questão, foi gerado o conjunto de dados
 
 \begin{figure}[H]
   \centering
-  \includegraphics[width=0.9\textwidth]{imgs/data1.png}
+  \includegraphics[width=0.75\textwidth]{imgs/data1.png}
   \caption{Pontos do domínio $\mathcal{X}$ amostrados uniformemente e o respectivo parabolóide gerado.}
   \label{fig:data1}
 \end{figure}
@@ -37,34 +37,39 @@ z = \frac{x - \mu}{\sigma},
 
 em que $\mu$ e $\sigma$ representam, respectivamente, a média e o desvio padrão de cada coordenada, calculados apenas sobre o conjunto de treinamento.
 
-Com os dados preparados, foi definida a arquitetura da GAN. A Figura~\ref{fig:gan1} apresenta as arquiteturas da rede Geradora e da rede Discriminadora, definidas empiricamente.
+Este exercício utiliza uma rede do tipo GAN (\textit{Generative Adversarial Network}), originalmente proposta por \cite{goodfellow2014gan}. Após a preparação dos dados, foi definida a arquitetura empregada neste trabalho. A Figura~\ref{fig:gan1} apresenta as arquiteturas das redes Geradora e Discriminadora, inspiradas em arquiteturas já consolidadas na literatura.
 
 \begin{figure}[H]
-  \centering
-  \includegraphics[width=0.8\textwidth]{imgs/arquitetura_GAN_1.png}
-  \caption{Arquiteturas da rede Geradora e da rede Discriminadora.}
-  \label{fig:gan1}
+    \centering
+    \includegraphics[width=0.75\textwidth]{imgs/arquitetura_GAN_1.png}
+    \caption{Arquiteturas da rede Geradora e da rede Discriminadora.}
+    \label{fig:gan1}
 \end{figure}
 
-A rede Geradora possui cinco camadas totalmente conectadas: uma camada de entrada com dimensão 2, correspondente ao espaço latente, três camadas ocultas com 128 neurônios cada e uma camada de saída com três neurônios, correspondentes às coordenadas $(x_1, x_2, x_3)$ do parabolóide gerado.
+A rede Geradora é composta por cinco camadas totalmente conectadas: quatro camadas ocultas, cada uma com 128 neurônios, seguidas da função de ativação SiLU, definida na Equação~\ref{eq:silu}, e uma camada de saída com três neurônios, correspondentes às coordenadas $(x_1, x_2, x_3)$ do parabolóide gerado. A utilização da função SiLU foi definida empiricamente, com base nos resultados obtidos durante os experimentos.
 
-A rede Discriminadora também possui três camadas ocultas com 128 neurônios cada. As camadas intermediárias utilizam a função de ativação LeakyReLU, definida na Equação~\ref{eq:leakyrelu}:
+\begin{equation}
+\text{SiLU}(x)=x\cdot\sigma(x)=\frac{x}{1+e^{-x}},
+\label{eq:silu}
+\end{equation}
+
+A rede Discriminadora também é composta por quatro camadas ocultas com 128 neurônios cada. Nessas camadas é utilizada a função de ativação LeakyReLU, definida na Equação~\ref{eq:leakyrelu}:
 
 \begin{equation}
 \text{LeakyReLU}(x)=\max(\alpha x,x),
 \label{eq:leakyrelu}
 \end{equation}
 
-com $\alpha = 0.2$. A camada de saída possui um único neurônio, seguido pela função de ativação sigmoide, definida na Equação~\ref{eq:sigmoid}:
+em que $\alpha = 0.2$. Assim como na rede Geradora, a escolha dessa função de ativação e o seu hiperparâmetro foi realizada empiricamente, considerando o desempenho observado durante os experimentos. A camada de saída é composta por um único neurônio, seguido da função de ativação sigmoide, definida na Equação~\ref{eq:sigmoid}:
 
 \begin{equation}
 \sigma(x)=\frac{1}{1+e^{-x}}.
 \label{eq:sigmoid}
 \end{equation}
 
-A saída do discriminador, denotada por $D(x)\in[0,1]$, representa a probabilidade de uma amostra pertencer ao conjunto de dados reais. Valores próximos de 1 indicam maior confiança de que a amostra seja real, enquanto valores próximos de 0 indicam que ela foi gerada pela rede Geradora.
+A saída da rede Discriminadora, denotada por $D(x)\in[0,1]$, representa a probabilidade estimada de uma amostra pertencer à distribuição dos dados reais. Dessa forma, a utilização da função de ativação sigmoide permite interpretar a saída como uma probabilidade: valores próximos de 1 indicam maior confiança de que a amostra seja proveniente do conjunto de dados reais, enquanto valores próximos de 0 indicam maior confiança de que a amostra tenha sido gerada pela rede Geradora.
 
-Para a otimização de ambas as redes foi utilizado o algoritmo Adam, definido pelas Equações~\ref{eq:adam1}--\ref{eq:adam4}, com taxa de aprendizado igual a $10^{-4}$ e parâmetros $\beta_1 = 0.9$ e $\beta_2 = 0.999$, definidos empiricamente.
+Para a otimização dos parâmetros das redes Geradora e Discriminadora foi utilizado o algoritmo Adam (\textit{Adaptive Moment Estimation}). Foi empregada uma taxa de aprendizado de $10^{-4}$, enquanto os hiperparâmetros $\beta_1 = 0.9$ e $\beta_2 = 0.999$ foram definidos empiricamente com base no desempenho observado durante os experimentos. O algoritmo Adam realiza a atualização dos parâmetros de acordo com as Equações~\ref{eq:adam1}--\ref{eq:adam4}:
 
 \begin{align}
 m_t &= \beta_1 m_{t-1} + (1-\beta_1)g_t,
@@ -78,13 +83,9 @@ v_t &= \beta_2 v_{t-1} + (1-\beta_2)g_t^2,
 \label{eq:adam4}
 \end{align}
 
-em que $g_t$ representa o gradiente da função de custo em relação aos parâmetros $\theta$, $\eta$ é a taxa de aprendizado e $\varepsilon$ é uma constante utilizada para garantir estabilidade numérica.
+em que $g_t$ representa o gradiente da função de custo em relação aos parâmetros $\theta$ no instante $t$, $m_t$ e $v_t$ correspondem, respectivamente, às estimativas do primeiro e do segundo momentos dos gradientes, $\hat{m}_t$ e $\hat{v}_t$ são as versões corrigidas dessas estimativas, $\eta$ é a taxa de aprendizado e $\varepsilon$ é uma constante positiva utilizada para garantir a estabilidade numérica durante a atualização dos parâmetros.
 
-A função de custo utilizada no treinamento da GAN foi baseada na
-\textit{Binary Cross-Entropy} (BCE), uma função de erro empregada em
-problemas de classificação binária. Considerando um rótulo verdadeiro
-$y \in \{0,1\}$ e a probabilidade estimada pela rede $\hat{y}$, a BCE é
-definida como:
+A função de custo utilizada no treinamento da GAN foi baseada na \textit{Binary Cross-Entropy} (BCE), uma função amplamente empregada em problemas de classificação binária, definida na Equação~\ref{eq:bce}. Sua utilização é adequada nesse contexto, pois a rede Discriminadora realiza uma tarefa de classificação binária, distinguindo amostras reais das amostras geradas pela rede Geradora. Enquanto o discriminador busca classificar corretamente essas amostras, o gerador é treinado para produzir dados sintéticos capazes de serem classificados pelo discriminador como pertencentes ao conjunto de dados reais.
 
 \begin{equation}
 \mathcal{L}_{BCE}(y,\hat{y})
@@ -97,10 +98,7 @@ y\log(\hat{y})
 \label{eq:bce}
 \end{equation}
 
-No treinamento da GAN, o discriminador é responsável por classificar
-amostras reais como pertencentes à classe $y=1$ e amostras geradas pelo
-gerador como pertencentes à classe $y=0$. Dessa forma, a função de custo
-do discriminador, obtida a partir da BCE, é dada por:
+Durante o treinamento da GAN, o discriminador é otimizado para classificar amostras reais como pertencentes à classe $y=1$ e amostras geradas pelo gerador como pertencentes à classe $y=0$. Assim, sua função de custo é definida por:
 
 \begin{equation}
 \mathcal{L}_D
@@ -110,31 +108,31 @@ do discriminador, obtida a partir da BCE, é dada por:
 \left[
 \log(D(x^{(i)}))
 +
-\log(1-D(G(z^{(i)})))
+\log\left(1-D(G(z^{(i)}))\right)
 \right],
 \label{eq:loss_discriminator}
 \end{equation}
 
-onde $x^{(i)}$ representa uma amostra real do conjunto de treinamento,
-$z^{(i)}$ representa um vetor amostrado do espaço latente e $B$ é o
-tamanho do lote.
+em que $x^{(i)}$ representa uma amostra real do conjunto de treinamento, $z^{(i)}$ é um vetor amostrado do espaço latente, $G(\cdot)$ representa a rede Geradora, $D(\cdot)$ representa a rede Discriminadora e $B$ é o tamanho do lote de treinamento.
 
-Por outro lado, durante a atualização da rede Geradora, o objetivo é
-produzir amostras que sejam classificadas pelo discriminador como reais.
-Assim, a função de custo do gerador é definida por:
+Por outro lado, a rede Geradora é treinada para produzir amostras que maximizem a probabilidade de serem classificadas pelo discriminador como reais. Para isso, foi utilizada a função de custo não saturante (\textit{non-saturating loss}), definida por:
 
 \begin{equation}
 \mathcal{L}_G
 =
 -\frac{1}{B}
 \sum_{i=1}^{B}
-\log(D(G(z^{(i)}))).
+\log\left(D(G(z^{(i)}))\right).
 \label{eq:loss_generator}
 \end{equation}
 
-O treinamento foi realizado durante 300 épocas, utilizando $k=1$, em que $k$ representa o número de atualizações da rede Discriminadora realizadas para cada atualização da rede Geradora em cada lote (\textit{batch}) de treinamento. Durante o treinamento, a rede Geradora recebe como entrada vetores latentes $z \in \mathbb{R}^{d}$, amostrados da distribuição uniforme $p_z = U(-2,2)$. Esses vetores pertencem a um espaço latente independente do espaço dos dados e são utilizados como fonte de aleatoriedade para a geração de novas amostras. A partir desses vetores, a rede Geradora aprende uma transformação capaz de produzir amostras que seguem a distribuição dos dados reais. O procedimento completo de treinamento adotado é apresentado no Algoritmo~\ref{alg:gan_train}.
+Essa formulação fornece gradientes mais informativos durante o treinamento,
+especialmente nas etapas iniciais, contribuindo para uma convergência mais
+estável da rede Geradora.
 
-\begin{algorithm}[H]
+O procedimento completo de treinamento adotado é apresentado no Algoritmo~\ref{alg:gan_train}. O treinamento foi realizado durante 300 épocas sem critérios de parada, utilizando $k=1$, em que $k$ representa o número de atualizações da rede Discriminadora realizadas para cada atualização da rede Geradora em cada lote (\textit{batch}) de treinamento. Durante o treinamento, a rede Geradora recebe como entrada vetores latentes $z \in \mathbb{R}^{d}$, com $d=2$, amostrados da distribuição uniforme $p_z = U(-2,2)$. Esses vetores pertencem a um espaço latente independente do espaço dos dados e são utilizados como fonte de aleatoriedade para a geração de novas amostras. A partir desses vetores, a rede Geradora aprende uma transformação capaz de produzir amostras que seguem a distribuição dos dados reais. 
+
+\begin{algorithm}
 \caption{Treinamento da GAN}
 \label{alg:gan_train}
 \begin{algorithmic}[1]
@@ -180,16 +178,22 @@ O treinamento foi realizado durante 300 épocas, utilizando $k=1$, em que $k$ re
 \end{algorithmic}
 \end{algorithm}
 
-Após o treinamento, a Figura~\ref{fig:loss_gan1} apresenta a evolução da função de custo das redes Geradora e Discriminadora ao longo das épocas. Observa-se que, nas primeiras iterações, a perda da rede Geradora aumenta, indicando que a rede Discriminadora consegue distinguir com facilidade as amostras reais das amostras geradas. À medida que o treinamento evolui, a rede Geradora passa a produzir amostras mais realistas, reduzindo gradualmente sua perda, enquanto a perda da rede Discriminadora tende a estabilizar. Esse comportamento é consistente com o processo esperado de treinamento de uma GAN.
+Após o treinamento, a Figura~\ref{fig:loss_gan1} apresenta a evolução das funções de custo das redes Geradora e Discriminadora ao longo das épocas. Observa-se que, nas primeiras épocas, a perda da rede Geradora aumenta, enquanto a perda da rede Discriminadora diminui, indicando que, inicialmente, a rede Discriminadora consegue distinguir com facilidade as amostras reais das amostras geradas.
+
+À medida que o treinamento evolui, a rede Geradora passa a produzir amostras cada vez mais semelhantes às amostras reais, dificultando a tarefa da rede Discriminadora. Como consequência, a perda da rede Geradora tende a diminuir, enquanto a perda da rede Discriminadora aumenta e posteriormente se estabiliza em torno de um determinado valor.
+
+Além disso, observa-se que ambas as funções de custo apresentam oscilações ao longo de todo o treinamento. Esse comportamento é esperado em redes adversariais, uma vez que as duas redes são otimizadas simultaneamente em um jogo de soma zero: melhorias em uma delas tendem a alterar o desempenho da outra. Assim, as oscilações refletem o equilíbrio dinâmico entre a capacidade da rede Geradora de produzir amostras mais realistas e a capacidade da rede Discriminadora de distingui-las das amostras reais.
 
 \begin{figure}[H]
   \centering
-  \includegraphics[width=0.65\textwidth]{imgs/loss_gan1.png}
+  \includegraphics[width=0.55\textwidth]{imgs/loss_gan1.png}
   \caption{Evolução das funções de perda da rede geradora e da rede discriminadora.}
   \label{fig:loss_gan1}
 \end{figure}
 
-Logo após, o modelo treinado foi utilizado para gerar novas amostras a partir do conjunto de teste. A superfície produzida pela rede Geradora é apresentada na Figura~\ref{fig:paraboloides}. Visualmente, observa-se que a GAN foi capaz de aprender a geometria do parabolóide, produzindo uma superfície bastante semelhante àquela presente no conjunto de dados original.
+Após o treinamento, a rede Geradora foi utilizada para produzir novas amostras a partir de um conjunto de vetores aleatórios bidimensionais, cujas coordenadas foram amostradas independentemente de uma distribuição uniforme \(p_z = U(-2,2)\). O número de vetores amostrados foi definido como igual ao número de pontos presentes no conjunto de teste.
+
+A superfície correspondente ao conjunto de dados original é apresentada à esquerda da Figura~\ref{fig:paraboloides}, enquanto as amostras geradas pela rede Geradora são apresentadas à direita da mesma figura. Visualmente, observa-se que a GAN foi capaz de aprender a geometria do parabolóide, produzindo uma distribuição de pontos bastante semelhante àquela observada no conjunto de dados original.
 
 \begin{figure}[H]
   \centering
@@ -234,7 +238,9 @@ z_i - (x_i^2 + y_i^2 + 1).
 \label{eq:surface_error}
 \end{equation}
 
-Além disso, foram calculadas as versões relativas dessas métricas, normalizando os erros pelo valor médio da superfície gerada. Observa-se que a rede Geradora apresentou um erro geométrico absoluto de aproximadamente $0.35$ para a métrica MAE e $0.44$ para a métrica RMSE. Quando normalizados, esses valores correspondem a erros relativos de aproximadamente $14.05\%$ e $16.87\%$, respectivamente. Esses resultados indicam que a GAN foi capaz de aprender a estrutura geral do parabolóide, gerando amostras próximas à superfície real, embora ainda apresente um desvio geométrico devido à dificuldade inerente do treinamento adversarial. 
+Além disso, foram calculadas as versões relativas dessas métricas, normalizando os erros pelo valor médio da superfície gerada. 
+
+A rede Geradora apresentou um erro geométrico absoluto de aproximadamente $0.35$ para a métrica MAE e $0.44$ para a métrica RMSE. Quando normalizados, esses valores correspondem a erros relativos de aproximadamente $14.05\%$ e $16.87\%$, respectivamente. Esses resultados indicam que a GAN foi capaz de aprender a estrutura geral do parabolóide, gerando amostras próximas à superfície real, embora ainda apresente um desvio geométrico devido à dificuldade inerente do treinamento adversarial. 
 
 Por fim, considere a parametrização analítica do parabolóide definida pela função
 $S:\mathbb{R}^{2}\rightarrow\mathbb{R}^{3}$,
@@ -286,7 +292,7 @@ A Tabela~\ref{tab:res_grad1} apresenta a comparação entre os jacobianos da fun
 
 em que a norma de Frobenius corresponde à raiz quadrada da soma dos quadrados de todos os elementos da matriz diferença entre os jacobianos. Quanto menor esse valor, maior é a semelhança entre as transformações locais realizadas pela função analítica e pela rede Geradora. Como essa métrica é calculada para cada amostra avaliada, foi considerada a média dessas normas ao longo de todos os pontos analisados, obtendo-se uma medida global da discrepância entre os dois jacobianos.
 
-Observa-se que a norma média de Frobenius da diferença entre os jacobianos foi igual a 2,12, indicando diferenças significativas entre as duas transformações. Em particular, nota-se que as derivadas das duas primeiras coordenadas diferem substancialmente da parametrização analítica. Por exemplo, enquanto para a função $S$ tem-se $\partial x/\partial a = 1$ e $\partial y/\partial b = 1$, a rede Geradora apresentou valores médios próximos de $0,00$ e $-0,03$, respectivamente. De maneira semelhante, as derivadas cruzadas, que são nulas na parametrização analítica, assumiram valores elevados no gerador, como $\partial x/\partial b=-0,93$ e $\partial y/\partial a=-1,14$. Por outro lado, as derivadas associadas à terceira coordenada apresentaram diferenças relativamente menores, com valores médios de $-0,03$ e $-0,24$ para o gerador, enquanto a função analítica apresentou $-0,05$ e $-0,06$.
+A Tabela~\ref{tab:res_grad1} apresenta a comparação entre os jacobianos médios da função analítica $S$ e da rede Geradora $G$. A norma média de Frobenius da diferença entre esses jacobianos foi igual a 2,12, indicando que a transformação aprendida pela rede apresenta diferenças em relação à parametrização analítica.
 
 \begin{table}[H]
 \centering
@@ -316,13 +322,19 @@ Desvio padrão & 0.1006 \\
 
 \end{table}
 
-Esse comportamento pode ser visualizado na Figura~\ref{fig:desloc1}, que ilustra a correspondência entre os vetores do espaço latente e as duas primeiras coordenadas produzidas pelo gerador. Observa-se que os pontos não permanecem nas mesmas posições do espaço latente, evidenciando que a rede não aprendeu a identidade nas duas primeiras coordenadas. Em vez disso, o gerador aprendeu uma transformação não linear do espaço latente, utilizando os vetores apenas como uma fonte de aleatoriedade para produzir amostras pertencentes à distribuição do parabolóide. Esse resultado está de acordo com o objetivo do treinamento adversarial de uma GAN, que busca reproduzir a distribuição dos dados e não uma parametrização específica da superfície.
+Observa-se que as maiores discrepâncias ocorrem nas derivadas das duas primeiras coordenadas. Enquanto a parametrização analítica possui $\partial x/\partial a = 1$ e $\partial y/\partial b = 1$, a rede Geradora apresentou valores médios de aproximadamente $0,00$ e $-0,03$, respectivamente. Da mesma forma, as derivadas cruzadas, que são identicamente nulas na função analítica, assumiram valores médios elevados na rede Geradora, como $\partial x/\partial b=-0,93$ e $\partial y/\partial a=-1,14$.
+
+Em contrapartida, as derivadas da terceira coordenada apresentaram maior proximidade com a parametrização analítica. Os valores médios obtidos para a rede Geradora foram $\partial z/\partial a=-0,03$ e $\partial z/\partial b=-0,24$, enquanto a função analítica apresentou, respectivamente, $-0,05$ e $-0,06$. Embora ainda exista discrepância, principalmente em $\partial z/\partial b$, ela é inferior à observada nas derivadas das duas primeiras coordenadas.
+
+Esse comportamento pode ser visualizado na Figura~\ref{fig:desloc1}, que ilustra a correspondência entre os vetores do espaço latente e as duas primeiras coordenadas produzidas pela rede Geradora. Observa-se que as coordenadas geradas não preservam a posição original dos vetores no espaço latente, evidenciando que a rede não aprendeu a identidade entre o espaço latente e as duas primeiras coordenadas da superfície. Em vez disso, o gerador aprendeu uma transformação do espaço latente, utilizando os vetores latentes como fonte de variabilidade para produzir amostras pertencentes à distribuição dos dados. Esse comportamento está de acordo com o objetivo do treinamento adversarial de uma GAN, cujo propósito é aproximar a distribuição dos dados reais, e não reproduzir uma parametrização específica da superfície.
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.5\textwidth]{imgs/desloc1.png}
+    \includegraphics[width=0.45\textwidth]{imgs/desloc1.png}
     \caption{Correspondência entre os vetores do espaço latente e as duas primeiras coordenadas produzidas pela rede Geradora. As setas indicam o deslocamento de cada vetor latente para as coordenadas $(x,y)$ geradas, evidenciando que a rede aprende uma transformação do espaço latente em vez de preservar sua parametrização.}
     \label{fig:desloc1}
 \end{figure}
 
-Além desses fatores, deve-se considerar que reproduzir a geometria diferencial da superfície é uma tarefa mais complexa do que apenas reproduzir sua distribuição de pontos. A função objetivo de uma GAN clássica não impõe restrições para que o gerador preserve a estrutura local do \textit{manifold}, como seus gradientes ou espaços tangentes. Dessa forma, mesmo quando as amostras geradas pertencem aproximadamente ao parabolóide, pequenas oscilações locais podem fazer com que os gradientes diferenciem significativamente daqueles da superfície analítica \cite{li2021mrgan}.
+Essa observação também ajuda a explicar as diferenças encontradas entre os jacobianos da função analítica e da rede Geradora. Como a parametrização aprendida pela GAN não precisa coincidir com a parametrização utilizada para gerar os dados, diferentes transformações do espaço latente podem produzir a mesma superfície no espaço de saída. Consequentemente, mesmo que a geometria global do parabolóide seja preservada, os gradientes em relação às variáveis latentes podem diferir daqueles obtidos pela parametrização analítica.
+
+Além disso, reproduzir a geometria diferencial da superfície constitui uma tarefa mais exigente do que apenas aproximar sua distribuição de pontos. A função objetivo de uma GAN clássica não impõe restrições explícitas para que o gerador preserve propriedades diferenciais do \textit{manifold}, tais como gradientes, espaços tangentes ou curvaturas. Dessa forma, mesmo quando as amostras geradas pertencem aproximadamente ao parabolóide, pequenas deformações locais na parametrização podem resultar em diferenças significativas entre os jacobianos da função analítica e da rede Geradora \cite{li2021mrgan}.

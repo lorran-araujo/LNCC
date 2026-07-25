@@ -1,4 +1,4 @@
-This is LuaHBTeX, Version 1.17.0 (TeX Live 2023/Debian)  (format=lualatex 2025.10.7)  17 JUL 2026 15:07
+This is LuaHBTeX, Version 1.17.0 (TeX Live 2023/Debian)  (format=lualatex 2025.10.7)  23 JUL 2026 11:44
  restricted system commands enabled.
  file:line:error style messages enabled.
 **/home/lorrantwo/Documentos/GitHub/LNCC/Doutorado/Disciplinas/03-Topicos-avancados-redes-neurais-profundas/lista1/escrita/main 2>/dev/null
@@ -525,11 +525,7 @@ File: l3backend-luatex.def 2024-01-04 L3 backend support: PDF output (LuaTeX)
 \l__color_backend_stack_int=\count312
 Inserting `l3color' in `luaotfload.parse_color'.
 \l__pdf_internal_box=\box58
-) (./main.aux
-
-LaTeX Warning: Label `tab:fid_results' multiply defined.
-
-)
+) (./main.aux)
 \openout1 = main.aux
 
 LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 64.
@@ -631,17 +627,12 @@ File: umsa.fd 2013/01/14 v3.01 AMS symbols A
 LaTeX Font Info:    Trying to load font information for U+msb on input line 78.
  (/usr/share/texlive/texmf-dist/tex/latex/amsfonts/umsb.fd
 File: umsb.fd 2013/01/14 v3.01 AMS symbols B
-)
-Overfull \hbox (2.89543pt too wide) in paragraph at lines 78--79
-\T1/lmtt/m/n/10 com/lorrantwo/LNCC$[]\T1/lmr/m/n/10 . A im-ple-men-ta-ção foi de-sen-vol-vida em ar-qui-vos \T1/lmr/m/it/10 Jupy-ter No-te-book \T1/lmr/m/n/10 (for-mato \T1/lmtt/m/n/10 .ipynb\T1/lmr/m/n/10 ),
- []
-
-(./exercises/exercise1.tex
+) (./exercises/exercise1.tex
 <imgs/data1.png, id=24, 926.5014pt x 426.393pt>
 File: imgs/data1.png Graphic file (type png)
 <use imgs/data1.png>
 Package luatex.def Info: imgs/data1.png  used on input line 26.
-(luatex.def)             Requested size: 409.71692pt x 188.5634pt.
+(luatex.def)             Requested size: 341.43307pt x 157.13834pt.
  [1
 
 {/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map}]
@@ -649,139 +640,133 @@ Package luatex.def Info: imgs/data1.png  used on input line 26.
 File: imgs/arquitetura_GAN_1.png Graphic file (type png)
 <use imgs/arquitetura_GAN_1.png>
 Package luatex.def Info: imgs/arquitetura_GAN_1.png  used on input line 44.
-(luatex.def)             Requested size: 364.19667pt x 198.6479pt.
+(luatex.def)             Requested size: 341.43307pt x 186.2383pt.
  [2<./imgs/data1.png><./imgs/arquitetura_GAN_1.png>] [3]
-Package hyperref Info: bookmark level for unknown algorithm defaults to 0 on input line 138.
-<imgs/loss_gan1.png, id=83, 498.4221pt x 354.123pt>
+Package hyperref Info: bookmark level for unknown algorithm defaults to 0 on input line 136.
+ [4]
+<imgs/loss_gan1.png, id=96, 498.4221pt x 354.123pt>
 File: imgs/loss_gan1.png Graphic file (type png)
 <use imgs/loss_gan1.png>
-Package luatex.def Info: imgs/loss_gan1.png  used on input line 187.
-(luatex.def)             Requested size: 295.90588pt x 210.23839pt.
- [4]
-<imgs/paraboloides.png, id=94, 975.645pt x 403.9893pt>
+Package luatex.def Info: imgs/loss_gan1.png  used on input line 189.
+(luatex.def)             Requested size: 250.38564pt x 177.89859pt.
+<imgs/paraboloides.png, id=98, 975.645pt x 403.9893pt>
 File: imgs/paraboloides.png Graphic file (type png)
 <use imgs/paraboloides.png>
-Package luatex.def Info: imgs/paraboloides.png  used on input line 196.
+Package luatex.def Info: imgs/paraboloides.png  used on input line 200.
 (luatex.def)             Requested size: 455.24411pt x 188.5065pt.
- [5<./imgs/loss_gan1.png><./imgs/paraboloides.png>] [6]
-<imgs/desloc1.png, id=117, 428.5611pt x 435.7881pt>
+ [5<./imgs/loss_gan1.png>] [6<./imgs/paraboloides.png>] [7]
+<imgs/desloc1.png, id=128, 428.5611pt x 435.7881pt>
 File: imgs/desloc1.png Graphic file (type png)
 <use imgs/desloc1.png>
-Package luatex.def Info: imgs/desloc1.png  used on input line 323.
-(luatex.def)             Requested size: 227.62206pt x 231.4653pt.
- [7]) (./exercises/exercise2.tex [8<./imgs/desloc1.png>]
-<imgs/data2.png, id=139, 570.2103pt x 570.933pt>
+Package luatex.def Info: imgs/desloc1.png  used on input line 333.
+(luatex.def)             Requested size: 204.85846pt x 208.3181pt.
+ [8<./imgs/desloc1.png>]) (./exercises/exercise2.tex
+<imgs/data2.png, id=140, 570.2103pt x 570.933pt>
 File: imgs/data2.png Graphic file (type png)
 <use imgs/data2.png>
-Package luatex.def Info: imgs/data2.png  used on input line 22.
+Package luatex.def Info: imgs/data2.png  used on input line 16.
 (luatex.def)             Requested size: 227.62206pt x 227.90742pt.
-<imgs/mnist_distribution2.png, id=140, 708.0051pt x 353.1594pt>
+<imgs/mnist_distribution2.png, id=141, 708.0051pt x 353.1594pt>
 File: imgs/mnist_distribution2.png Graphic file (type png)
 <use imgs/mnist_distribution2.png>
-Package luatex.def Info: imgs/mnist_distribution2.png  used on input line 29.
+Package luatex.def Info: imgs/mnist_distribution2.png  used on input line 23.
 (luatex.def)             Requested size: 341.43307pt x 170.30672pt.
- [9<./imgs/data2.png><./imgs/mnist_distribution2.png>]
-<imgs/gan2.png, id=153, 1413.28pt x 770.88pt>
+ [9<./imgs/data2.png>]
+<imgs/gan2.png, id=154, 1413.28pt x 770.88pt>
 File: imgs/gan2.png Graphic file (type png)
 <use imgs/gan2.png>
-Package luatex.def Info: imgs/gan2.png  used on input line 68.
+Package luatex.def Info: imgs/gan2.png  used on input line 38.
 (luatex.def)             Requested size: 432.48051pt x 235.90027pt.
- [10<./imgs/gan2.png>]
-<imgs/loss_gan2.png, id=164, 498.663pt x 281.853pt>
+ [10<./imgs/mnist_distribution2.png><./imgs/gan2.png>] [11]
+<imgs/loss_gan2.png, id=181, 498.663pt x 281.853pt>
 File: imgs/loss_gan2.png Graphic file (type png)
 <use imgs/loss_gan2.png>
-Package luatex.def Info: imgs/loss_gan2.png  used on input line 102.
-(luatex.def)             Requested size: 273.14923pt x 154.38742pt.
-<imgs/FID2.png, id=167, 497.9403pt x 281.853pt>
+Package luatex.def Info: imgs/loss_gan2.png  used on input line 104.
+(luatex.def)             Requested size: 318.66948pt x 180.11865pt.
+<imgs/FID2.png, id=185, 497.9403pt x 281.853pt>
 File: imgs/FID2.png Graphic file (type png)
 <use imgs/FID2.png>
-Package luatex.def Info: imgs/FID2.png  used on input line 111.
-(luatex.def)             Requested size: 273.14923pt x 154.61105pt.
- [11<./imgs/loss_gan2.png>]
-<imgs/disc_acc2.png, id=182, 497.9403pt x 281.853pt>
+Package luatex.def Info: imgs/FID2.png  used on input line 113.
+(luatex.def)             Requested size: 318.66948pt x 180.3767pt.
+ [12<./imgs/loss_gan2.png>]
+<imgs/disc_acc2.png, id=196, 497.9403pt x 281.853pt>
 File: imgs/disc_acc2.png Graphic file (type png)
 <use imgs/disc_acc2.png>
-Package luatex.def Info: imgs/disc_acc2.png  used on input line 118.
-(luatex.def)             Requested size: 273.14923pt x 154.61105pt.
-<imgs/res21.png, id=186, 570.2103pt x 570.933pt>
+Package luatex.def Info: imgs/disc_acc2.png  used on input line 122.
+(luatex.def)             Requested size: 318.66948pt x 180.3767pt.
+<imgs/res21.png, id=198, 570.2103pt x 570.933pt>
 File: imgs/res21.png Graphic file (type png)
 <use imgs/res21.png>
 Package luatex.def Info: imgs/res21.png  used on input line 134.
 (luatex.def)             Requested size: 185.73926pt x 185.96918pt.
-<imgs/res22.png, id=187, 570.2103pt x 570.933pt>
+<imgs/res22.png, id=199, 570.2103pt x 570.933pt>
 File: imgs/res22.png Graphic file (type png)
 <use imgs/res22.png>
 Package luatex.def Info: imgs/res22.png  used on input line 141.
 (luatex.def)             Requested size: 185.73926pt x 185.96918pt.
- [12<./imgs/FID2.png><./imgs/disc_acc2.png>]) (./exercises/exercise3.tex [13<./imgs/res21.png><./imgs/res22.png>]
-<imgs/data3.png, id=207, 642.4803pt x 354.123pt>
+ [13<./imgs/FID2.png><./imgs/disc_acc2.png>] [14<./imgs/res21.png><./imgs/res22.png>]) (./exercises/exercise3.tex
+<imgs/data3.png, id=220, 642.4803pt x 354.123pt>
 File: imgs/data3.png Graphic file (type png)
 <use imgs/data3.png>
-Package luatex.def Info: imgs/data3.png  used on input line 13.
+Package luatex.def Info: imgs/data3.png  used on input line 17.
 (luatex.def)             Requested size: 318.66948pt x 175.64534pt.
- [14<./imgs/data3.png>]
-<imgs/model3.png, id=217, 1515.6625pt x 469.755pt>
+ [15]
+<imgs/model3.png, id=228, 1515.6625pt x 469.755pt>
 File: imgs/model3.png Graphic file (type png)
 <use imgs/model3.png>
-Package luatex.def Info: imgs/model3.png  used on input line 36.
+Package luatex.def Info: imgs/model3.png  used on input line 40.
 (luatex.def)             Requested size: 455.24411pt x 141.09244pt.
- [15<./imgs/model3.png>] [16]
-<imgs/train3.png, id=234, 498.663pt x 317.988pt>
+ [16<./imgs/data3.png>] [17<./imgs/model3.png>] [18]
+<imgs/train3.png, id=251, 498.663pt x 317.988pt>
 File: imgs/train3.png Graphic file (type png)
 <use imgs/train3.png>
-Package luatex.def Info: imgs/train3.png  used on input line 143.
-(luatex.def)             Requested size: 295.90588pt x 188.6933pt.
-<imgs/res3.png, id=237, 498.663pt x 317.988pt>
+Package luatex.def Info: imgs/train3.png  used on input line 149.
+(luatex.def)             Requested size: 273.14923pt x 174.18066pt.
+<imgs/res3.png, id=254, 498.663pt x 317.988pt>
 File: imgs/res3.png Graphic file (type png)
 <use imgs/res3.png>
-Package luatex.def Info: imgs/res3.png  used on input line 152.
-(luatex.def)             Requested size: 295.90588pt x 188.6933pt.
- [17<./imgs/train3.png>]
-<imgs/res32.png, id=248, 635.2533pt x 354.123pt>
+Package luatex.def Info: imgs/res3.png  used on input line 158.
+(luatex.def)             Requested size: 273.14923pt x 174.18066pt.
+ [19<./imgs/train3.png><./imgs/res3.png>]
+<imgs/res32.png, id=267, 635.2533pt x 354.123pt>
 File: imgs/res32.png Graphic file (type png)
 <use imgs/res32.png>
-Package luatex.def Info: imgs/res32.png  used on input line 161.
-(luatex.def)             Requested size: 341.43307pt x 190.33199pt.
-
-
-LaTeX Warning: Reference `tab:res3' on page 18 undefined on input line 166.
-
-[18<./imgs/res3.png><./imgs/res32.png>]
-<imgs/res33.png, id=259, 929.3922pt x 1004.553pt>
+Package luatex.def Info: imgs/res32.png  used on input line 171.
+(luatex.def)             Requested size: 318.66948pt x 177.63922pt.
+<imgs/mae_faixa_etaria.png, id=270, 602.7318pt x 333.8874pt>
+File: imgs/mae_faixa_etaria.png Graphic file (type png)
+<use imgs/mae_faixa_etaria.png>
+Package luatex.def Info: imgs/mae_faixa_etaria.png  used on input line 180.
+(luatex.def)             Requested size: 341.43307pt x 189.14091pt.
+ [20<./imgs/res32.png>]
+<imgs/res33.png, id=280, 929.3922pt x 1004.553pt>
 File: imgs/res33.png Graphic file (type png)
 <use imgs/res33.png>
-Package luatex.def Info: imgs/res33.png  used on input line 172.
-(luatex.def)             Requested size: 455.24411pt x 492.06667pt.
-) [19<./imgs/res33.png>] (./main.bbl) [20] (./main.aux)
+Package luatex.def Info: imgs/res33.png  used on input line 189.
+(luatex.def)             Requested size: 432.48051pt x 467.44954pt.
+ [21<./imgs/mae_faixa_etaria.png>]) (./main.bbl [22<./imgs/res33.png>]) [23] (./main.aux)
  ***********
 LaTeX2e <2023-11-01> patch level 1
 L3 programming layer <2024-01-22>
  ***********
-
-
-LaTeX Warning: There were undefined references.
-
-
-LaTeX Warning: There were multiply-defined labels.
-
 Package rerunfilecheck Info: File `main.out' has not changed.
 (rerunfilecheck)             Checksum: B1E1FB88C6C8E39F51EA7F678481DFDE;575.
 )
 
 Here is how much of LuaTeX's memory you used:
- 15747 strings out of 476553
+ 15773 strings out of 476553
  125086,1977958 words of node,token memory allocated
- 850 words of node memory still in use:
-   7 hlist, 2 vlist, 2 rule, 2 glue, 4 kern, 2 sub_mlist, 1 glyph, 107 attribute, 61 glue_spec, 55 attribute_list, 1 write, 1 pdf_action nodes
-   avail lists: 1:1,2:913,3:297,4:27,5:445,6:76,7:8119,8:65,9:719,10:24,11:859
- 37269 multiletter control sequences out of 65536+600000
+ 874 words of node memory still in use:
+   7 hlist, 2 vlist, 2 rule, 2 glue, 4 kern, 2 sub_mlist, 1 glyph, 115 attribute, 61 glue_spec, 59 attribute_list, 1 write, 1 pdf_action nodes
+   avail lists: 1:1,2:1042,3:297,4:40,5:490,6:76,7:8804,8:84,9:643,10:26,11:951
+ 37284 multiletter control sequences out of 65536+600000
  57 fonts using 3618135 bytes
- 72i,12n,75p,1107b,571s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 72i,12n,75p,1496b,571s stack positions out of 10000i,1000n,20000p,200000b,200000s
 {/usr/share/texmf/fonts/enc/dvips/lm/lm-ec.enc}{/usr/share/texmf/fonts/enc/dvips/lm/lm-ts1.enc}</usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmex10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi7.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmmib10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr7.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy7.pfb></usr/share/texmf/fonts/type1/public/lm/lmbx10.pfb></usr/share/texmf/fonts/type1/public/lm/lmbx12.pfb></usr/share/texmf/fonts/type1/public/lm/lmbxi10.pfb></usr/share/texmf/fonts/type1/public/lm/lmr10.pfb></usr/share/texmf/fonts/type1/public/lm/lmr12.pfb></usr/share/texmf/fonts/type1/public/lm/lmr7.pfb></usr/share/texmf/fonts/type1/public/lm/lmr8.pfb></usr/share/texmf/fonts/type1/public/lm/lmr9.pfb></usr/share/texmf/fonts/type1/public/lm/lmri10.pfb></usr/share/texmf/fonts/type1/public/lm/lmtt10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/symbols/msbm10.pfb>
-Output written on main.pdf (20 pages, 7565779 bytes).
+Output written on main.pdf (23 pages, 7626668 bytes).
 
-PDF statistics: 343 PDF objects out of 1000 (max. 8388607)
- 261 compressed objects within 3 object streams
- 78 named destinations out of 1000 (max. 131072)
+PDF statistics: 372 PDF objects out of 1000 (max. 8388607)
+ 285 compressed objects within 3 object streams
+ 86 named destinations out of 1000 (max. 131072)
  25 words of extra memory for PDF output out of 10000 (max. 100000000)
 

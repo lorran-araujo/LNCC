@@ -9,13 +9,7 @@
 
 \textbf{Resolução:}
 
-Para a realização deste experimento, foi utilizado o conjunto de dados \textit{MNIST} (\textit{Modified National Institute of Standards and Technology}) \cite{lecun1998gradient}, composto por imagens em escala de cinza de dígitos manuscritos. Cada imagem possui dimensão de $28 \times 28$ pixels e pertence a uma das dez classes correspondentes aos dígitos de $0$ a $9$. O conjunto de dados contém 70.000 imagens, sendo 60.000 destinadas ao treinamento e 10.000 ao teste. Neste trabalho, apenas o conjunto de treinamento foi utilizado para o treinamento da Rede Generativa Adversarial (GAN). A Figura~\ref{fig:data2} apresenta alguns exemplos de imagens presentes na base de dados. Além disso, através da Figura~\ref{fig:data_distribution2}, podemos observar que o conjunto de dados é aproximadamente balanceado em relação ao número de amostras de cada classe disponíveis para treinamento.
-
-Como a camada de saída da rede geradora utilizará a função de ativação \textit{Tanh}, cujos valores pertencem ao intervalo $[-1,1]$, as imagens do MNIST, originalmente representadas no intervalo $[0,1]$, foram normalizadas para o intervalo $[-1,1]$ por meio da seguinte transformação:
-
-\begin{equation}
-x_{\text{norm}} = 2x - 1.
-\end{equation}
+Para a realização deste experimento, foi utilizado o conjunto de dados \textit{MNIST} (\textit{Modified National Institute of Standards and Technology}) \cite{lecun1998gradient}, composto por imagens em escala de cinza de dígitos manuscritos. Cada imagem possui dimensão de $28 \times 28$ pixels e pertence a uma das dez classes correspondentes aos dígitos de $0$ a $9$. O conjunto de dados contém 70.000 imagens, sendo 60.000 destinadas ao treinamento e 10.000 ao teste. A Figura~\ref{fig:data2} apresenta alguns exemplos de imagens presentes na base de dados. Além disso, através da Figura~\ref{fig:data_distribution2}, podemos observar que o conjunto de dados é aproximadamente balanceado em relação ao número de amostras de cada classe disponíveis para treinamento.
 
 \begin{figure}[H]
     \centering
@@ -31,13 +25,26 @@ x_{\text{norm}} = 2x - 1.
     \label{fig:data_distribution2}
 \end{figure}
 
-Considerando que o problema envolve a geração de imagens, foi adotada uma arquitetura convolucional para a GAN, inspirada na estrutura proposta pelas DCGANs (\textit{Deep Convolutional Generative Adversarial Networks}). A arquitetura utilizada para as redes é ilustrada na Figura~\ref{fig:gan2}.
+Como a camada de saída da rede geradora utilizará a função de ativação \textit{Tanh}, cujos valores pertencem ao intervalo $[-1,1]$, as imagens do MNIST, originalmente representadas no intervalo $[0,1]$, foram normalizadas para o intervalo $[-1,1]$ por meio da seguinte transformação:
 
-Como podemos observarm, a rede geradora recebe como entrada um vetor de ruído aleatório de dimensão 100, representado no formato $(100,1,1)$. A partir desse vetor, sucessivas camadas de convolução transposta (\textit{ConvTranspose2d}) realizam o aumento gradual da resolução espacial até produzir uma imagem sintética de dimensão $28 \times 28$. Entre as camadas convolucionais são empregadas camadas de \textit{Batch Normalization} e a função de ativação ReLU, enquanto a camada de saída utiliza a função \textit{Tanh}, garantindo que os valores gerados permaneçam no mesmo intervalo dos dados normalizados.
+\begin{equation}
+x_{\text{norm}} = 2x - 1.
+\end{equation}
 
-Por outro lado, a rede discriminadora recebe como entrada imagens reais ou sintéticas de dimensão $28 \times 28$ e realiza sucessivas operações de convolução para reduzir sua dimensão espacial e extrair características discriminativas. Nas camadas intermediárias é utilizada a função de ativação \textit{LeakyReLU} com coeficiente negativo igual a 0,2, além de uma camada de \textit{Batch Normalization}. A camada final produz um único valor escalar, indicando o grau de confiança da rede de que a imagem fornecida pertence ao conjunto de dados reais.
+Considerando que o problema consiste na geração de imagens, foi adotada uma arquitetura convolucional para as redes da GAN, inspirada na \textit{Deep Convolutional Generative Adversarial Network} (DCGAN), proposta por \cite{radford2016dcgan}. Embora não reproduza exatamente a arquitetura original, o modelo empregado neste trabalho segue os principais princípios da DCGAN, como o uso de camadas convolucionais transpostas no gerador, camadas convolucionais no discriminador e funções de ativação apropriadas para cada rede. A arquitetura utilizada é apresentada na Figura~\ref{fig:gan2}.
 
-A Tabela~\ref{tab:gan_architecture} resume a arquitetura completa das redes geradora e discriminadora implementadas neste trabalho. Os hiperparâmetros da arquitetura foram definidos empiricamente, a partir de experimentos envolvendo diferentes configurações de número de filtros, tamanhos de kernel e demais parâmetros das camadas convolucionais.
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.95\textwidth]{imgs/gan2.png}
+    \caption{Arquitetura da GAN convolucional utilizada neste trabalho.}
+    \label{fig:gan2}
+\end{figure}
+
+A rede Geradora recebe como entrada um vetor de ruído aleatório de dimensão 100, representado no formato $(100,1,1)$. A partir desse vetor, sucessivas camadas de convolução transposta (\textit{ConvTranspose2d}) promovem a expansão gradual da resolução espacial até produzir uma imagem sintética de dimensão $28\times28$. Entre essas camadas são utilizadas operações de \textit{Batch Normalization} e a função de ativação ReLU, enquanto a camada de saída emprega a função \textit{Tanh}, restringindo os valores gerados ao intervalo $[-1,1]$, compatível com a normalização aplicada às imagens de treinamento.
+
+Por sua vez, a rede Discriminadora recebe como entrada imagens reais ou sintéticas de dimensão $28\times28$ e aplica sucessivas operações de convolução para reduzir sua resolução espacial e extrair características discriminativas. Nas camadas intermediárias são utilizadas a função de ativação \textit{LeakyReLU}, com coeficiente negativo igual a 0,2, e camadas de \textit{Batch Normalization}. A camada de saída produz um único valor escalar que representa a probabilidade estimada de a imagem pertencer ao conjunto de dados reais.
+
+A Tabela~\ref{tab:gan_architecture} apresenta a arquitetura completa das redes Geradora e Discriminadora implementadas neste trabalho. Os hiperparâmetros adotados, incluindo o número de filtros, os tamanhos dos \textit{kernels} e os demais parâmetros das camadas convolucionais, foram definidos empiricamente a partir de experimentos com diferentes configurações.
 
 \begin{table}[H]
 \centering
@@ -61,14 +68,9 @@ A Tabela~\ref{tab:gan_architecture} resume a arquitetura completa das redes gera
 \end{tabular}
 \end{table}
 
-Na rede geradora, as duas primeiras camadas convolucionais transpostas são seguidas por operações de \textit{Batch Normalization} e pela função de ativação ReLU. Já na camada de saída é utilizada a função \textit{Tanh}. Na rede discriminadora, a primeira camada convolucional é seguida por uma função \textit{LeakyReLU}; a segunda camada utiliza \textit{Batch Normalization} e \textit{LeakyReLU}; enquanto a camada final não emprega função de ativação, produzindo diretamente o escore utilizado pela função de perda durante o treinamento.
+Na rede Geradora, as duas primeiras camadas de convolução transposta são seguidas por operações de \textit{Batch Normalization} e pela função de ativação ReLU. A camada de saída utiliza a função \textit{Tanh}, restringindo os valores gerados ao intervalo $[-1,1]$.
 
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=0.95\textwidth]{imgs/gan2.png}
-    \caption{Arquitetura da GAN convolucional utilizada neste trabalho.}
-    \label{fig:gan2}
-\end{figure}
+Na rede Discriminadora, a primeira camada convolucional é seguida pela função de ativação \textit{LeakyReLU}, enquanto a segunda camada é seguida por operações de \textit{Batch Normalization} e pela mesma função de ativação. A camada de saída não emprega função de ativação, produzindo diretamente um \textit{logit}, que é utilizado pela função de perda durante o treinamento.
 
 O treinamento foi realizado de maneira análoga ao descrito na Questão~\ref{cap:exercise1}, utilizando o otimizador Adam com os mesmos hiperparâmetros e as mesmas funções de custo para o gerador e o discriminador.
 
@@ -86,8 +88,8 @@ Considerando um limite máximo de 100 épocas, foram avaliadas duas estratégias
         \right),
         \label{eq:fid}
     \end{equation}
-    onde $(\boldsymbol{\mu}_x,\Sigma_x)$ representam a média e a matriz de covariância das características extraídas das imagens reais e $(\boldsymbol{\mu}_g,\Sigma_g)$ representam as estatísticas correspondentes das imagens geradas. Quanto menor o valor do FID, maior a similaridade entre as distribuições das imagens reais e sintéticas.
-
+    onde $(\mu_x,\Sigma_x)$ representam, respectivamente, o vetor média e a matriz de covariância das representações obtidas a partir das imagens reais, enquanto $(\mu_g,\Sigma_g)$ correspondem às mesmas estatísticas calculadas para as imagens geradas. Neste trabalho, as representações foram obtidas aplicando uma operação de \textit{Average Pooling} às imagens, seguida da vetorização dos mapas resultantes. Quanto menor o valor do FID, maior a similaridade entre as distribuições das representações das imagens reais e sintéticas.
+    
     O treinamento era interrompido caso o melhor valor de FID não apresentasse melhoria durante uma janela consecutiva de $n=10$ épocas.
 
     \item \textbf{(M2) Estabilidade da acurácia do discriminador:} nesta estratégia, foi monitorada a acurácia do discriminador sobre o conjunto de validação ao final de cada época. A hipótese adotada é que, quando essa acurácia passa a oscilar dentro de uma faixa reduzida por um período suficientemente longo, o treinamento pode ter atingido um estado próximo do equilíbrio entre gerador e discriminador.
@@ -99,32 +101,30 @@ Após definir os critérios de parada, a GAN foi treinada utilizando cada uma da
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.60\textwidth]{imgs/loss_gan2.png}
+    \includegraphics[width=0.70\textwidth]{imgs/loss_gan2.png}
     \caption{Evolução das funções de custo normalizadas do gerador e do discriminador durante o treinamento da GAN para as duas estratégias de parada antecipada avaliadas: Early FID (M1) e estabilidade da acurácia do discriminador (M2). Observa-se que o treinamento utilizando M1 foi interrompido na época 26, enquanto o treinamento utilizando M2 prosseguiu até a época 59.}
     \label{fig:loss_gan2}
 \end{figure}
 
-Para analisar o comportamento de ambos os critérios, a Figura~\ref{fig:FID2} apresenta a evolução do FID ao longo das épocas, enquanto a Figura~\ref{fig:disc_acc2} mostra a evolução da acurácia do discriminador.
+Para analisar o comportamento de ambos os critérios, a Figura~\ref{fig:FID2} apresenta a evolução do FID ao longo das épocas, enquanto a Figura~\ref{fig:disc_acc2} mostra a evolução da acurácia do discriminador. Observando a Figura~\ref{fig:FID2}, nota-se que a estratégia M1 interrompeu o treinamento quando o FID permaneceu sem melhora durante a janela de monitoramento estabelecida. Entretanto, ao analisar a curva correspondente ao treinamento utilizando M2, percebe-se que, após algumas épocas adicionais, o FID voltou a diminuir e atingiu valores inferiores ao obtido pela estratégia M1. Esse comportamento indica que, para os hiperparâmetros utilizados, o critério de parada baseado exclusivamente na estagnação do FID mostrou-se excessivamente conservador, interrompendo o treinamento antes que o gerador atingisse sua melhor qualidade.
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.60\textwidth]{imgs/FID2.png}
+    \includegraphics[width=0.70\textwidth]{imgs/FID2.png}
     \caption{Evolução da métrica Fréchet Inception Distance (FID) ao longo do treinamento para as estratégias Early FID (M1) e estabilidade da acurácia do discriminador (M2). Valores menores indicam maior similaridade entre as distribuições das imagens reais e geradas.}
     \label{fig:FID2}
 \end{figure}
 
+Por outro lado, a Figura~\ref{fig:disc_acc2} permite interpretar o comportamento da estratégia M2. Entre aproximadamente as épocas 30 e 50, a acurácia do discriminador apresentou oscilações relativamente elevadas, indicando que o processo adversarial ainda estava em evolução. Somente após esse período a acurácia passou a permanecer dentro da faixa de estabilidade estabelecida, levando ao encerramento do treinamento. Embora os valores absolutos da acurácia nesse momento sejam relativamente elevados, sugerindo que o discriminador ainda conseguia distinguir parte das imagens sintéticas, a evolução do FID demonstra que o gerador continuou melhorando sua capacidade de produzir amostras realistas durante esse intervalo.
+
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.60\textwidth]{imgs/disc_acc2.png}
+    \includegraphics[width=0.70\textwidth]{imgs/disc_acc2.png}
     \caption{Evolução da acurácia do discriminador no conjunto de validação durante o treinamento da GAN para as estratégias Early FID (M1) e estabilidade da acurácia do discriminador (M2). A região final da curva de M2 apresenta menor variação entre épocas, satisfazendo o critério de estabilidade utilizado para a parada antecipada.}
     \label{fig:disc_acc2}
 \end{figure}
 
-Observando a Figura~\ref{fig:FID2}, nota-se que a estratégia M1 interrompeu o treinamento quando o FID permaneceu sem melhora durante a janela de monitoramento estabelecida. Entretanto, ao analisar a curva correspondente ao treinamento utilizando M2, percebe-se que, após algumas épocas adicionais, o FID voltou a diminuir e atingiu valores inferiores ao obtido pela estratégia M1. Esse comportamento indica que, para os hiperparâmetros utilizados, o critério de parada baseado exclusivamente na estagnação do FID mostrou-se excessivamente conservador, interrompendo o treinamento antes que o gerador atingisse sua melhor qualidade.
-
-A Figura~\ref{fig:disc_acc2} permite interpretar o comportamento da estratégia M2. Entre aproximadamente as épocas 30 e 50, a acurácia do discriminador apresentou oscilações relativamente elevadas, indicando que o processo adversarial ainda estava em evolução. Somente após esse período a acurácia passou a permanecer dentro da faixa de estabilidade estabelecida, levando ao encerramento do treinamento. Embora os valores absolutos da acurácia nesse momento sejam relativamente elevados, sugerindo que o discriminador ainda conseguia distinguir parte das imagens sintéticas, a evolução do FID demonstra que o gerador continuou melhorando sua capacidade de produzir amostras realistas durante esse intervalo.
-
-A Figura~\ref{fig:res2} apresenta exemplos de imagens sintetizadas pelos modelos obtidos através das duas estratégias de parada. Visualmente, observa-se uma ligeira superioridade das imagens produzidas pela estratégia M2, que apresentam menor quantidade de artefatos no fundo e dígitos com formas mais consistentes.
+A Figura~\ref{fig:res2} apresenta exemplos de imagens sintetizadas pelos modelos obtidos por meio das diferentes estratégias de parada. Visualmente, observa-se uma ligeira superioridade das imagens produzidas pela estratégia M2, que apresentam menor quantidade de artefatos no fundo e dígitos com contornos mais consistentes. Entretanto, as diferenças qualitativas entre os modelos são sutis e podem não ser facilmente perceptíveis apenas pela inspeção visual, o que reforça a importância da utilização de métricas quantitativas, como FID e MMD, para uma avaliação mais objetiva da qualidade das imagens geradas.
 
 \begin{figure}[H]
     \centering
@@ -147,24 +147,44 @@ A Figura~\ref{fig:res2} apresenta exemplos de imagens sintetizadas pelos modelos
     \label{fig:res2}
 \end{figure}
 
-Como referência adicional, o modelo também foi treinado durante as 100 épocas previstas, sem a utilização de parada antecipada. A Tabela~\ref{tab:fid_results} resume os resultados quantitativos obtidos utilizando as métricas FID e MMD para os três modelos treinados.
+Como referência adicional, o modelo também foi treinado durante as 100 épocas previstas, sem a utilização de parada antecipada. Para a comparação entre os modelos, além da métrica Fréchet Inception Distance (FID), foi utilizada a métrica \textit{Maximum Mean Discrepancy} (MMD), que mede a distância entre duas distribuições de probabilidade por meio de uma função de kernel. Considerando dois conjuntos de amostras $X=\{x_i\}_{i=1}^{n}$ e $Y=\{y_j\}_{j=1}^{m}$, a MMD é definida por
+
+\begin{equation}
+\mathrm{MMD}^2(X,Y)
+=
+\frac{1}{n^2}
+\sum_{i=1}^{n}\sum_{j=1}^{n}
+k(x_i,x_j)
++
+\frac{1}{m^2}
+\sum_{i=1}^{m}\sum_{j=1}^{m}
+k(y_i,y_j)
+-
+\frac{2}{nm}
+\sum_{i=1}^{n}\sum_{j=1}^{m}
+k(x_i,y_j),
+\label{eq:mmd}
+\end{equation}
+
+em que $k(\cdot,\cdot)$ representa uma função de kernel, sendo utilizado neste trabalho o kernel Gaussiano (RBF). Assim como ocorre com o FID, valores menores de MMD indicam maior similaridade entre as distribuições das imagens reais e geradas.
+
+A Tabela~\ref{tab:fid_results} resume os resultados quantitativos obtidos utilizando as métricas FID e MMD para os três modelos treinados.
 
 \begin{table}[H]
 \centering
 \caption{Comparação entre os diferentes critérios de parada.}
 \label{tab:fid_results}
-\begin{tabular}{lcc}
+\begin{tabular}{lccc}
 \hline
-\textbf{Estratégia} & \textbf{Épocas} & \textbf{FID} $\downarrow$ \\
+\textbf{Estratégia} & \textbf{Épocas} & \textbf{FID} $\downarrow$ & \textbf{MMD} $\downarrow$ \\
 \hline
-Treinamento completo & 100 & 0.1075\\
-Early FID (M1) & 26 & 0.1164\\
-Estabilidade do discriminador (M2) & 59 & \textbf{0.0727}\\
+Treinamento completo & 100 & 0.1075 & 0.00213 \\
+Early FID (M1) & 26 & 0.1164 & 0.00379 \\
+Estabilidade do discriminador (M2) & 59 & \textbf{0.0727} & \textbf{0.00142} \\
 \hline
 \end{tabular}
-\label{tab:fid_results}
 \end{table}
 
-Os resultados quantitativos corroboram a análise visual. Apesar de o treinamento completo utilizar todas as 100 épocas disponíveis, ele não apresentou o melhor desempenho. A estratégia M2 obteve simultaneamente o menor valor de FID e de MMD, indicando maior proximidade entre as distribuições das imagens reais e geradas. Por outro lado, a estratégia M1 apresentou o pior desempenho entre os três cenários, reforçando que, para esta configuração experimental, o critério de parada baseado apenas na estagnação do FID interrompeu o treinamento prematuramente.
+Os resultados quantitativos corroboram a análise visual. Embora o treinamento completo tenha utilizado todas as 100 épocas disponíveis, ele não apresentou o melhor desempenho. A estratégia M2 obteve simultaneamente os menores valores de FID e MMD, indicando maior proximidade entre as distribuições das imagens reais e geradas. Por outro lado, a estratégia M1 apresentou os maiores valores em ambas as métricas, sugerindo que o critério de parada baseado exclusivamente na estagnação do FID interrompeu o treinamento prematuramente.
 
-De maneira geral, os experimentos indicam que a utilização da estabilidade da acurácia do discriminador como critério de parada mostrou-se uma alternativa mais eficiente para este problema, permitindo que o gerador continuasse evoluindo mesmo após períodos temporários de estagnação do FID e produzindo, ao final do treinamento, amostras de melhor qualidade.
+De maneira geral, os resultados obtidos pelas duas métricas são consistentes entre si e indicam que a utilização da estabilidade da acurácia do discriminador como critério de parada foi a estratégia mais eficaz para este problema. Essa abordagem permitiu que a rede Geradora continuasse evoluindo mesmo após períodos temporários de estagnação do FID, produzindo ao final do treinamento imagens com maior similaridade estatística em relação ao conjunto de dados real.
