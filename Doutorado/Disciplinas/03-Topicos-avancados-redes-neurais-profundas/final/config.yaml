@@ -1,0 +1,60 @@
+seed: 42
+
+dataset:
+  # Options: cifar10, imagefolder
+  name: cifar10
+  data_dir: ./data
+  image_size: 224
+  batch_size: 64
+  num_workers: 2
+  download: true
+  random_crop_padding: 4
+  color_jitter: 0.1
+
+  # Used for imagefolder and for splitting CIFAR-10 train set.
+  train_ratio: 0.7
+  val_ratio: 0.15
+  test_ratio: 0.15
+
+  # Set > 1 to run cross-validation over train+validation data.
+  # A separated test split is still kept for final evaluation per fold.
+  k_folds: 1
+
+model:
+  backbone: resnet18
+  pretrained: true
+  freeze_backbone: true
+  num_classes: 10
+  classifier: quantum
+
+  mlp:
+    feature_source: raw
+    hidden_layers: [256]
+    dropout: 0.3
+
+  quantum:
+    encoding: amplitude
+    num_qubits: 4
+    num_layers: 2
+    entanglement: linear
+
+features:
+  cache_dir: ./features
+  use_cache: true
+  prepare_if_missing: false
+  reducer: pca
+  qubits: [4, 6, 8]
+  encodings: [angle, amplitude]
+  batch_size: 256
+  quantum_batch_size: 16
+
+training:
+  device: auto
+  output_dir: ./outputs
+  epochs: 500
+  learning_rate: 0.0001
+  weight_decay: 0.0001
+  optimizer: adam
+  scheduler: cosine
+  early_stopping_patience: 8
+  checkpoint_name: best_model.pt

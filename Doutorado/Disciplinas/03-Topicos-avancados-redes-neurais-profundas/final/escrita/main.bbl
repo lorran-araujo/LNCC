@@ -1,0 +1,35 @@
+\begin{thebibliography}{4}
+\providecommand{\natexlab}[1]{#1}
+\providecommand{\url}[1]{\texttt{#1}}
+\expandafter\ifx\csname urlstyle\endcsname\relax
+  \providecommand{\doi}[1]{doi: #1}\else
+  \providecommand{\doi}{doi: \begingroup \urlstyle{rm}\Url}\fi
+
+\bibitem[Bergholm et~al.(2018)Bergholm, Izaac, Schuld,
+  et~al.]{bergholm2018pennylane}
+Ville Bergholm, Josh Izaac, Maria Schuld, et~al.
+\newblock {PennyLane}: Automatic differentiation of hybrid quantum-classical
+  computations.
+\newblock \emph{arXiv preprint arXiv:1811.04968}, 2018.
+
+\bibitem[Biamonte et~al.(2017)Biamonte, Wittek, Pancotti, Rebentrost, Wiebe,
+  and Lloyd]{biamonte2017quantum}
+Jacob Biamonte, Peter Wittek, Nicola Pancotti, Patrick Rebentrost, Nathan
+  Wiebe, and Seth Lloyd.
+\newblock Quantum machine learning.
+\newblock \emph{Nature}, 549:\penalty0 195--202, 2017.
+
+\bibitem[Cerezo et~al.(2021)Cerezo, Arrasmith, Babbush,
+  et~al.]{cerezo2021variational}
+M.~Cerezo, Andrew Arrasmith, Ryan Babbush, et~al.
+\newblock Variational quantum algorithms.
+\newblock \emph{Nature Reviews Physics}, 3:\penalty0 625--644, 2021.
+
+\bibitem[Schuld et~al.(2015)Schuld, Sinayskiy, and
+  Petruccione]{schuld2015introduction}
+Maria Schuld, Ilya Sinayskiy, and Francesco Petruccione.
+\newblock An introduction to quantum machine learning.
+\newblock \emph{Contemporary Physics}, 56\penalty0 (2):\penalty0 172--185,
+  2015.
+
+\end{thebibliography}
