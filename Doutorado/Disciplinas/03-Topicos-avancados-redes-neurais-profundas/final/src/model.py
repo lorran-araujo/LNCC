@@ -2,7 +2,7 @@ import torch
 import torch.nn as nn
 from torchvision import models
 
-from src.codification import amplitude_encoding, angle_encoding
+from src.codification import amplitude_encoding, angle_encoding, dense_angle_encoding
 
 try:
     import pennylane as qml
@@ -81,6 +81,24 @@ class VariationalQuantumClassifier(nn.Module):
 
         dev = qml.device("default.qubit", wires=self.num_qubits)
 
+        def apply_dense_angle_embedding(inputs):
+            for wire in range(self.num_qubits):
+                offset = 3 * wire
+                qml.RX(inputs[..., offset], wires=wire)
+                qml.RY(inputs[..., offset + 1], wires=wire)
+                qml.RZ(inputs[..., offset + 2], wires=wire)
+
+        def apply_trainable_layer(weights, layer):
+            for wire in range(self.num_qubits):
+                qml.RX(weights[layer, wire, 0], wires=wire)
+                qml.RY(weights[layer, wire, 1], wires=wire)
+                qml.RZ(weights[layer, wire, 2], wires=wire)
+
+            for wire in range(self.num_qubits - 1):
+                qml.CNOT(wires=[wire, wire + 1])
+            if self.entanglement == "circular" and self.num_qubits > 2:
+                qml.CNOT(wires=[self.num_qubits - 1, 0])
+
         @qml.qnode(dev, interface="torch")
         def circuit(inputs, weights):
             if self.encoding == "angle":
@@ -96,19 +114,21 @@ class VariationalQuantumClassifier(nn.Module):
                     normalize=False,
                     pad_with=0.0,
                 )
+            elif self.encoding == "dense_angle":
+                apply_dense_angle_embedding(inputs)
+            elif self.encoding == "reupload_angle":
+                pass
             else:
                 raise ValueError(f"Unsupported quantum encoding: {self.encoding}")
 
             for layer in range(self.num_layers):
-                for wire in range(self.num_qubits):
-                    qml.RX(weights[layer, wire, 0], wires=wire)
-                    qml.RY(weights[layer, wire, 1], wires=wire)
-                    qml.RZ(weights[layer, wire, 2], wires=wire)
-
-                for wire in range(self.num_qubits - 1):
-                    qml.CNOT(wires=[wire, wire + 1])
-                if self.entanglement == "circular" and self.num_qubits > 2:
-                    qml.CNOT(wires=[self.num_qubits - 1, 0])
+                if self.encoding == "reupload_angle":
+                    qml.AngleEmbedding(
+                        inputs,
+                        wires=range(self.num_qubits),
+                        rotation="Y",
+                    )
+                apply_trainable_layer(weights, layer)
 
             return [qml.expval(qml.PauliZ(wire)) for wire in range(self.num_qubits)]
 
@@ -117,8 +137,10 @@ class VariationalQuantumClassifier(nn.Module):
         self.output_layer = nn.Linear(self.num_qubits, config["num_classes"])
 
     def _prepare_inputs(self, features):
-        if self.encoding == "angle":
+        if self.encoding in {"angle", "reupload_angle"}:
             return angle_encoding(features, self.num_qubits)
+        if self.encoding == "dense_angle":
+            return dense_angle_encoding(features, self.num_qubits)
         if self.encoding == "amplitude":
             return amplitude_encoding(features, self.num_qubits)
         raise ValueError(f"Unsupported quantum encoding: {self.encoding}")

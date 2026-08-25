@@ -62,6 +62,25 @@ def angle_encoding(features, num_qubits, value_range=(-math.pi, math.pi), eps=1e
     return _restore_shape(encoded, was_1d)
 
 
+def dense_angle_encoding(features, num_qubits, value_range=(-math.pi, math.pi), eps=1e-12):
+    """Prepare three rotation angles per qubit for dense angle encoding."""
+    _validate_num_qubits(num_qubits)
+    if len(value_range) != 2 or value_range[0] >= value_range[1]:
+        raise ValueError("value_range must be a tuple like (min_angle, max_angle).")
+
+    features, was_1d = _ensure_2d(features)
+    features = _pad_or_truncate(features.float(), 3 * num_qubits)
+
+    min_values = features.min(dim=1, keepdim=True).values
+    max_values = features.max(dim=1, keepdim=True).values
+    scale = (max_values - min_values).clamp_min(eps)
+
+    lower, upper = value_range
+    encoded = (features - min_values) / scale
+    encoded = encoded * (upper - lower) + lower
+    return _restore_shape(encoded, was_1d)
+
+
 def amplitude_encoding(features, num_qubits, eps=1e-12):
     """Prepare normalized amplitudes for a quantum state with ``num_qubits``.
 
@@ -93,6 +112,10 @@ def encode_features(features, encoding, num_qubits, **kwargs):
     encoding = encoding.lower()
     if encoding == "angle":
         return angle_encoding(features, num_qubits, **kwargs)
+    if encoding == "reupload_angle":
+        return angle_encoding(features, num_qubits, **kwargs)
+    if encoding == "dense_angle":
+        return dense_angle_encoding(features, num_qubits, **kwargs)
     if encoding == "amplitude":
         return amplitude_encoding(features, num_qubits, **kwargs)
 

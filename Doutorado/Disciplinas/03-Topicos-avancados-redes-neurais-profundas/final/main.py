@@ -101,9 +101,14 @@ def _load_training_loaders(config, device):
     return loaders, input_dim, {"feature_source": source, "feature_dim": input_dim}
 
 
+def _count_trainable_params(model):
+    return sum(parameter.numel() for parameter in model.parameters() if parameter.requires_grad)
+
+
 def run_single_split(config, device):
     data, input_dim, feature_metadata = _load_training_loaders(config, device)
     model = build_feature_classifier(input_dim, config["model"]).to(device)
+    trainable_params = _count_trainable_params(model)
     trainer = Trainer(model, config, device)
 
     history = trainer.fit(data["train_loader"], data["val_loader"])
@@ -114,6 +119,7 @@ def run_single_split(config, device):
         {
             "model": config["model"],
             "features": feature_metadata,
+            "trainable_params": trainable_params,
             "history": history,
             "test": test_metrics,
         },

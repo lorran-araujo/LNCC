@@ -1,0 +1,372 @@
+\documentclass[aspectratio=169]{beamer}
+
+\usetheme{Madrid}
+\usecolortheme{default}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[brazil]{babel}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{xcolor}
+
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+
+\title[DDPM para Geração de Faces]{Modelo de Difusão DDPM para Geração de Faces}
+\subtitle{Arquitetura, Treinamento e Amostragem}
+\author{Lorran de Araújo Durães Soares}
+\institute{Tópicos Avançados em Redes Neurais Profundas}
+\date{\today}
+
+\begin{document}
+
+\begin{frame}
+    \titlepage
+\end{frame}
+
+\begin{frame}{Objetivo}
+    \begin{itemize}
+        \item Treinar um modelo generativo capaz de produzir imagens de faces a partir de ruído aleatório.
+        \item O modelo usado é um DDPM: \textit{Denoising Diffusion Probabilistic Model} \cite{ho2020ddpm}.
+        \item A rede neural principal é uma UNet convolucional condicionada pelo passo temporal de difusão \cite{ronneberger2015unet}.
+        \item A geração é feita por remoção progressiva de ruído, do passo $T$ até o passo $0$.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{Fluxo Geral do Projeto}
+    \begin{enumerate}
+        \item Normalizar as imagens para o intervalo $[-1, 1]$.
+        \item Durante o treinamento, adicionar ruído gaussiano às imagens.
+        \item Treinar uma UNet para prever o ruído adicionado.
+        \item Durante a geração, começar de ruído puro.
+        \item Aplicar o processo reverso até obter uma imagem sintética.
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}{Dataset e Pré-processamento}
+    \begin{itemize}
+        \item Dataset usado: subconjunto do UTKFace \cite{zhang2017utkface}.
+        \item Filtro aplicado: faces femininas entre 20 e 40 anos.
+        \item Imagens convertidas para RGB e redimensionadas para $128 \times 128$.
+        \item Normalização:
+        \[
+            x \in [0, 1] \rightarrow x \in [-1, 1]
+        \]
+        \item Aumento de dados: \texttt{RandomHorizontalFlip} com probabilidade 0.5.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{Ideia Central do DDPM}
+    \begin{block}{Processo direto}
+        Uma imagem real é corrompida progressivamente com ruído gaussiano.
+    \end{block}
+
+    \begin{block}{Processo reverso}
+        O modelo aprende a remover esse ruído passo a passo.
+    \end{block}
+
+    \begin{itemize}
+        \item No treinamento, conhecemos a imagem limpa e o ruído aplicado.
+        \item A rede aprende a prever o ruído presente em uma imagem ruidosa.
+        \item Na geração, começamos de ruído puro e usamos a rede para reverter o processo.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{Processo Direto: Adição de Ruído}
+    O scheduler define uma sequência linear de variâncias $\beta_t$ \cite{ho2020ddpm}.
+
+    \[
+        \alpha_t = 1 - \beta_t
+    \]
+
+    \[
+        \bar{\alpha}_t = \prod_{s=1}^{t} \alpha_s
+    \]
+
+    A imagem ruidosa em um passo $t$ é obtida por:
+
+    \[
+        x_t = \sqrt{\bar{\alpha}_t} x_0 + \sqrt{1 - \bar{\alpha}_t} \epsilon
+    \]
+
+    onde $\epsilon \sim \mathcal{N}(0, I)$.
+\end{frame}
+
+\begin{frame}{Objetivo de Treinamento}
+    A rede neural recebe:
+
+    \[
+        (x_t, t)
+    \]
+
+    e prediz:
+
+    \[
+        \epsilon_\theta(x_t, t)
+    \]
+
+    A função de perda é \cite{ho2020ddpm}:
+
+    \[
+        \mathcal{L} = \mathbb{E}_{x_0, t, \epsilon}\left[\|\epsilon - \epsilon_\theta(x_t, t)\|^2\right]
+    \]
+
+    Ou seja, o modelo não prediz diretamente a imagem final; ele prediz o ruído.
+\end{frame}
+
+\begin{frame}{Arquitetura Geral da UNet I}
+
+    \begin{figure}
+        \centering
+        \includegraphics[width=0.85\textwidth]{imgs/arquitetura.png}
+    \end{figure}
+
+\end{frame}
+
+\begin{frame}{Arquitetura Geral da UNet II}
+    \begin{itemize}
+        \item Entrada: imagem ruidosa $x_t$ com forma $[B, 3, 128, 128]$.
+        \item Condicionamento: timestep $t$ via embedding temporal.
+        \item Saída: ruído previsto com a mesma forma da imagem.
+        \item Estrutura encoder-decoder com conexões de atalho \cite{ronneberger2015unet}.
+        \item Encoder captura contexto global.
+        \item Decoder reconstrói a resolução espacial.
+        \item Skip connections preservam detalhes locais.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{Escalas da UNet}
+    \begin{table}
+        \centering
+        \begin{tabular}{ccc}
+            \toprule
+            Etapa & Resolução & Canais \\
+            \midrule
+            Entrada & $128 \times 128$ & 3 \\
+            Nível 1 & $128 \times 128$ & 64 \\
+            Nível 2 & $64 \times 64$ & 128 \\
+            Nível 3 & $32 \times 32$ & 256 \\
+            Nível 4 & $16 \times 16$ & 512 \\
+            Bottleneck & $8 \times 8$ & 512 \\
+            Saída & $128 \times 128$ & 3 \\
+            \bottomrule
+        \end{tabular}
+    \end{table}
+
+    Com \texttt{base\_channels = 64}, o modelo possui aproximadamente 38.49 milhões de parâmetros.
+\end{frame}
+
+\begin{frame}{Bloco Residual}
+    Cada \texttt{ResBlock} contém:
+
+    \begin{itemize}
+        \item GroupNorm \cite{wu2018groupnorm}.
+        \item Ativação SiLU.
+        \item Convolução $3 \times 3$.
+        \item Injeção do embedding temporal.
+        \item Nova sequência GroupNorm, SiLU e convolução $3 \times 3$.
+        \item Conexão residual entre entrada e saída \cite{he2016resnet}.
+    \end{itemize}
+
+    \[
+        y = F(x, t) + x
+    \]
+
+    Se o número de canais muda, usa-se uma convolução $1 \times 1$ no caminho residual.
+\end{frame}
+
+\begin{frame}{Embedding Temporal}
+    O modelo precisa saber o nível de ruído de cada amostra.
+
+    \begin{itemize}
+        \item O timestep $t$ é codificado com senos e cossenos em múltiplas frequências.
+        \item Essa estratégia é inspirada nos embeddings posicionais dos Transformers \cite{vaswani2017attention}.
+        \item Depois, um MLP projeta o embedding para dimensão 256.
+        \item O embedding é somado aos mapas de características dentro dos ResBlocks.
+    \end{itemize}
+
+    Injeção temporal no bloco:
+
+    \[
+        h = h + \text{MLP}(t)[:, :, None, None]
+    \]
+\end{frame}
+
+\begin{frame}{Self-Attention}
+    \begin{itemize}
+        \item A atenção permite que regiões distantes da imagem interajam.
+        \item Isso é útil para faces, pois olhos, boca, cabelo e contorno precisam ser globalmente coerentes.
+        \item O modelo usa atenção nas resoluções menores: $16 \times 16$ e $8 \times 8$.
+        \item Aplicar atenção em $128 \times 128$ seria muito custoso em memória.
+    \end{itemize}
+
+    Atenção por produto escalar \cite{vaswani2017attention}:
+
+    \[
+        \text{Attention}(Q, K, V) = \text{softmax}\left(\frac{QK^T}{\sqrt{C}}\right)V
+    \]
+\end{frame}
+
+\begin{frame}{Treinamento do DDPM}
+    \begin{figure}
+        \centering
+        \includegraphics[width=0.55\textwidth]{imgs/algorithm1.png}
+    \end{figure}
+\end{frame}
+
+\begin{frame}{Loop de Treinamento}
+    Para cada batch de imagens reais $x_0$:
+
+    \begin{enumerate}
+        \item Sorteia-se um timestep $t$ para cada imagem.
+        \item Sorteia-se ruído gaussiano $\epsilon$.
+        \item Calcula-se $x_t$ usando o scheduler.
+        \item A UNet prediz $\epsilon_\theta(x_t, t)$.
+        \item Calcula-se a loss MSE.
+        \item Executa-se backpropagation.
+        \item Aplica-se gradient clipping.
+        \item Atualiza-se o modelo com AdamW \cite{loshchilov2019adamw}.
+        \item Atualiza-se a EMA dos pesos.
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}{Hiperparâmetros Principais}
+    \begin{table}
+        \centering
+        \begin{tabular}{ll}
+            \toprule
+            Hiperparâmetro & Valor atual \\
+            \midrule
+            Tamanho da imagem & 128 \\
+            Batch size & 16 \\
+            Épocas & 200 \\
+            Learning rate & 0.0002 \\
+            Timesteps & 1000 \\
+            Base channels & 64 \\
+            EMA decay & 0.999 \\
+            Gradient clipping & 1.0 \\
+            Augmentation & Horizontal flip \\
+            \bottomrule
+        \end{tabular}
+    \end{table}
+\end{frame}
+
+\begin{frame}{EMA: Média Móvel Exponencial}
+    A EMA mantém uma segunda cópia do modelo, suavizando os pesos ao longo do treinamento.
+
+    \[
+        \theta_{EMA} \leftarrow \lambda \theta_{EMA} + (1 - \lambda)\theta
+    \]
+
+    No projeto:
+
+    \[
+        \lambda = 0.999
+    \]
+
+    Logo:
+
+    \[
+        \theta_{EMA} \leftarrow 0.999\theta_{EMA} + 0.001\theta
+    \]
+\end{frame}
+
+\begin{frame}{Por que Usar EMA?}
+    \begin{itemize}
+        \item Os pesos do modelo principal oscilam durante o treinamento.
+        \item A oscilação vem dos batches aleatórios, timesteps aleatórios e ruído gaussiano.
+        \item A EMA cria uma versão temporalmente suavizada dos pesos \cite{nichol2021improved,dhariwal2021diffusion}.
+        \item Em modelos generativos, a EMA costuma gerar imagens mais estáveis e coerentes.
+        \item A EMA não altera a loss: o modelo principal continua treinando com MSE.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{Processo de Geração I}
+    \begin{figure}
+        \centering
+        \includegraphics[width=0.5\textwidth]{imgs/algorithm2.png}
+    \end{figure}
+\end{frame}
+
+\begin{frame}{Processo de Geração II}
+    A geração começa com ruído puro:
+
+    \[
+        x_T \sim \mathcal{N}(0, I)
+    \]
+
+    Depois, para cada timestep $t$ de $T-1$ até $0$:
+
+    \begin{enumerate}
+        \item A UNet prediz o ruído presente em $x_t$.
+        \item Calcula-se a média da distribuição reversa.
+        \item Se $t > 0$, adiciona-se ruído com variância posterior.
+        \item Se $t = 0$, a média é usada como imagem final.
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}{Exemplos de imagens geradas}
+    \begin{figure}
+        \centering
+        \includegraphics[width=0.85\textwidth]{imgs/generateds.png}
+    \end{figure}
+\end{frame}
+
+\begin{frame}{Visualização do processo de Denoising}
+    \begin{figure}
+        \centering
+        \includegraphics[width=0.85\textwidth]{imgs/denoising.png}
+    \end{figure}
+\end{frame}
+
+\begin{frame}{Limitações Atuais}
+    \begin{itemize}
+        \item A geração DDPM com 1000 passos é lenta.
+        \item O modelo é incondicional: não controla idade, gênero ou etnia explicitamente.
+        \item Não há métrica quantitativa como FID implementada.
+        \item O scheduler de ruído é linear.
+        \item O conjunto filtrado tem tamanho limitado para geração de faces.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{Possíveis Melhorias}
+    \begin{itemize}
+        \item Implementar DDIM para amostragem mais rápida \cite{song2021ddim}.
+        \item Testar cosine noise schedule.
+        \item Usar mixed precision para acelerar o treinamento.
+        \item Adicionar condicionamento por atributos do UTKFace.
+        \item Medir qualidade com FID.
+        \item Treinar por mais tempo ou usar dataset maior.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{Resumo}
+    \begin{itemize}
+        \item O DDPM aprende a inverter um processo de adição gradual de ruído.
+        \item A UNet prediz o ruído em cada timestep.
+        \item A arquitetura usa múltiplas escalas, ResBlocks, skip connections e atenção \cite{ronneberger2015unet,he2016resnet,vaswani2017attention}.
+        \item O treinamento usa MSE, AdamW, gradient clipping e EMA.
+        \item Na geração, a versão EMA do modelo é preferida por produzir amostras mais estáveis.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{Referências}
+    \footnotesize
+    \begin{thebibliography}{99}
+        \bibitem{ho2020ddpm} Ho, J.; Jain, A.; Abbeel, P. \textit{Denoising Diffusion Probabilistic Models}. NeurIPS, 2020.
+        \bibitem{ronneberger2015unet} Ronneberger, O.; Fischer, P.; Brox, T. \textit{U-Net: Convolutional Networks for Biomedical Image Segmentation}. MICCAI, 2015.
+        \bibitem{he2016resnet} He, K.; Zhang, X.; Ren, S.; Sun, J. \textit{Deep Residual Learning for Image Recognition}. CVPR, 2016.
+        \bibitem{vaswani2017attention} Vaswani, A. et al. \textit{Attention Is All You Need}. NeurIPS, 2017.
+        \bibitem{wu2018groupnorm} Wu, Y.; He, K. \textit{Group Normalization}. ECCV, 2018.
+        \bibitem{loshchilov2019adamw} Loshchilov, I.; Hutter, F. \textit{Decoupled Weight Decay Regularization}. ICLR, 2019.
+        \bibitem{nichol2021improved} Nichol, A. Q.; Dhariwal, P. \textit{Improved Denoising Diffusion Probabilistic Models}. ICML, 2021.
+        \bibitem{dhariwal2021diffusion} Dhariwal, P.; Nichol, A. Q. \textit{Diffusion Models Beat GANs on Image Synthesis}. NeurIPS, 2021.
+        \bibitem{song2021ddim} Song, J.; Meng, C.; Ermon, S. \textit{Denoising Diffusion Implicit Models}. ICLR, 2021.
+        \bibitem{zhang2017utkface} Zhang, Z.; Song, Y.; Qi, H. \textit{Age Progression/Regression by Conditional Adversarial Autoencoder}. CVPR, 2017.
+    \end{thebibliography}
+\end{frame}
+
+\end{document}

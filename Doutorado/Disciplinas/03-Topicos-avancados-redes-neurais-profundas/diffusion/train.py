@@ -5,6 +5,8 @@ Os parâmetros são lidos do arquivo config.yaml.
 """
 
 import os
+from copy import deepcopy
+
 import yaml
 
 import torch
@@ -15,6 +17,15 @@ from tqdm import tqdm
 from dataset import ImageFolderDataset
 from ddpm import NoiseScheduler
 from model import SimpleUNet
+
+
+def update_ema(ema_model, model, decay):
+    with torch.no_grad():
+        for ema_param, param in zip(ema_model.parameters(), model.parameters()):
+            ema_param.mul_(decay).add_(param, alpha=1 - decay)
+
+        for ema_buffer, buffer in zip(ema_model.buffers(), model.buffers()):
+            ema_buffer.copy_(buffer)
 
 
 # -------------------------------------------------
@@ -39,6 +50,7 @@ def train():
     dataset = ImageFolderDataset(
         config["data_dir"],
         image_size=config["image_size"],
+        horizontal_flip=config.get("horizontal_flip", False),
     )
 
     dataloader = DataLoader(
@@ -60,6 +72,12 @@ def train():
         in_channels=3,
         base_ch=config["base_channels"],
     ).to(device)
+    ema_model = deepcopy(model).eval()
+    for param in ema_model.parameters():
+        param.requires_grad_(False)
+
+    ema_decay = config.get("ema_decay", 0.999)
+    grad_clip = config.get("grad_clip", 1.0)
 
     optimizer = torch.optim.AdamW(
         model.parameters(),
@@ -112,7 +130,10 @@ def train():
 
             optimizer.zero_grad()
             loss.backward()
+            if grad_clip is not None and grad_clip > 0:
+                torch.nn.utils.clip_grad_norm_(model.parameters(), grad_clip)
             optimizer.step()
+            update_ema(ema_model, model, ema_decay)
 
             running_loss += loss.item()
 
@@ -136,6 +157,7 @@ def train():
                 {
                     "epoch": epoch,
                     "model_state_dict": model.state_dict(),
+                    "ema_model_state_dict": ema_model.state_dict(),
                     "config": config,
                 },
                 checkpoint_path,
@@ -151,6 +173,7 @@ def train():
     torch.save(
         {
             "model_state_dict": model.state_dict(),
+            "ema_model_state_dict": ema_model.state_dict(),
             "config": config,
         },
         final_model_path,

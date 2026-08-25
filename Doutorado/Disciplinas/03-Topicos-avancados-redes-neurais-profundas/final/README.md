@@ -79,6 +79,10 @@ python run_experiments.py --config config.yaml
 
 Os resultados serao salvos em subpastas de `outputs/experiments`, com um resumo consolidado em `experiment_summary.json` e `experiment_summary.csv`.
 
+O script executa os classificadores quanticos para cada combinacao de `features.encodings` e `features.qubits`. As MLPs classicas sao executadas uma vez para cada dimensao PCA unica exigida por essas combinacoes, evitando duplicar experimentos classicos quando duas codificacoes usam a mesma dimensao, como `angle` e `reupload_angle`.
+
+Para cada dimensao PCA unica, sao treinadas uma MLP forte e uma MLP pequena com cerca de `model.mlp_tiny.target_params` parametros treinaveis.
+
 MLP sobre features congeladas:
 
 ```yaml
@@ -93,6 +97,10 @@ model:
     feature_source: raw
     hidden_layers: [256]
     dropout: 0.3
+
+  mlp_tiny:
+    target_params: 150
+    dropout: 0.0
 ```
 
 Classificador quantico variacional:
@@ -108,4 +116,11 @@ model:
     entanglement: linear
 ```
 
-Para classificadores quanticos, as features da ResNet sao reduzidas por PCA. O PCA e ajustado apenas no conjunto de treino e aplicado em treino, validacao e teste. Para `angle`, a dimensao reduzida e `num_qubits`; para `amplitude`, e `2 ** num_qubits`.
+Para classificadores quanticos, as features da ResNet sao reduzidas por PCA. O PCA e ajustado apenas no conjunto de treino e aplicado em treino, validacao e teste. As codificacoes disponiveis sao:
+
+| Codificacao | Dimensao PCA | Descricao |
+|---|---:|---|
+| `angle` | `num_qubits` | Uma feature por qubit, aplicada como rotacao `RY` antes das camadas variacionais. |
+| `amplitude` | `2 ** num_qubits` | Vetor normalizado como amplitudes do estado quantico. |
+| `dense_angle` | `3 * num_qubits` | Tres features por qubit, aplicadas como rotacoes `RX`, `RY` e `RZ` antes das camadas variacionais. |
+| `reupload_angle` | `num_qubits` | Mesmo vetor de `angle`, reinserido antes de cada camada variacional. |

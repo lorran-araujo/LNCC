@@ -1,22 +1,25 @@
 # ---------- Treinamento ----------
-data_dir: "./data/mnist_images"
-output_dir: "./checkpoints"
+data_dir: "./data/utkface_female_20_40_128"
+output_dir: "./checkpoints/utkface_female_20_40_128"
 
-image_size: 28
-batch_size: 64
-epochs: 10
+image_size: 128
+batch_size: 16
+epochs: 200
 
 lr: 0.0002
+ema_decay: 0.999
+grad_clip: 1.0
+horizontal_flip: true
 
 timesteps: 1000
-base_channels: 128
+base_channels: 64
 
 num_workers: 4
 save_every: 25
 
 # ---------- Geração ----------
-checkpoint: "./checkpoints/diffusion_final.pt"
-sample_output_dir: "./samples"
+checkpoint: "./checkpoints/utkface_female_20_40_128/diffusion_final.pt"
+sample_output_dir: "./samples/utkface_female_20_40_128"
 
-num_images: 20
+num_images: 16
 save_intermediates: 100

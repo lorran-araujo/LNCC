@@ -1,0 +1,680 @@
+EXPLICACAO DO CODIGO - MODELO DE DIFUSAO DDPM PARA GERACAO DE FACES
+=====================================================================
+
+1. VISAO GERAL DO PROJETO
+-------------------------
+
+Este projeto implementa um modelo de difusao do tipo DDPM, ou Denoising
+Diffusion Probabilistic Model, em PyTorch. O objetivo e treinar uma rede neural
+para gerar imagens de faces a partir de ruido aleatorio.
+
+O fluxo geral e:
+
+1. Preparar um conjunto de imagens reais.
+2. Normalizar as imagens para o intervalo [-1, 1].
+3. Durante o treinamento, adicionar ruido gaussiano progressivamente as imagens.
+4. Treinar uma UNet para prever o ruido adicionado em cada passo temporal.
+5. Durante a geracao, comecar de ruido puro e aplicar o processo reverso para
+   transformar o ruido em uma imagem.
+
+Arquivos principais:
+
+- config.yaml: contem caminhos e hiperparametros.
+- dataset.py: carrega imagens de uma pasta e aplica transformacoes.
+- ddpm.py: contem o agendador de ruido e o embedding temporal.
+- model.py: define a arquitetura da UNet usada para prever ruido.
+- train.py: executa o treinamento do modelo.
+- sampling.py: implementa o processo reverso de amostragem DDPM.
+- preview_samples.py: carrega um checkpoint e gera imagens.
+- samples/viewing.ipynb: notebook para visualizar resultados salvos.
+
+
+2. CONFIGURACAO DO EXPERIMENTO
+------------------------------
+
+O arquivo config.yaml controla o experimento. A configuracao atual usa o
+subconjunto UTKFace feminino entre 20 e 40 anos, com imagens 128x128:
+
+- data_dir: pasta com as imagens de treinamento.
+- output_dir: pasta onde os checkpoints sao salvos.
+- image_size: tamanho das imagens usadas pela rede.
+- batch_size: quantidade de imagens por batch.
+- epochs: numero total de epocas.
+- lr: taxa de aprendizado.
+- ema_decay: fator de decaimento usado na media movel exponencial dos pesos.
+- grad_clip: limite usado para clipping de gradiente.
+- horizontal_flip: ativa data augmentation por espelhamento horizontal.
+- timesteps: numero de passos do processo de difusao.
+- base_channels: largura base da UNet.
+- save_every: intervalo de epocas para salvar checkpoints.
+- checkpoint: caminho do checkpoint usado na geracao.
+- sample_output_dir: pasta onde as imagens geradas sao salvas.
+- num_images: numero de imagens geradas por execucao.
+- save_intermediates: intervalo para salvar passos intermediarios de denoising.
+
+
+3. DATASET E PRE-PROCESSAMENTO
+------------------------------
+
+O arquivo dataset.py define a classe ImageFolderDataset. Ela procura imagens
+recursivamente dentro da pasta indicada em data_dir e aceita extensoes como PNG,
+JPG, JPEG, BMP e WEBP.
+
+Para cada imagem:
+
+1. A imagem e aberta com PIL e convertida para RGB.
+2. Ela e redimensionada para image_size x image_size.
+3. Opcionalmente, aplica-se RandomHorizontalFlip com probabilidade 0.5.
+4. A imagem e convertida para tensor com valores em [0, 1].
+5. A imagem e normalizada para [-1, 1] usando media 0.5 e desvio 0.5.
+
+A normalizacao para [-1, 1] e comum em modelos generativos de imagem porque
+centraliza os dados em torno de zero e combina bem com redes convolucionais e
+funcoes de ativacao como SiLU.
+
+O RandomHorizontalFlip foi incluido porque, para faces, o espelhamento horizontal
+normalmente preserva a classe visual da imagem. Isso aumenta a diversidade do
+treinamento sem precisar coletar novas imagens. Para o subconjunto usado, que tem
+aproximadamente alguns milhares de imagens, esse aumento de dados ajuda a reduzir
+overfitting.
+
+
+4. FUNDAMENTO DO DDPM
+---------------------
+
+Um DDPM trabalha com dois processos:
+
+4.1 Processo direto
+
+No processo direto, uma imagem real x_0 recebe ruido gaussiano ao longo de T
+passos. Em cada passo t, a imagem fica mais ruidosa. Depois de muitos passos, a
+distribuicao se aproxima de ruido gaussiano puro.
+
+No codigo, isso esta em ddpm.py, na classe NoiseScheduler. O scheduler define:
+
+- beta_t: quantidade de ruido adicionada em cada passo.
+- alpha_t = 1 - beta_t.
+- alpha_cumprod_t: produto acumulado dos alphas ate o passo t.
+
+A funcao add_noise aplica diretamente a formula fechada:
+
+x_t = sqrt(alpha_cumprod_t) * x_0 + sqrt(1 - alpha_cumprod_t) * epsilon
+
+onde epsilon e ruido gaussiano padrao.
+
+Isso permite sortear qualquer passo t diretamente, sem precisar simular todos os
+passos anteriores.
+
+4.2 Processo reverso
+
+No processo reverso, queremos partir de ruido puro x_T e remover ruido passo a
+passo ate obter uma imagem x_0. Como a distribuicao reversa exata nao e conhecida,
+treinamos uma rede neural para estimar o ruido presente em x_t.
+
+A rede aprende uma funcao:
+
+epsilon_theta(x_t, t)
+
+Ou seja, dada uma imagem ruidosa x_t e o passo temporal t, a rede prediz o ruido
+epsilon que foi usado para corromper a imagem original.
+
+4.3 Objetivo de treinamento
+
+O treinamento minimiza o erro quadratico medio entre o ruido real e o ruido
+previsto:
+
+loss = MSE(epsilon_theta(x_t, t), epsilon)
+
+Esse objetivo e usado no artigo original de DDPM e e uma forma simples e estavel
+de treinar modelos de difusao.
+
+
+5. EMBEDDING TEMPORAL
+---------------------
+
+O modelo precisa saber em qual passo temporal t ele esta operando. Remover ruido
+em um passo inicial e diferente de remover ruido quando a imagem ainda e quase
+ruido puro.
+
+Por isso, ddpm.py define a classe TimeEmbedding. Ela cria um embedding senoidal
+do timestep, inspirado nos embeddings posicionais dos Transformers. O timestep t
+e transformado em valores de seno e cosseno em diferentes frequencias. Depois, um
+MLP projeta essa representacao para uma dimensao maior.
+
+No codigo atual:
+
+- SimpleUNet usa time_emb_dim = 256.
+- TimeEmbedding recebe dim = 64.
+- O MLP interno projeta para dim * 4 = 256.
+
+Esse vetor temporal e injetado nos blocos residuais da UNet. Assim, cada bloco
+sabe em qual nivel de ruido esta trabalhando.
+
+
+6. ARQUITETURA DA REDE
+----------------------
+
+O arquivo model.py define a rede SimpleUNet. Apesar do nome SimpleUNet ter sido
+mantido para preservar compatibilidade com os scripts, a arquitetura atual e bem
+mais forte que a versao inicial.
+
+6.1 Ideia geral da UNet
+
+A UNet e uma arquitetura encoder-decoder com skip connections. Ela e muito usada
+em tarefas de imagem porque combina informacao local e global:
+
+- O encoder reduz progressivamente a resolucao espacial e aumenta o numero de
+  canais.
+- O bottleneck processa representacoes compactas e semanticamente mais ricas.
+- O decoder aumenta novamente a resolucao ate voltar ao tamanho original.
+- As skip connections ligam encoder e decoder em resolucoes correspondentes,
+  preservando detalhes espaciais.
+
+No contexto de difusao, a UNet recebe uma imagem ruidosa x_t e tenta prever o
+ruido presente nela. As skip connections ajudam a manter detalhes finos, enquanto
+as camadas profundas capturam estrutura global da face.
+
+6.2 Entrada e saida
+
+Entrada da rede:
+
+- Tensor x_t com forma [batch, 3, 128, 128].
+- Tensor t com o timestep de cada imagem do batch.
+
+Saida da rede:
+
+- Tensor com a mesma forma da imagem: [batch, 3, 128, 128].
+- Essa saida representa o ruido previsto, nao a imagem final diretamente.
+
+6.3 Largura dos canais
+
+A rede usa base_channels = 64. As resolucoes usam multiplicadores de canal:
+
+- ch1 = 64
+- ch2 = 128
+- ch3 = 256
+- ch4 = 512
+
+Isso significa que, conforme a imagem diminui em resolucao, a rede aumenta a
+quantidade de canais para representar caracteristicas mais abstratas.
+
+6.4 Encoder
+
+O encoder possui quatro niveis:
+
+- Nivel 1: 128x128 com 64 canais.
+- Nivel 2: 64x64 com 128 canais.
+- Nivel 3: 32x32 com 256 canais.
+- Nivel 4: 16x16 com 512 canais.
+
+Depois do quarto nivel, ainda ha um downsampling para o bottleneck em 8x8 com
+512 canais.
+
+Cada nivel possui dois ResBlocks. O quarto nivel tambem possui um bloco de
+atencao.
+
+6.5 Bottleneck
+
+O bottleneck opera na representacao mais compacta, aproximadamente 8x8 com 512
+canais. Ele contem:
+
+- ResBlock
+- AttentionBlock
+- ResBlock
+
+Essa parte e importante porque em baixa resolucao a rede consegue modelar
+relacoes globais da imagem com menor custo computacional. Em faces, isso ajuda a
+coordenar olhos, boca, nariz, cabelo e formato geral.
+
+6.6 Decoder
+
+O decoder inverte o processo do encoder:
+
+- 8x8 -> 16x16
+- 16x16 -> 32x32
+- 32x32 -> 64x64
+- 64x64 -> 128x128
+
+Em cada escala, a representacao do decoder e concatenada com a representacao do
+encoder da mesma resolucao. Essa concatenacao e a skip connection da UNet.
+
+Por exemplo, quando o decoder volta para 16x16, ele concatena sua representacao
+com d4, que foi salva no encoder tambem em 16x16. Isso recupera informacoes que
+poderiam ter sido perdidas no downsampling.
+
+6.7 ResBlock
+
+O ResBlock e o bloco basico da rede. Ele contem:
+
+- GroupNorm
+- SiLU
+- Conv2d 3x3
+- injecao do embedding temporal
+- GroupNorm
+- SiLU
+- Conv2d 3x3
+- conexao residual
+
+A conexao residual soma a entrada do bloco com sua saida transformada. Se o
+numero de canais muda, uma convolucao 1x1 ajusta a dimensao da entrada antes da
+soma.
+
+O uso de blocos residuais ajuda o treinamento de redes mais profundas, porque o
+gradiente consegue fluir melhor e a rede pode aprender correcoes incrementais.
+
+6.8 Injecao do tempo nos ResBlocks
+
+Dentro de cada ResBlock, o embedding temporal passa por um pequeno MLP e e somado
+ao mapa de caracteristicas:
+
+h = h + time_mlp(t_emb)[:, :, None, None]
+
+Essa operacao transforma o vetor temporal em um bias por canal. Assim, a rede
+modula suas ativacoes dependendo do timestep. Isso e essencial porque a estrategia
+de denoising muda conforme o nivel de ruido.
+
+6.9 AttentionBlock
+
+O AttentionBlock aplica self-attention espacial. Primeiro, o mapa de
+caracteristicas [B, C, H, W] e convertido para [B, C, H*W]. Depois, sao calculados
+Q, K e V por uma convolucao 1D. A atencao e calculada com produto escalar:
+
+attention = softmax(QK^T / sqrt(C))
+
+Depois, os valores V sao combinados usando essa matriz de atencao.
+
+A atencao permite que uma posicao da imagem use informacao de outras posicoes
+distantes. Isso e importante para faces porque olhos, boca, contorno do rosto e
+cabelo precisam ser globalmente consistentes.
+
+No codigo, a atencao foi colocada nas resolucoes baixas, principalmente 16x16 e
+8x8, pois aplicar atencao em 128x128 seria muito caro em memoria e tempo.
+
+6.10 GroupNorm e SiLU
+
+GroupNorm normaliza canais em grupos. Ela e adequada para batch sizes pequenos,
+como batch_size = 16, porque nao depende das estatisticas do batch como BatchNorm.
+
+SiLU e uma funcao de ativacao suave, tambem conhecida como Swish. Ela costuma
+funcionar bem em arquiteturas modernas de difusao.
+
+6.11 Por que a arquitetura antiga ficou ruim
+
+A primeira arquitetura tinha apenas dois niveis de downsampling. Para imagens
+128x128 de faces, isso era limitado por alguns motivos:
+
+- Pouca profundidade.
+- Campo receptivo menor.
+- Menor capacidade de modelar estrutura global.
+- Ausencia de atencao.
+- Menor capacidade parametrica.
+
+Faces exigem consistencia global: olhos alinhados, boca coerente, formato do
+rosto, cabelo e textura. Uma rede muito rasa pode aprender texturas locais, mas
+tem dificuldade de coordenar a imagem como um todo.
+
+A nova UNet e mais apropriada para 128x128 porque possui mais escalas, mais
+blocos residuais, atencao em baixa resolucao e aproximadamente 38.49 milhoes de
+parametros com base_channels = 64.
+
+
+7. TREINAMENTO
+--------------
+
+O treinamento acontece em train.py.
+
+7.1 Carregamento
+
+O script le config.yaml, escolhe o device CUDA se disponivel e cria:
+
+- Dataset.
+- DataLoader.
+- NoiseScheduler.
+- SimpleUNet.
+- Copia EMA da rede.
+- Otimizador AdamW.
+
+7.2 Passo de treinamento
+
+Para cada batch x0:
+
+1. Sorteia-se um timestep t aleatorio para cada imagem do batch.
+2. Sorteia-se ruido gaussiano epsilon com a mesma forma da imagem.
+3. Gera-se a imagem ruidosa x_t com scheduler.add_noise.
+4. A UNet recebe x_t e t.
+5. A UNet prediz noise_pred.
+6. Calcula-se MSE entre noise_pred e epsilon.
+7. O gradiente e calculado por backpropagation.
+8. O gradiente e limitado por grad_clip.
+9. O AdamW atualiza os pesos da rede.
+10. A copia EMA e atualizada.
+
+7.3 Loss
+
+A loss usada e:
+
+MSE(noise_pred, noise)
+
+Essa loss treina a rede para estimar o ruido que foi aplicado a imagem limpa.
+Durante a geracao, essa estimativa permite calcular a media da distribuicao
+reversa e remover ruido passo a passo.
+
+7.4 Otimizador AdamW
+
+O AdamW e uma versao do Adam que desacopla weight decay da atualizacao adaptativa.
+Ele e uma escolha comum em treinamento moderno de redes profundas.
+
+7.5 Gradient clipping
+
+O codigo usa clipping de norma de gradiente:
+
+torch.nn.utils.clip_grad_norm_(model.parameters(), grad_clip)
+
+Com grad_clip = 1.0, se a norma dos gradientes ficar muito grande, ela e reduzida.
+Isso ajuda a evitar instabilidades, especialmente porque a nova UNet e maior.
+
+
+8. EMA - EXPONENTIAL MOVING AVERAGE
+-----------------------------------
+
+A EMA, ou media movel exponencial, e uma tecnica muito usada em modelos
+generativos. A ideia e manter uma segunda versao da rede, cujos pesos sao uma
+media suavizada dos pesos treinados ao longo do tempo.
+
+8.1 Onde a EMA aparece no codigo
+
+No arquivo train.py, a funcao update_ema atualiza os pesos da rede EMA:
+
+ema_param = decay * ema_param + (1 - decay) * param
+
+No codigo:
+
+ema_param.mul_(decay).add_(param, alpha=1 - decay)
+
+No inicio do treinamento, o modelo EMA e criado como uma copia exata do modelo
+principal:
+
+ema_model = deepcopy(model).eval()
+
+Depois, seus parametros sao congelados:
+
+param.requires_grad_(False)
+
+Isso significa que o modelo EMA nao e treinado diretamente por gradiente. Ele e
+atualizado apenas pela media movel dos pesos do modelo principal.
+
+Depois de cada optimizer.step(), o codigo chama:
+
+update_ema(ema_model, model, ema_decay)
+
+Ou seja, primeiro o modelo principal aprende com o batch; em seguida, a EMA e
+atualizada para se aproximar um pouco dos novos pesos.
+
+8.2 O que significa ema_decay = 0.999
+
+Com ema_decay = 0.999, a atualizacao e:
+
+peso_ema_novo = 0.999 * peso_ema_antigo + 0.001 * peso_modelo_atual
+
+Isso significa que a EMA muda devagar. Ela nao copia completamente os pesos do
+modelo atual; ela acumula uma versao suavizada do historico recente do treinamento.
+
+8.3 Por que usar EMA
+
+Durante o treinamento, os pesos do modelo principal oscilam por causa do SGD/Adam,
+da aleatoriedade dos batches, dos timesteps aleatorios e do ruido gaussiano.
+Mesmo quando o treinamento esta indo bem, a rede em uma determinada iteracao pode
+estar em um ponto ligeiramente pior para geracao visual.
+
+A EMA reduz essas oscilacoes. Ela funciona como uma media temporal dos modelos
+recentes, produzindo pesos mais estaveis. Em modelos generativos, isso costuma
+melhorar a qualidade das amostras, deixando imagens menos ruidosas e mais
+coerentes.
+
+8.4 EMA nao muda a loss de treinamento
+
+Um ponto importante para explicar no seminario: a EMA nao altera a funcao de loss.
+O modelo principal continua sendo treinado normalmente com MSE. A EMA e uma
+segunda copia usada principalmente para avaliacao e geracao.
+
+8.5 Como a EMA e salva
+
+Nos checkpoints, train.py salva duas versoes dos pesos:
+
+- model_state_dict: pesos normais do modelo treinado.
+- ema_model_state_dict: pesos suavizados por EMA.
+
+Isso aparece tanto nos checkpoints intermediarios quanto no checkpoint final.
+
+8.6 Como a EMA e usada na geracao
+
+No arquivo preview_samples.py, ao carregar um checkpoint, o codigo verifica se a
+chave ema_model_state_dict existe:
+
+state_key = "ema_model_state_dict" if "ema_model_state_dict" in checkpoint else "model_state_dict"
+
+Se existir, a geracao usa automaticamente os pesos EMA. Se nao existir, usa os
+pesos normais. Isso mantem compatibilidade com checkpoints antigos, mas prefere a
+versao EMA quando disponivel.
+
+Assim, o fluxo ideal e:
+
+1. Treinar o modelo principal.
+2. Atualizar EMA a cada batch.
+3. Salvar modelo principal e modelo EMA.
+4. Usar modelo EMA para gerar imagens.
+
+8.7 Como explicar intuitivamente
+
+Uma analogia simples: o modelo principal e como uma camera tremendo durante o
+treinamento; a EMA e como uma estabilizacao temporal da imagem. Ela nao cria uma
+nova arquitetura, mas fornece uma versao mais estavel dos pesos aprendidos.
+
+
+9. CHECKPOINTS
+--------------
+
+O treinamento salva checkpoints a cada save_every epocas e tambem salva um modelo
+final no fim.
+
+Cada checkpoint contem:
+
+- epoch: epoca atual, nos checkpoints intermediarios.
+- model_state_dict: pesos normais da UNet.
+- ema_model_state_dict: pesos EMA.
+- config: configuracao usada no treinamento.
+
+Salvar a configuracao dentro do checkpoint e importante porque a geracao precisa
+saber image_size, base_channels e timesteps usados no treinamento. Assim, mesmo
+se config.yaml mudar depois, o checkpoint ainda carrega os parametros corretos da
+arquitetura treinada.
+
+
+10. GERACAO DE IMAGENS
+----------------------
+
+A geracao usa preview_samples.py e sampling.py.
+
+10.1 Carregamento
+
+preview_samples.py:
+
+1. Le config.yaml.
+2. Carrega o checkpoint configurado.
+3. Recupera a configuracao salva no checkpoint.
+4. Cria a mesma arquitetura SimpleUNet usada no treinamento.
+5. Carrega ema_model_state_dict se existir.
+6. Cria o NoiseScheduler.
+7. Chama sample_ddpm.
+
+10.2 Processo reverso em sampling.py
+
+A funcao sample_ddpm comeca criando ruido puro:
+
+x = torch.randn(num_images, 3, image_size, image_size)
+
+Depois, percorre os timesteps de tras para frente:
+
+T-1, T-2, ..., 1, 0
+
+Em cada passo:
+
+1. Cria um tensor t_batch com o timestep atual.
+2. A rede prediz o ruido presente em x.
+3. Calcula a media da distribuicao reversa.
+4. Se t > 0, adiciona ruido com variancia posterior.
+5. Se t == 0, usa apenas a media.
+
+Ao final, a imagem e limitada para [-1, 1] e depois convertida para [0, 1] antes
+de ser salva como PNG.
+
+10.3 Intermediarios
+
+Se save_intermediates for maior que zero, o codigo salva estados intermediarios
+modelo transforma ruido em imagem.
+
+
+11. FLUXO DE USO
+----------------
+
+Fluxo basico:
+
+1. Ajustar config.yaml.
+2. Treinar:
+
+   python3 train.py
+
+3. Gerar amostras:
+
+   python3 preview_samples.py
+
+4. Visualizar:
+
+   abrir samples/viewing.ipynb
+
+Tambem e possivel passar opcoes diretamente para a geracao:
+
+python3 preview_samples.py --num-images 16 --seed 42
+
+ou escolher outro checkpoint:
+
+python3 preview_samples.py --checkpoint ./checkpoints/utkface_female_20_40_128/diffusion_epoch100.pt --output-dir ./samples/teste_epoch100
+
+
+12. LIMITACOES E POSSIVEIS MELHORIAS
+------------------------------------
+
+Limitacoes atuais:
+
+- O scheduler de ruido e linear; outros schedules podem melhorar resultados.
+- A amostragem DDPM com 1000 passos e lenta.
+- Nao ha FID, IS ou outra metrica automatica de qualidade.
+- Nao ha validacao separada.
+- O modelo e incondicional: ele nao recebe idade, genero ou outro atributo como
+  condicao.
+- O dataset filtrado nao e muito grande para geracao de faces.
+
+Possiveis melhorias:
+
+- Implementar DDIM para amostragem mais rapida.
+- Testar cosine noise schedule.
+- Treinar em 64x64 primeiro e depois 128x128.
+- Adicionar condicionamento por atributos do UTKFace.
+- Usar FID para comparacao quantitativa.
+- Usar mixed precision para acelerar treinamento e reduzir memoria.
+- Adicionar gradient accumulation se a GPU nao permitir batch size maior.
+
+
+13. ROTEIRO SUGERIDO PARA O SEMINARIO
+-------------------------------------
+
+Uma ordem boa para explicar:
+
+1. Motivacao: gerar faces realistas a partir de ruido.
+2. Ideia central da difusao: adicionar ruido e aprender a remover ruido.
+3. Processo direto: x_0 vira x_t.
+4. Processo reverso: x_T vira imagem.
+5. Objetivo de treinamento: prever epsilon usando MSE.
+6. Por que usar UNet: combina contexto global e detalhes locais.
+7. Arquitetura usada: escalas, ResBlocks, skip connections e atencao.
+8. Papel do timestep: embedding senoidal injetado nos ResBlocks.
+9. Treinamento: batch, timestep aleatorio, ruido, loss, AdamW.
+10. EMA: por que foi usada, onde foi implementada e como melhora geracao.
+11. Geracao: checkpoint EMA, processo reverso e imagens intermediarias.
+12. Resultados: mostrar imagens finais e passos de denoising.
+13. Limitacoes e proximos passos.
+
+
+14. REFERENCIAS
+---------------
+
+Ho, J.; Jain, A.; Abbeel, P. Denoising Diffusion Probabilistic Models. NeurIPS,
+2020.
+
+- Referencia principal para DDPM.
+- Fundamenta o processo direto, o processo reverso e o treinamento por predicao
+  de ruido com loss MSE.
+
+Ronneberger, O.; Fischer, P.; Brox, T. U-Net: Convolutional Networks for
+Biomedical Image Segmentation. MICCAI, 2015.
+
+- Referencia da arquitetura UNet.
+- Fundamenta o uso de encoder-decoder com skip connections.
+
+He, K.; Zhang, X.; Ren, S.; Sun, J. Deep Residual Learning for Image Recognition.
+CVPR, 2016.
+
+- Referencia dos blocos residuais.
+- Fundamenta a ideia de somar entrada e saida transformada para facilitar o
+  treinamento de redes profundas.
+
+Vaswani, A. et al. Attention Is All You Need. NeurIPS, 2017.
+
+- Referencia para embeddings senoidais e mecanismo de atencao por produto
+  escalar.
+- O embedding temporal senoidal usado no projeto segue essa ideia de representar
+  posicoes, aqui timesteps, por senos e cossenos em frequencias diferentes.
+
+Wu, Y.; He, K. Group Normalization. ECCV, 2018.
+
+- Referencia para GroupNorm.
+- Justifica o uso de normalizacao por grupos, especialmente util quando o batch
+  size e pequeno.
+
+Loshchilov, I.; Hutter, F. Decoupled Weight Decay Regularization. ICLR, 2019.
+
+- Referencia para AdamW.
+- Fundamenta o otimizador usado no treinamento.
+
+Nichol, A. Q.; Dhariwal, P. Improved Denoising Diffusion Probabilistic Models.
+ICML, 2021.
+
+- Referencia para melhorias praticas em modelos de difusao.
+- Discute variantes e aperfeicoamentos de DDPM.
+
+Dhariwal, P.; Nichol, A. Q. Diffusion Models Beat GANs on Image Synthesis.
+NeurIPS, 2021.
+
+- Referencia para arquiteturas UNet mais fortes em difusao, uso de atencao e
+  melhorias praticas em qualidade de amostragem.
+
+Song, J.; Meng, C.; Ermon, S. Denoising Diffusion Implicit Models. ICLR, 2021.
+
+- Referencia para DDIM, uma alternativa de amostragem mais rapida que pode ser
+  implementada futuramente.
+
+Zhang, Z.; Song, Y.; Qi, H. Age Progression/Regression by Conditional Adversarial
+Autoencoder. CVPR, 2017.
+
+- Trabalho associado ao dataset UTKFace.
+- Fundamenta a origem do conjunto de faces com atributos como idade, genero e
+  etnia.
+
+
+15. FRASE CURTA PARA RESUMIR O METODO
+-------------------------------------
+
+O modelo aprende a reverter um processo artificial de corrupcao por ruido: durante
+o treinamento, ele recebe uma imagem parcialmente ruidosa e aprende a prever o
+ruido adicionado; durante a geracao, essa rede e aplicada repetidamente para
+transformar ruido puro em uma nova imagem de face.

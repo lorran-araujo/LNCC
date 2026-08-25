@@ -8,6 +8,7 @@ from pathlib import Path
 import torch
 
 from main import run_single_split
+from src.features import quantum_input_dim
 from src.utils import load_config, save_json, set_seed
 
 
@@ -18,30 +19,81 @@ def _device_from_config(config):
     return torch.device(device_name)
 
 
+def _tiny_hidden_dim(input_dim, num_classes, target_params):
+    hidden_dim = round((target_params - num_classes) / (input_dim + num_classes + 1))
+    return max(1, hidden_dim)
+
+
 def _build_experiments(config):
     feature_config = config.get("features", {})
+    model_config = config.get("model", {})
+    tiny_config = model_config.get("mlp_tiny", {})
     qubits = feature_config.get("qubits", [4, 6, 8])
     encodings = feature_config.get("encodings", ["angle", "amplitude"])
+    num_classes = model_config.get("num_classes", 10)
+    tiny_target_params = tiny_config.get("target_params", 150)
+    pca_dims = sorted(
+        {quantum_input_dim(encoding, num_qubits) for encoding in encodings for num_qubits in qubits}
+    )
 
     experiments = [
         {
             "name": "mlp_raw",
             "classifier": "mlp",
+            "model_family": "mlp",
             "feature_source": "raw",
             "encoding": None,
             "num_qubits": None,
+            "pca_dim": None,
+            "hidden_layers": None,
+            "dropout": None,
         }
     ]
 
+    for pca_dim in pca_dims:
+        experiments.append(
+            {
+                "name": f"mlp_pca_dim_{pca_dim}",
+                "classifier": "mlp",
+                "model_family": "mlp",
+                "feature_source": "pca",
+                "encoding": None,
+                "num_qubits": None,
+                "pca_dim": pca_dim,
+                "hidden_layers": None,
+                "dropout": None,
+            }
+        )
+        experiments.append(
+            {
+                "name": f"mlp_tiny_pca_dim_{pca_dim}",
+                "classifier": "mlp",
+                "model_family": "mlp_tiny",
+                "feature_source": "pca",
+                "encoding": None,
+                "num_qubits": None,
+                "pca_dim": pca_dim,
+                "hidden_layers": [
+                    _tiny_hidden_dim(pca_dim, num_classes, tiny_target_params)
+                ],
+                "dropout": tiny_config.get("dropout", 0.0),
+            }
+        )
+
     for encoding in encodings:
         for num_qubits in qubits:
+            pca_dim = quantum_input_dim(encoding, num_qubits)
             experiments.append(
                 {
                     "name": f"quantum_{encoding}_{num_qubits}q",
                     "classifier": "quantum",
+                    "model_family": "quantum",
                     "feature_source": "pca",
                     "encoding": encoding,
                     "num_qubits": num_qubits,
+                    "pca_dim": pca_dim,
+                    "hidden_layers": None,
+                    "dropout": None,
                 }
             )
 
@@ -57,6 +109,12 @@ def _config_for_experiment(base_config, experiment, output_root):
     if experiment["classifier"] == "mlp":
         config["model"].setdefault("mlp", {})
         config["model"]["mlp"]["feature_source"] = experiment["feature_source"]
+        if experiment.get("hidden_layers") is not None:
+            config["model"]["mlp"]["hidden_layers"] = experiment["hidden_layers"]
+        if experiment.get("dropout") is not None:
+            config["model"]["mlp"]["dropout"] = experiment["dropout"]
+        if experiment["feature_source"] == "pca":
+            config["model"]["mlp"]["reduced_dim"] = experiment["pca_dim"]
     else:
         config["model"].setdefault("quantum", {})
         config["model"]["quantum"]["encoding"] = experiment["encoding"]
@@ -97,11 +155,13 @@ def _summary_row(experiment, metrics):
     duration = metrics.get("duration", {}) if metrics else {}
     return {
         "experiment": experiment["name"],
-        "classifier": experiment["classifier"],
+        "classifier": experiment.get("model_family", experiment["classifier"]),
         "encoding": experiment.get("encoding") or "",
         "num_qubits": experiment.get("num_qubits") or "",
+        "pca_dim": experiment.get("pca_dim") or "",
         "feature_source": features.get("feature_source", experiment.get("feature_source", "")),
         "feature_dim": features.get("feature_dim", ""),
+        "trainable_params": metrics.get("trainable_params", "") if metrics else "",
         "test_loss": test.get("loss", ""),
         "test_accuracy": test.get("accuracy", ""),
         "duration_seconds": duration.get("seconds", ""),
@@ -119,8 +179,10 @@ def _save_summary(rows, output_root):
         "classifier",
         "encoding",
         "num_qubits",
+        "pca_dim",
         "feature_source",
         "feature_dim",
+        "trainable_params",
         "test_loss",
         "test_accuracy",
         "duration_seconds",

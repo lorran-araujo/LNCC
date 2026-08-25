@@ -34,8 +34,9 @@ class TimeEmbedding(nn.Module):
 
     def forward(self, t):
         half = self.dim // 2
+        log_base = torch.log(torch.tensor(10000.0, device=t.device))
         freqs = torch.exp(
-            -torch.arange(half, device=t.device) * (torch.log(torch.tensor(10000.0)) / half)
+            -torch.arange(half, device=t.device) * (log_base / half)
         )
         args = t.float()[:, None] * freqs[None, :]
         emb = torch.cat([torch.sin(args), torch.cos(args)], dim=-1)

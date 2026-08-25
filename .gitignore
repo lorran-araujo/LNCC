@@ -151,3 +151,95 @@ Doutorado/Disciplinas/03-Topicos-avancados-redes-neurais-profundas/.venv
 Doutorado/Disciplinas/03-Topicos-avancados-redes-neurais-profundas/final/features
 Doutorado/Disciplinas/03-Topicos-avancados-redes-neurais-profundas/final/data
 Doutorado/Disciplinas/03-Topicos-avancados-redes-neurais-profundas/final/outputs
+
+Sugestao de .gitignore para este projeto
+========================================
+
+Caminho atual obtido com pwd:
+/mnt/dados_sda/lorran/LNCC/Doutorado/Disciplinas/03-Topicos-avancados-redes-neurais-profundas/diffusion
+
+Observacao:
+O .gitignore deve usar caminhos relativos ao repositorio ou ao diretorio onde o
+.gitignore estiver. Nao e recomendado colocar caminhos absolutos como o caminho
+acima dentro do .gitignore.
+
+Conteudo sugerido:
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# Ambientes virtuais
+.venv/
+venv/
+env/
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Dados locais
+data/raw/
+data/utkface_female_20_40_128/
+data/oxford_pets_128/
+data/cifar100_images/
+data/mnist_images/
+
+# Checkpoints e pesos de modelos
+checkpoints/
+*.pt
+*.pth
+*.ckpt
+
+# Amostras geradas
+samples/*/*.png
+samples/*/denoising_steps/
+
+# Manter notebooks dentro de samples, se existirem
+!samples/*.ipynb
+
+# Slides: manter fonte, PDF final e imagens; ignorar auxiliares LaTeX
+slides/*.aux
+slides/*.log
+slides/*.nav
+slides/*.out
+slides/*.snm
+slides/*.toc
+slides/*.vrb
+slides/*.fls
+slides/*.fdb_latexmk
+slides/*.synctex.gz
+
+# Arquivos auxiliares LaTeX na raiz, se algum dia compilar fora de slides
+*.aux
+*.log
+*.nav
+*.out
+*.snm
+*.toc
+*.vrb
+*.fls
+*.fdb_latexmk
+*.synctex.gz
+
+# Sistema/editor
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+*~
+
+# Logs e saidas temporarias
+*.log
+output.txt
+
+Notas:
+- Se quiser versionar alguns exemplos de imagens geradas para o seminario,
+  remova ou comente a regra samples/*/*.png.
+- Se quiser versionar checkpoints pequenos especificos, remova checkpoints/ e
+  ignore apenas checkpoints grandes manualmente.
+- Como os checkpoints .pt costumam ser grandes, a recomendacao padrao e nao
+  versiona-los no Git.

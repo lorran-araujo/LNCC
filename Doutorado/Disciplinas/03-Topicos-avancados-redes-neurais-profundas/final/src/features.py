@@ -9,8 +9,10 @@ from torch.utils.data import DataLoader, TensorDataset
 
 def quantum_input_dim(encoding, num_qubits):
     encoding = encoding.lower()
-    if encoding == "angle":
+    if encoding in {"angle", "reupload_angle"}:
         return num_qubits
+    if encoding == "dense_angle":
+        return 3 * num_qubits
     if encoding == "amplitude":
         return 2 ** num_qubits
     raise ValueError(f"Unsupported encoding: {encoding}")

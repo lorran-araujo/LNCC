@@ -1,0 +1,258 @@
+DETALHES DE IMPLEMENTACAO DA METODOLOGIA
+
+Este documento resume os principais detalhes de implementacao do pipeline experimental utilizado no projeto, incluindo base de dados, pre-processamento, extracao de atributos, modelos avaliados, otimizacao, hiperparametros e protocolo de avaliacao. As informacoes foram extraidas da configuracao e do codigo-fonte do projeto.
+
+
+1. Visao geral do pipeline
+
+A metodologia implementada segue um pipeline baseado em transferencia de aprendizado e classificacao sobre atributos congelados. Inicialmente, as imagens sao carregadas e pre-processadas. Em seguida, uma rede convolucional pre-treinada e utilizada como extrator de caracteristicas. O backbone e mantido congelado, isto e, seus pesos nao sao atualizados durante o treinamento dos classificadores.
+
+As caracteristicas extraidas sao salvas em cache para evitar recomputacao. A partir dessas caracteristicas, sao avaliados classificadores classicos do tipo MLP e classificadores quanticos variacionais. Para os classificadores quanticos, as caracteristicas da rede convolucional sao reduzidas por PCA para uma dimensao compativel com a codificacao quantica escolhida.
+
+
+2. Base de dados e divisao experimental
+
+A configuracao padrao utiliza o conjunto CIFAR-10, com 10 classes. O codigo tambem suporta bases locais organizadas no formato ImageFolder, mas a configuracao atual esta definida para CIFAR-10.
+
+Parametros da base de dados:
+
+- Dataset: CIFAR-10.
+- Diretorio dos dados: ./data.
+- Numero de classes: 10.
+- Download automatico: habilitado.
+- Tamanho das imagens apos redimensionamento: 224 x 224 pixels.
+- Batch size para imagens: 64.
+- Numero de workers do DataLoader: 2.
+- Semente aleatoria: 42.
+
+A divisao dos dados e estratificada, preservando a proporcao das classes nos subconjuntos. A configuracao padrao utiliza:
+
+- Treinamento: 70%.
+- Validacao: 15%.
+- Teste: 15%.
+
+O codigo possui suporte configuravel para validacao cruzada estratificada por k-folds, mas na configuracao atual k_folds = 1. Portanto, a execucao padrao usa uma unica divisao treino/validacao/teste. Para o pipeline baseado em features, k_folds > 1 ainda nao esta implementado na rotina principal.
+
+
+3. Pre-processamento e aumento de dados
+
+Durante o treinamento, as imagens passam pelas seguintes transformacoes:
+
+- Redimensionamento para 224 x 224 pixels.
+- Recorte aleatorio com padding igual a 4 pixels.
+- Espelhamento horizontal aleatorio.
+- Color jitter com intensidade 0.1 para brilho, contraste e saturacao.
+- Conversao para tensor.
+- Normalizacao com media [0.485, 0.456, 0.406] e desvio padrao [0.229, 0.224, 0.225], os mesmos valores usualmente empregados para modelos pre-treinados no ImageNet.
+
+Durante validacao e teste, nao sao aplicados aumentos aleatorios. As imagens sao apenas redimensionadas para 224 x 224 pixels, convertidas para tensor e normalizadas com as mesmas medias e desvios padrao.
+
+
+4. Extracao de caracteristicas
+
+O extrator de caracteristicas padrao e uma ResNet-18 pre-treinada. A camada totalmente conectada final da ResNet e substituida por uma identidade, de modo que a rede retorna diretamente o vetor de caracteristicas produzido antes da camada de classificacao original.
+
+Configuracao do backbone:
+
+- Arquitetura: ResNet-18.
+- Pesos pre-treinados: pesos padrao do torchvision para ResNet-18.
+- Congelamento do backbone: habilitado.
+- Treinamento fim-a-fim do backbone: nao realizado na configuracao atual.
+
+As caracteristicas sao extraidas para os subconjuntos de treino, validacao e teste e armazenadas em arquivos .pt no diretorio ./features. O cache e organizado por dataset, backbone, semente e nome da divisao. A configuracao atual usa features.use_cache = true, portanto o treinamento reutiliza as caracteristicas previamente extraidas.
+
+
+5. Reducao de dimensionalidade por PCA
+
+Para experimentos que requerem reducao dimensional, e utilizado PCA da biblioteca scikit-learn. O PCA e ajustado exclusivamente sobre as caracteristicas do conjunto de treinamento e, em seguida, aplicado aos conjuntos de treinamento, validacao e teste. Essa escolha evita vazamento de informacao dos conjuntos de validacao e teste para a etapa de ajuste do redutor.
+
+Configuracao do PCA:
+
+- Redutor: PCA.
+- Biblioteca: scikit-learn.
+- Semente aleatoria: 42.
+- Ajuste: somente no conjunto de treinamento.
+- Aplicacao: treino, validacao e teste.
+
+As dimensoes PCA sao determinadas pelas combinacoes de numero de qubits e tipo de codificacao quantica. Na configuracao atual, sao considerados:
+
+- Numeros de qubits: 4, 6 e 8.
+- Codificacoes: angle, amplitude, dense_angle e reupload_angle.
+
+As dimensoes de entrada exigidas por cada codificacao sao:
+
+- angle: num_qubits.
+- reupload_angle: num_qubits.
+- dense_angle: 3 * num_qubits.
+- amplitude: 2 ** num_qubits.
+
+Assim, para 4, 6 e 8 qubits, as dimensoes possiveis incluem 4, 6, 8, 12, 18, 24, 16, 64 e 256, removendo duplicatas quando necessario.
+
+
+6. Classificador MLP
+
+O classificador MLP padrao recebe as caracteristicas extraidas pelo backbone, podendo usar as features cruas ou features reduzidas por PCA. A arquitetura consiste em camadas lineares, ativacao ReLU e dropout, seguida de uma camada linear final para as 10 classes.
+
+Configuracao padrao da MLP forte:
+
+- Entrada: caracteristicas congeladas da ResNet-18, ou versoes reduzidas por PCA dependendo do experimento.
+- Camadas ocultas: [256].
+- Ativacao: ReLU.
+- Dropout: 0.3.
+- Saida: camada linear com 10 unidades.
+
+Tambem ha uma configuracao de MLP pequena, usada como baseline com numero reduzido de parametros. Essa MLP pequena e ajustada para ter aproximadamente model.mlp_tiny.target_params parametros treinaveis.
+
+Configuracao da MLP pequena:
+
+- Alvo aproximado de parametros treinaveis: 150.
+- Dropout: 0.0.
+- Dimensao oculta: calculada em funcao da dimensao de entrada, do numero de classes e do alvo de parametros.
+
+
+7. Classificador quantico variacional
+
+O classificador quantico variacional e implementado com PennyLane integrado ao PyTorch por meio de qml.qnn.TorchLayer. A simulacao usa o dispositivo default.qubit. Quando o classificador quantico e utilizado, a execucao e forcada para CPU, pois o circuito usa o simulador default.qubit.
+
+Configuracao padrao do classificador quantico:
+
+- Biblioteca: PennyLane.
+- Dispositivo quantico: default.qubit.
+- Interface: torch.
+- Numero de qubits padrao: 4.
+- Numero de camadas variacionais: 2.
+- Emaranhamento padrao: linear.
+- Camada classica final: linear, de num_qubits para 10 classes.
+
+O circuito retorna o valor esperado do observavel PauliZ em cada qubit. Esses valores esperados formam um vetor de tamanho igual ao numero de qubits, que e entao passado para uma camada linear classica responsavel pela classificacao final.
+
+Cada camada variacional aplica, em cada qubit, rotacoes parametrizadas RX, RY e RZ. Em seguida, sao aplicadas portas CNOT entre qubits adjacentes. No modo de emaranhamento linear, as CNOTs conectam os qubits em cadeia. O codigo tambem suporta emaranhamento circular, em que uma CNOT adicional conecta o ultimo qubit ao primeiro quando ha mais de dois qubits, embora a configuracao atual use emaranhamento linear.
+
+Os pesos treinaveis do circuito possuem formato:
+
+- weights: (num_layers, num_qubits, 3).
+
+Isso corresponde a tres parametros de rotacao por qubit em cada camada variacional.
+
+
+8. Codificacoes quanticas consideradas
+
+Foram implementadas quatro estrategias de codificacao das caracteristicas classicas em estados/circuitos quanticos:
+
+1. angle
+
+Nesta codificacao, sao usadas num_qubits caracteristicas. O vetor de entrada e truncado ou preenchido com zeros ate atingir essa dimensao. Em seguida, os valores sao escalados por amostra para o intervalo [-pi, pi]. No circuito, esses valores sao aplicados com AngleEmbedding usando rotacoes RY.
+
+2. reupload_angle
+
+Esta codificacao usa o mesmo pre-processamento da codificacao angle, com num_qubits caracteristicas escaladas para [-pi, pi]. A diferenca e que a codificacao e reaplicada antes de cada camada variacional, caracterizando a estrategia de data re-uploading.
+
+3. dense_angle
+
+Nesta codificacao, sao usadas 3 * num_qubits caracteristicas. Para cada qubit, tres valores sao aplicados como rotacoes RX, RY e RZ. Assim como em angle, os valores sao truncados ou preenchidos com zeros e escalados por amostra para o intervalo [-pi, pi].
+
+4. amplitude
+
+Nesta codificacao, o vetor de entrada e truncado ou preenchido com zeros ate atingir dimensao 2 ** num_qubits. O vetor e normalizado pela norma L2 para que possa ser interpretado como vetor de amplitudes. Caso a norma seja zero, o codigo define o primeiro componente como 1 antes da normalizacao. No circuito, e utilizada a operacao AmplitudeEmbedding com normalize = false, pois a normalizacao e realizada previamente no codigo.
+
+
+9. Treinamento e otimizacao
+
+A funcao de perda utilizada em todos os treinamentos e a entropia cruzada para classificacao multiclasse.
+
+Configuracao de treinamento:
+
+- Funcao de perda: CrossEntropyLoss.
+- Otimizador padrao: Adam.
+- Taxa de aprendizado: 0.0001.
+- Weight decay: 0.0001.
+- Numero maximo de epocas: 500.
+- Scheduler: CosineAnnealingLR.
+- T_max do scheduler: 500, igual ao numero maximo de epocas.
+- Early stopping: habilitado.
+- Paciencia do early stopping: 8 epocas sem melhora na perda de validacao.
+- Criterio de selecao do melhor modelo: menor perda de validacao.
+- Nome do checkpoint: best_model.pt.
+
+Durante cada epoca, o modelo e treinado sobre o conjunto de treinamento e avaliado no conjunto de validacao. A cada epoca, o scheduler de taxa de aprendizado e atualizado. Quando a perda de validacao melhora, os pesos do modelo sao salvos. Ao final do treinamento, o melhor checkpoint salvo e recarregado antes da avaliacao final no conjunto de teste.
+
+O codigo tambem possui suporte ao otimizador SGD, embora a configuracao atual use Adam. Caso SGD seja selecionado, sao usados os seguintes parametros:
+
+- Taxa de aprendizado: valor definido em training.learning_rate.
+- Momentum: 0.9 por padrao, salvo se outro valor for especificado.
+- Weight decay: valor definido em training.weight_decay.
+
+
+10. Tamanhos de lote
+
+Existem diferentes tamanhos de lote para as etapas do pipeline:
+
+- Batch size para carregamento de imagens: 64.
+- Batch size para classificadores sobre features: 256.
+- Batch size para classificadores quanticos: 16.
+
+O batch size menor nos classificadores quanticos reduz o custo computacional associado a simulacao dos circuitos quanticos.
+
+
+11. Metricas e saidas
+
+As metricas computadas durante treinamento, validacao e teste sao:
+
+- Perda media.
+- Acuracia.
+
+Durante o treinamento, o historico por epoca armazena perda e acuracia de treino e validacao. Apos o treinamento, o modelo com melhor perda de validacao e avaliado no conjunto de teste. Os resultados sao salvos em metrics.json dentro do diretorio de saida configurado.
+
+O diretorio de saida padrao e:
+
+- ./outputs.
+
+Para execucoes com multiplos experimentos, os resultados sao salvos em subdiretorios de:
+
+- ./outputs/experiments.
+
+O script de experimentos tambem gera arquivos consolidados:
+
+- experiment_summary.json.
+- experiment_summary.csv.
+
+Esses arquivos incluem nome do experimento, tipo de classificador, codificacao, numero de qubits, dimensao PCA, origem das features, numero de parametros treinaveis, perda e acuracia no teste, e duracao da execucao.
+
+
+12. Conjunto de experimentos automatizados
+
+O script run_experiments.py executa automaticamente uma colecao de experimentos comparativos. A lista inclui:
+
+- MLP sobre features cruas da ResNet-18.
+- MLP sobre features reduzidas por PCA para cada dimensao unica requerida pelas codificacoes quanticas.
+- MLP pequena sobre features reduzidas por PCA para cada dimensao unica requerida pelas codificacoes quanticas.
+- Classificadores quanticos para cada combinacao entre codificacao e numero de qubits.
+
+Com a configuracao atual, as combinacoes quanticas incluem:
+
+- Codificacoes: angle, amplitude, dense_angle e reupload_angle.
+- Qubits: 4, 6 e 8.
+
+Isso gera experimentos quanticos para todas as 12 combinacoes entre codificacao e numero de qubits. As MLPs com PCA sao executadas apenas para dimensoes PCA unicas, evitando duplicacao quando duas codificacoes requerem a mesma dimensao de entrada.
+
+
+13. Reprodutibilidade
+
+A semente aleatoria global configurada e 42. Essa semente e usada na divisao estratificada dos dados, no PCA e antes da execucao dos experimentos. O dispositivo de execucao e definido automaticamente como CUDA quando disponivel, exceto nos classificadores quanticos, que usam CPU por causa do simulador PennyLane default.qubit.
+
+Dependencias principais:
+
+- torch.
+- torchvision.
+- numpy.
+- scikit-learn.
+- PyYAML.
+- pennylane.
+- joblib.
+
+
+14. Possivel descricao resumida para artigo
+
+Neste trabalho, as imagens foram classificadas por meio de um pipeline hibrido baseado em transferencia de aprendizado e classificadores treinados sobre caracteristicas congeladas. As imagens foram redimensionadas para 224 x 224 pixels e normalizadas com estatisticas do ImageNet. Durante o treinamento, foram aplicados recorte aleatorio, espelhamento horizontal e variacao de cor. Uma ResNet-18 pre-treinada foi utilizada como extrator de caracteristicas, com seus pesos congelados e a camada final substituida por identidade. As caracteristicas extraidas foram armazenadas em cache e utilizadas como entrada para classificadores MLP e classificadores quanticos variacionais. Para os modelos quanticos, as caracteristicas foram reduzidas por PCA, ajustado apenas sobre o conjunto de treinamento, para dimensoes compativeis com as codificacoes quanticas avaliadas.
+
+Os classificadores foram treinados com entropia cruzada, otimizador Adam, taxa de aprendizado de 1e-4, weight decay de 1e-4 e scheduler CosineAnnealingLR ao longo de ate 500 epocas. Foi utilizado early stopping com paciencia de 8 epocas baseado na perda de validacao, mantendo-se o checkpoint com menor perda de validacao para posterior avaliacao no conjunto de teste. A divisao dos dados foi estratificada em 70% para treinamento, 15% para validacao e 15% para teste, usando semente aleatoria 42. As metricas reportadas foram perda media e acuracia.
