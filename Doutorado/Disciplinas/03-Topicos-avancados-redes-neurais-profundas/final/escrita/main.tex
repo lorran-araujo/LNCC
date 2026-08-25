@@ -1,743 +1,103 @@
-\documentclass[aspectratio=169,10pt]{beamer}
-
+\documentclass[9pt]{beamer}
 \usepackage[portuguese]{babel}
-\usepackage[utf8]{inputenc}
-\usepackage[T1]{fontenc}
-\usepackage{amsmath,amssymb}
+\usepackage{amsfonts,amsmath,amssymb,amsthm,thmtools}
 \usepackage{booktabs}
+\usepackage[table]{xcolor}
 \usepackage{graphicx}
 \usepackage{tikz}
 \usepackage{hyperref}
 \usepackage[numbers]{natbib}
 \usepackage{braket}
+\usepackage{quantikz}
+\usepackage[ruled,vlined,linesnumbered]{algorithm2e}
+
+\usepackage{listings}
+\usepackage{xcolor}
+
+\lstdefinestyle{pythonstyle}{
+  language=Python,
+  basicstyle=\ttfamily\scriptsize,
+  keywordstyle=\color{blue},
+  stringstyle=\color{red!70!black},
+  commentstyle=\color{green!40!black},
+  numbers=left,
+  numberstyle=\tiny\color{gray},
+  stepnumber=1,
+  numbersep=6pt,
+  showstringspaces=false,
+  breaklines=true,
+  frame=single,
+  tabsize=4
+}
 
 \usetikzlibrary{arrows.meta,positioning,shapes.geometric,calc}
 
-\definecolor{DeepBlue}{HTML}{102A43}
-\definecolor{QuantumPurple}{HTML}{6D28D9}
-\definecolor{NeuralOrange}{HTML}{F97316}
-\definecolor{SoftGray}{HTML}{F3F4F6}
-\definecolor{AccentGreen}{HTML}{059669}
+\usepackage{./assets/style/beamerthemeLNCC}
+\usetheme{LNCC}
 
-\usetheme{Madrid}
-\usecolortheme{default}
-\setbeamertemplate{navigation symbols}{}
-\setbeamertemplate{itemize item}{\color{QuantumPurple}$\blacktriangleright$}
-\setbeamertemplate{itemize subitem}{\color{NeuralOrange}$\bullet$}
+%\usepackage[backend=biber,style=numeric]{biblatex}
 
-\setbeamercolor{title}{fg=white,bg=DeepBlue}
-\setbeamercolor{frametitle}{fg=white,bg=DeepBlue}
-\setbeamercolor{block title}{fg=white,bg=QuantumPurple}
-\setbeamercolor{block body}{fg=black,bg=SoftGray}
-\setbeamercolor{alerted text}{fg=NeuralOrange}
+%\addbibresource{referencias.bib}  % Adicione o arquivo de referências .bib
+%\addbibresource{bibliografia.bib}  % Adicione o arquivo de referências .bib
 
-\title[Classificacao Quantica de Imagens]{Classificacao Quantica de Imagens com Extratores Profundos de Caracteristicas}
-\subtitle{Proposta de investigacao: codificacao de estados, numero de qubits e classificadores quanticos variacionais}
-\author[Lorran de Araujo]{Lorran de Araujo Duraes Soares}
-\institute[LNCC]{Topicos Avancados de Redes Neurais Profundas e Aplicacoes\\Laboratorio Nacional de Computacao Cientifica}
-\date{\today}
+\bibliographystyle{plainnat}
 
+% Remover o título da citação
+% \AtEveryCitekey{\clearfield{title}}
+% \AtEveryBibitem{\clearfield{title}}
+
+\newcommand{\testcolor}[1]{\colorbox{#1}{\textcolor{#1}{test}}~\texttt{#1}}
+
+\usefonttheme[onlymath]{serif}
+
+\titlebackground*{assets/img/background3}
+
+\newcommand{\hrefcol}[2]{\textcolor{LNCCaltblue}{\href{#1}{#2}}}
+\colorlet{DeepBlue}{LNCCdarkeraltblue}
+\colorlet{QuantumPurple}{LNCCmainblue}
+\colorlet{NeuralOrange}{LNCCorange}
+\colorlet{SoftGray}{LNCClightergrey}
+\colorlet{AccentGreen}{LNCCgreen}
 \newcommand{\highlight}[1]{\textcolor{QuantumPurple}{\textbf{#1}}}
+
+\title{Classificação Multiclasse de Imagens com Modelos Híbridos Clássico-Quânticos}
+\subtitle{Extratores profundos de características e circuitos quânticos variacionais}
+%#\course{Master's Degree student in Computational Modeling}
+
+\author[Lorran de Araujo]{Lorran de Araújo Durães Soares}
+
+\institute[]{\normalsize
+  \inst{1} Laboratório Nacional de Computação Científica (LNCC/MCTI)\\ 
+}
+
+\newcommand{\insertemail}{\texttt{lorran@posgrad.lncc.br}}
 
 \begin{document}
 
-\begin{frame}
-  \titlepage
+\maketitle
+
+\include{tex/text}
+
+\begin{frame}[allowframebreaks]{Referencias Iniciais}
+    \bibliography{referencias}
 \end{frame}
 
-\begin{frame}{Contextualização}
-  \begin{columns}[T,onlytextwidth]
-    \begin{column}{0.48\textwidth}
-      \begin{block}{Modelos clássicos atuais}
-        \begin{itemize}
-          \item Redes neurais convolucionais tem apresentado excelente desempenho em classificação de imagens.
-          \item Entretanto, modelos totalmente clássicos podem exigir muitos parâmetros e grande capacidade computacional.
-        \end{itemize}
-      \end{block}
-    \end{column}
-
-    \begin{column}{0.48\textwidth}
-      \begin{block}{Motivação quântica}
-        \begin{itemize}
-          \item Circuitos quânticos exploram propriedades como superposição, interferência e emaranhamento; 
-          \item Ofere uma forma alternativa de representar e processar dados de alta dimensão.
-        \end{itemize}
-      \end{block}
-    \end{column}
-  \end{columns}
-
-  \vspace{0.35cm}
-
-  \begin{alertblock}{Questão de interesse}
-    No cenário atual, uma abordagem prática é utilizar arquiteturas híbridas:
-    
-    \begin{itemize}
-      \item uma CNN clássica extrai as características;
-      \item um circuito quântico variacional realiza a classificação.
-    \end{itemize}
-
-  \end{alertblock}
-\end{frame}
-
-\begin{frame}{Ideia Central}
-  \begin{block}{Proposta}
-    Desenvolver uma arquitetura híbrida composta por um extrator de características clássico e por circuitos quânticos variacionais utilizados como classificadores. Serão avaliados diferentes números de qubits e estratégias de codificação dos dados, com o objetivo de analisar seus impactos no desempenho da classificação de imagens.
-  \end{block}
-
-  \vspace{0.25cm}
-
-  \begin{center}
-  \begin{tikzpicture}[
-      box/.style={
-        draw,
-        rounded corners,
-        align=center,
-        minimum width=2.25cm,
-        minimum height=0.8cm
-      },
-      arrow/.style={-{Latex[length=2mm]},thick}
-    ]
-    \node[box,fill=SoftGray] (img) {Imagem};
-    \node[box,fill=NeuralOrange!20,right=0.35cm of img] (cnn) {Extrator de\\características};
-    \node[box,fill=NeuralOrange!10,right=0.35cm of cnn] (feat) {Vetor de\\características};
-    \node[box,fill=QuantumPurple!20,right=0.35cm of feat] (vqc) {Circuito quântico\\variacional};
-    \node[box,fill=AccentGreen!20,right=0.35cm of vqc] (cls) {Classe\\predita};
-
-    \draw[arrow] (img) -- (cnn);
-    \draw[arrow] (cnn) -- (feat);
-    \draw[arrow] (feat) -- (vqc);
-    \draw[arrow] (vqc) -- (cls);
-  \end{tikzpicture}
-  \end{center}
-
-  \begin{alertblock}{Pergunta orientadora}
-    Como o número de qubits e a estratégia de codificação das características influenciam o desempenho de classificadores híbridos baseados em \highlight{circuitos quânticos variacionais} \cite{cerezo2021variational} na classificação de imagens, quando comparados a um baseline clássico treinado sobre as mesmas características?
-  \end{alertblock}
-\end{frame}
-
-\begin{frame}{Motivação}
-  \begin{columns}[T,onlytextwidth]
-    
-    \begin{column}{0.32\textwidth}
-      \begin{block}{Aprendizado profundo}
-        Redes neurais convolucionais pré-treinadas são capazes de extrair representações visuais discriminativas e reutilizáveis, reduzindo a necessidade de treinar todo o modelo a partir do zero.
-      \end{block}
-    \end{column}
-    
-    \begin{column}{0.32\textwidth}
-      \begin{block}{Computação quântica}
-        Circuitos quânticos parametrizados oferecem uma abordagem alternativa para codificar e transformar dados em espaços de Hilbert de alta dimensão \cite{schuld2015introduction,biamonte2017quantum}.
-      \end{block}
-    \end{column}
-    
-    \begin{column}{0.32\textwidth}
-      \begin{block}{Arquitetura híbrida}
-        A combinação de extratores clássicos com classificadores quânticos permite investigar o potencial dos circuitos variacionais sem transferir para o sistema quântico todo o custo do processamento visual.
-      \end{block}
-    \end{column}
-    
-  \end{columns}
-\end{frame}
-
-\begin{frame}{Pipeline de Referência: Classificador Clássico}
-  \begin{center}
-  \begin{tikzpicture}[
-      box/.style={
-        draw,
-        rounded corners,
-        align=center,
-        minimum width=2.15cm,
-        minimum height=0.9cm
-      },
-      arrow/.style={-{Latex[length=2mm]},thick}
-    ]
-    \node[box,fill=SoftGray] (img) {Imagem\\CIFAR-10};
-    \node[box,fill=NeuralOrange!20,right=0.35cm of img] (resnet)
-      {ResNet18\\pré-treinada};
-    \node[box,fill=NeuralOrange!10,right=0.35cm of resnet] (feat)
-      {Vetor de\\características};
-    \node[box,fill=DeepBlue!10,right=0.35cm of feat] (proj)
-      {Redução\\dimensional};
-    \node[box,fill=DeepBlue!20,right=0.35cm of proj] (mlp)
-      {MLP\\clássica};
-    \node[box,fill=AccentGreen!20,right=0.35cm of mlp] (class)
-      {Classe\\predita};
-
-    \draw[arrow] (img) -- (resnet);
-    \draw[arrow] (resnet) -- (feat);
-    \draw[arrow] (feat) -- (proj);
-    \draw[arrow] (proj) -- (mlp);
-    \draw[arrow] (mlp) -- (class);
-  \end{tikzpicture}
-  \end{center}
-
-  \vspace{0.3cm}
-
-  \begin{block}{Baseline experimental}
-    O desempenho da MLP será utilizado como referência para avaliar a
-    competitividade dos classificadores quânticos. Para garantir uma comparação justa, os modelos clássico e quântico receberão as mesmas características extraídas pela ResNet18 escolhida como extratora de características.
-  \end{block}
-\end{frame}
-
-\begin{frame}{Pipeline Proposto: Classificador Quântico}
-  \begin{center}
-  \begin{tikzpicture}[
-      box/.style={
-        draw,
-        rounded corners,
-        align=center,
-        minimum width=2.05cm,
-        minimum height=0.9cm
-      },
-      arrow/.style={-{Latex[length=2mm]},thick}
-    ]
-    \node[box,fill=SoftGray] (img) {Imagem\\CIFAR-10};
-    \node[box,fill=NeuralOrange!20,right=0.3cm of img] (cnn)
-      {ResNet18\\pré-treinada};
-    \node[box,fill=NeuralOrange!10,right=0.3cm of cnn] (proj)
-      {Redução\\dimensional};
-    \node[box,fill=QuantumPurple!15,right=0.3cm of proj] (encode)
-      {Codificação\\quântica};
-    \node[box,fill=QuantumPurple!25,right=0.3cm of encode] (vqc)
-      {Circuito quântico\\variacional};
-    \node[box,fill=AccentGreen!20,right=0.3cm of vqc] (out)
-      {Medição e\\predição};
-
-    \draw[arrow] (img) -- (cnn);
-    \draw[arrow] (cnn) -- (proj);
-    \draw[arrow] (proj) -- (encode);
-    \draw[arrow] (encode) -- (vqc);
-    \draw[arrow] (vqc) -- (out);
-  \end{tikzpicture}
-  \end{center}
-
-  \vspace{0.25cm}
-
-  \begin{columns}[T,onlytextwidth]
-    \begin{column}{0.48\textwidth}
-      \begin{block}{Etapa clássica}
-        A ResNet18 extrai representações visuais das imagens, enquanto a redução
-        dimensional ajusta o vetor de características à quantidade de informações
-        que pode ser codificada pelo circuito quântico.
-      \end{block}
-    \end{column}
-
-    \begin{column}{0.48\textwidth}
-      \begin{block}{Etapa quântica}
-        O vetor reduzido é codificado em um estado quântico e processado por
-        camadas parametrizadas. As medições realizadas ao final do circuito são
-        utilizadas para produzir a predição da classe.
-      \end{block}
-    \end{column}
-  \end{columns}
-
-  \vspace{0.2cm}
-
-  \begin{alertblock}{Ambiente de execução}
-    Inicialmente, os circuitos quânticos serão executados em simuladores,
-    permitindo avaliar diferentes configurações de qubits e estratégias de
-    codificação em um ambiente controlado e livre de ruídos de hardware.
-  \end{alertblock}
-\end{frame}
-
-
-\section{Fundamentação Metodológica}
-
-%------------------------------------------------
-\begin{frame}{Fundamentação: Qubits e Estados Quânticos}
-
-  \begin{columns}[T,onlytextwidth]
-
-    \begin{column}{0.48\textwidth}
-      \begin{block}{Qubit}
-        Diferentemente de um bit clássico, que assume os valores $0$ ou $1$,
-        um qubit pode ser representado por uma superposição desses estados:
-        \[
-          \ket{\psi} = \alpha\ket{0} + \beta\ket{1},
-        \]
-        em que $\alpha,\beta\in\mathbb{C}$ e
-        \[
-          |\alpha|^2 + |\beta|^2 = 1.
-        \]
-      \end{block}
-    \end{column}
-
-    \begin{column}{0.48\textwidth}
-      \begin{block}{Sistema com múltiplos qubits}
-        Um sistema com $n$ qubits é descrito em um espaço de dimensão $2^n$:
-        \[
-          \ket{\psi}
-          =
-          \sum_{i=0}^{2^n-1} c_i\ket{i},
-        \]
-        com
-        \[
-          \sum_{i=0}^{2^n-1}|c_i|^2 = 1.
-        \]
-        Os coeficientes $c_i$ correspondem às amplitudes associadas aos
-        estados da base computacional.
-      \end{block}
-    \end{column}
-
-  \end{columns}
-\end{frame}
-
-
-%------------------------------------------------
-\begin{frame}{Codificação de Dados em Estados Quânticos}
-
-  \begin{alertblock}{Interpretação para aprendizado de máquina}
-    Os dados clássicos devem ser transformados em operações ou amplitudes
-    compatíveis com um estado quântico. Esse processo é denominado
-    \highlight{codificação dos dados}.
-  \end{alertblock}
-  
-  \begin{columns}[T,onlytextwidth]
-
-    \begin{column}{0.48\textwidth}
-      \begin{block}{Angle encoding}
-        Cada característica controla o ângulo de uma porta de rotação:
-        \[
-          \ket{\psi(\mathbf{x})}
-          =
-          \bigotimes_{i=1}^{n}
-          R_y(x_i)\ket{0}.
-        \]
-
-        \begin{itemize}
-          \item Implementação simples;
-          \item Baixa profundidade;
-          \item Em geral, uma característica por qubit e por camada.
-        \end{itemize}
-      \end{block}
-    \end{column}
-
-    \begin{column}{0.48\textwidth}
-      \begin{block}{Amplitude encoding}
-        As características são inseridas nas amplitudes do estado:
-        \[
-          \ket{\psi(\mathbf{x})}
-          =
-          \sum_{i=0}^{2^n-1} x_i\ket{i}.
-        \]
-
-        \begin{itemize}
-          \item Codifica até $2^n$ valores;
-          \item Requer normalização;
-          \item A preparação do estado pode ser custosa.
-        \end{itemize}
-      \end{block}
-    \end{column}
-  \end{columns}
-\end{frame}
-
-
-%------------------------------------------------
-% \begin{frame}{Codificação Repetida: Data Re-uploading}
-
-%   \begin{columns}[T,onlytextwidth]
-
-%     \begin{column}{0.55\textwidth}
-%       \begin{block}{Ideia}
-%         Em vez de codificar os dados apenas no início do circuito,
-%         o vetor de características é inserido novamente entre as camadas
-%         variacionais:
-%         \[
-%           U(\mathbf{x},\boldsymbol{\theta})
-%           =
-%           \prod_{\ell=1}^{L}
-%           U_{\mathrm{var}}(\boldsymbol{\theta}_{\ell})
-%           U_{\mathrm{enc}}(\mathbf{x}).
-%         \]
-
-%         Essa estratégia pode aumentar a expressividade do modelo mesmo
-%         quando poucos qubits estão disponíveis.
-%       \end{block}
-%     \end{column}
-
-%     \begin{column}{0.41\textwidth}
-%       \begin{center}
-%       \begin{tikzpicture}[
-%           box/.style={
-%             draw,
-%             rounded corners,
-%             align=center,
-%             minimum width=2.6cm,
-%             minimum height=0.7cm
-%           },
-%           arrow/.style={-{Latex[length=2mm]},thick},
-%           node distance=0.3cm
-%         ]
-%         \node[box,fill=QuantumPurple!15] (enc1)
-%           {Codificação\\$U_{\mathrm{enc}}(\mathbf{x})$};
-
-%         \node[box,fill=QuantumPurple!25,below=of enc1] (var1)
-%           {Camada variacional\\$U_{\mathrm{var}}(\theta_1)$};
-
-%         \node[box,fill=QuantumPurple!15,below=of var1] (enc2)
-%           {Nova codificação\\$U_{\mathrm{enc}}(\mathbf{x})$};
-
-%         \node[box,fill=QuantumPurple!25,below=of enc2] (var2)
-%           {Camada variacional\\$U_{\mathrm{var}}(\theta_2)$};
-
-%         \node[box,fill=AccentGreen!20,below=of var2] (med)
-%           {Medição};
-
-%         \draw[arrow] (enc1) -- (var1);
-%         \draw[arrow] (var1) -- (enc2);
-%         \draw[arrow] (enc2) -- (var2);
-%         \draw[arrow] (var2) -- (med);
-%       \end{tikzpicture}
-%       \end{center}
-%     \end{column}
-
-%   \end{columns}
-
-%   \begin{alertblock}{Hipótese experimental}
-%     O data re-uploading pode compensar parcialmente a limitação no número
-%     de qubits, mas também aumenta a profundidade e o custo do circuito.
-%   \end{alertblock}
-
-% \end{frame}
-
-
-%------------------------------------------------
-\begin{frame}{Circuito Quântico Variacional}
-
-  \begin{columns}[T,onlytextwidth]
-
-    \begin{column}{0.48\textwidth}
-      \begin{block}{Estrutura}
-        Um circuito quântico variacional combina:
-        \begin{itemize}
-          \item uma etapa de codificação dos dados;
-          \item portas parametrizadas;
-          \item operações de emaranhamento;
-          \item medições ao final do circuito.
-        \end{itemize}
-
-        Sua saída pode ser expressa como:
-        \[
-          f_{\boldsymbol{\theta}}(\mathbf{x})
-          =
-          \bra{\psi(\mathbf{x})}
-          U^\dagger(\boldsymbol{\theta})
-          O
-          U(\boldsymbol{\theta})
-          \ket{\psi(\mathbf{x})},
-        \]
-        em que $O$ é um observável quântico.
-      \end{block}
-    \end{column}
-
-    \begin{column}{0.48\textwidth}
-      \begin{block}{Ansatz variacional}
-        As camadas podem ser compostas por rotações parametrizadas e portas
-        de emaranhamento:
-        \[
-          U_{\mathrm{var}}(\boldsymbol{\theta})
-          =
-          U_{\mathrm{ent}}
-          \prod_{i=1}^{n}
-          R_z(\theta_{i,3})
-          R_y(\theta_{i,2})
-          R_x(\theta_{i,1}).
-        \]
-
-        \begin{itemize}
-          \item As rotações possuem parâmetros treináveis;
-          \item As portas CNOT promovem emaranhamento;
-          \item O bloco pode ser repetido por $L$ camadas.
-        \end{itemize}
-      \end{block}
-    \end{column}
-
-  \end{columns}
-\end{frame}
-
-%------------------------------------------------
-\begin{frame}{Treinamento do Modelo Híbrido}
-
-  \begin{center}
-  \begin{tikzpicture}[
-      box/.style={
-        draw,
-        rounded corners,
-        align=center,
-        minimum width=2.1cm,
-        minimum height=0.8cm
-      },
-      arrow/.style={-{Latex[length=2mm]},thick}
-    ]
-    \node[box,fill=SoftGray] (input) {Características\\reduzidas};
-    \node[box,fill=QuantumPurple!15,right=0.35cm of input] (enc)
-      {Codificação\\quântica};
-    \node[box,fill=QuantumPurple!25,right=0.35cm of enc] (vqc)
-      {Circuito\\variacional};
-    \node[box,fill=AccentGreen!15,right=0.35cm of vqc] (med)
-      {Valores\\esperados};
-    \node[box,fill=DeepBlue!15,right=0.35cm of med] (loss)
-      {Função de\\perda};
-
-    \draw[arrow] (input) -- (enc);
-    \draw[arrow] (enc) -- (vqc);
-    \draw[arrow] (vqc) -- (med);
-    \draw[arrow] (med) -- (loss);
-
-    \draw[arrow,bend left=35]
-      (loss.north) to node[above,align=center]
-      {\scriptsize atualização dos\\[-0.1cm]\scriptsize parâmetros}
-      (vqc.north);
-  \end{tikzpicture}
-  \end{center}
-
-  \vspace{0.3cm}
-
-  \begin{columns}[T,onlytextwidth]
-
-    \begin{column}{0.48\textwidth}
-      \begin{block}{Predição}
-        Para cada qubit medido, pode-se calcular o valor esperado do
-        observável de Pauli-$Z$:
-        \[
-          z_i = \langle Z_i\rangle.
-        \]
-
-        O vetor
-        \[
-          \mathbf{z} =
-          [\langle Z_1\rangle,\ldots,\langle Z_m\rangle]
-        \]
-        é utilizado para produzir a predição da classe.
-      \end{block}
-    \end{column}
-
-    \begin{column}{0.48\textwidth}
-      \begin{block}{Otimização}
-        A função de perda é calculada de forma clássica, e seus gradientes
-        são utilizados para atualizar os parâmetros do circuito:
-        \[
-          \boldsymbol{\theta}
-          \leftarrow
-          \boldsymbol{\theta}
-          -
-          \eta\nabla_{\boldsymbol{\theta}}\mathcal{L}.
-        \]
-
-        O gradiente pode ser obtido por métodos como a regra
-        \textit{parameter-shift}.
-      \end{block}
-    \end{column}
-
-  \end{columns}
-
-\end{frame}
-
-\begin{frame}{Papel do Numero de Qubits}
-  \begin{columns}[T,onlytextwidth]
-    \begin{column}{0.48\textwidth}
-      \begin{block}{Hipotese}
-        Mais qubits aumentam a capacidade de representacao do circuito, mas tambem aumentam custo de simulacao, risco de overfitting e dificuldade de otimizacao.
-      \end{block}
-      \begin{itemize}
-        \item Poucos qubits: classificador mais restrito.
-        \item Mais qubits: maior espaco de estados.
-        \item Simulacao classica cresce rapidamente.
-      \end{itemize}
-    \end{column}
-    \begin{column}{0.48\textwidth}
-      \begin{center}
-      \begin{tikzpicture}
-        \draw[->,thick] (0,0) -- (4.4,0) node[right] {qubits};
-        \draw[->,thick] (0,0) -- (0,3.0) node[above] {custo};
-        \draw[QuantumPurple,very thick] plot[smooth] coordinates {(0.3,0.3) (1.1,0.55) (2.0,1.0) (2.8,1.75) (3.7,2.8)};
-        \node[below] at (0.8,0) {4};
-        \node[below] at (1.8,0) {6};
-        \node[below] at (2.8,0) {8};
-        \node[below] at (3.8,0) {10};
-        \node[align=center,text width=3.4cm] at (2.4,2.5) {Trade-off entre capacidade e viabilidade};
-      \end{tikzpicture}
-      \end{center}
-    \end{column}
-  \end{columns}
-\end{frame}
-
-\section{Metodologia}
-
-\begin{frame}{O que será comparado?}
-  \begin{columns}[T,onlytextwidth]
-
-    \begin{column}{0.32\textwidth}
-      \begin{block}{Codificação dos dados}
-        \begin{itemize}
-          \item Angle encoding
-          \item Amplitude encoding
-          \item Basis encoding
-          \item Data re-uploading
-        \end{itemize}
-      \end{block}
-    \end{column}
-
-    \begin{column}{0.32\textwidth}
-      \begin{block}{Número de qubits}
-        \begin{itemize}
-          \item 4 qubits
-          \item 6 qubits
-          \item 8 qubits
-          \item 10 qubits
-        \end{itemize}
-      \end{block}
-    \end{column}
-
-    \begin{column}{0.32\textwidth}
-      \begin{block}{Circuito variacional}
-        \begin{itemize}
-          \item Número de camadas
-          \item Padrão de emaranhamento
-          \item Número de parâmetros
-          \item Profundidade do circuito
-        \end{itemize}
-      \end{block}
-    \end{column}
-
-  \end{columns}
-
-  \vspace{0.2cm}
-
-  \begin{alertblock}{Estratégia experimental}
-    Cada fator será analisado de forma controlada, mantendo os demais
-    componentes fixos, de modo a identificar sua influência individual
-    sobre o desempenho do classificador.
-  \end{alertblock}
-\end{frame}
-
-\begin{frame}{Desenho Experimental}
-  \begin{enumerate}
-    \item Utilizar uma ResNet18 pré-treinada no ImageNet como extratora de características.
-    
-    \item Manter os pesos da ResNet18 congelados durante os experimentos, garantindo que todos os classificadores utilizem o mesmo espaço de características.
-    
-    \item Aplicar um método de redução ou projeção dimensional para adequar o vetor de características ao número de qubits e à estratégia de codificação avaliados.
-    
-    \item Treinar circuitos quânticos variacionais para diferentes combinações de número de qubits, forma de codificação e arquitetura do circuito.
-    
-    \item Treinar uma MLP clássica como baseline, utilizando as mesmas características reduzidas, os mesmos conjuntos de treino, validação e teste e condições experimentais equivalentes.
-    
-    \item Comparar os modelos com base no desempenho preditivo, no custo computacional, no número de parâmetros e na estabilidade entre diferentes execuções.
-  \end{enumerate}
-
-  \vspace{0.25cm}
-
-  \begin{alertblock}{Controle experimental}
-    Para garantir uma comparação justa, todos os modelos utilizarão os mesmos dados, a mesma divisão entre treino, validação e teste e as mesmas características extraídas pela rede convolucional antes da etapa de classificação.
-  \end{alertblock}
-\end{frame}
-
-\begin{frame}{Metricas e Criterios de Analise}
-  \begin{columns}[T,onlytextwidth]
-    \begin{column}{0.48\textwidth}
-      \begin{block}{Desempenho preditivo}
-        \begin{itemize}
-          \item Acuracia
-          \item Loss de validacao/teste
-          \item Matriz de confusao
-          \item Media e desvio entre folds
-        \end{itemize}
-      \end{block}
-    \end{column}
-    \begin{column}{0.48\textwidth}
-      \begin{block}{Custo e estabilidade}
-        \begin{itemize}
-          \item Tempo de treinamento
-          \item Numero de parametros
-          \item Numero de qubits
-          \item Profundidade do circuito
-          \item Variabilidade entre execucoes
-        \end{itemize}
-      \end{block}
-    \end{column}
-  \end{columns}
-\end{frame}
-
-\begin{frame}{Hipoteses de Pesquisa}
-  \begin{block}{H1: codificacao importa}
-    Diferentes estrategias de codificacao podem produzir desempenhos distintos mesmo quando o extrator classico e mantido fixo.
-  \end{block}
-  \begin{block}{H2: mais qubits nem sempre e melhor}
-    O aumento do numero de qubits pode melhorar expressividade, mas tambem tornar a otimizacao mais dificil e aumentar custo computacional.
-  \end{block}
-  \begin{block}{H3: modelo hibrido pode ser competitivo}
-    Um classificador quantico variacional pode se aproximar da MLP classica em alguns cenarios, especialmente com caracteristicas ja bem estruturadas.
-  \end{block}
-\end{frame}
-
-\begin{frame}{Etapas de Implementacao}
-  \begin{center}
-  \begin{tikzpicture}[
-      flowstep/.style={draw,rounded corners,fill=SoftGray,align=center,minimum width=2.3cm,minimum height=0.85cm},
-      arrow/.style={-{Latex[length=2mm]},thick}
-    ]
-    \node[flowstep] (s1) {Baseline\\classico};
-    \node[flowstep,right=0.35cm of s1] (s2) {Extracao de\\features};
-    \node[flowstep,right=0.35cm of s2] (s3) {Modulo\\quantico};
-    \node[flowstep,right=0.35cm of s3] (s4) {Grade de\\experimentos};
-    \node[flowstep,right=0.35cm of s4] (s5) {Analise e\\relatorio};
-    \draw[arrow] (s1) -- (s2);
-    \draw[arrow] (s2) -- (s3);
-    \draw[arrow] (s3) -- (s4);
-    \draw[arrow] (s4) -- (s5);
-  \end{tikzpicture}
-  \end{center}
-
-  \vspace{0.4cm}
-  \begin{itemize}
-    \item Integrar biblioteca quantica: PennyLane \cite{bergholm2018pennylane} ou Qiskit Machine Learning.
-    \item Criar interface comum para classificadores classico e quantico.
-    \item Automatizar experimentos por codificacao, qubits e profundidade.
-  \end{itemize}
-\end{frame}
-
-\begin{frame}{Riscos e Limitacoes}
-  \begin{columns}[T,onlytextwidth]
-    \begin{column}{0.48\textwidth}
-      \begin{alertblock}{Computacionais}
-        \begin{itemize}
-          \item Simulacao quantica pode ser lenta.
-          \item Muitos qubits podem inviabilizar a grade completa.
-          \item Amplitude encoding pode ter alto custo de preparacao.
-        \end{itemize}
-      \end{alertblock}
-    \end{column}
-    \begin{column}{0.48\textwidth}
-      \begin{alertblock}{Metodologicos}
-        \begin{itemize}
-          \item Comparacao precisa controlar splits e features.
-          \item Resultados podem depender do ansatz escolhido.
-          \item Ganho sobre MLP classica nao e garantido.
-        \end{itemize}
-      \end{alertblock}
-    \end{column}
-  \end{columns}
-\end{frame}
-
-\begin{frame}{Resultado Esperado da Proposta}
-  \begin{block}{Produto tecnico}
-    Um pipeline experimental hibrido capaz de comparar classificadores classicos e quanticos sobre as mesmas caracteristicas profundas extraidas de imagens.
-  \end{block}
-
-  \begin{block}{Produto cientifico}
-    Uma analise empirica sobre como a escolha da codificacao quantica e do numero de qubits afeta desempenho, custo e estabilidade em classificacao de imagens.
-  \end{block}
-
-  \begin{block}{Entrega final}
-    Codigo reprodutivel, tabelas comparativas, graficos de desempenho e discussao das limitacoes observadas.
-  \end{block}
-\end{frame}
-
-\begin{frame}{Referencias Iniciais}
-  \small
-  \bibliographystyle{plainnat}
-  \bibliography{referencias}
+\begin{frame}[plain]
+    \vfill
+    \begin{center}
+        {\color{LNCCaltblue}\Huge\bfseries Obrigado!}\\[0.4cm]
+        {\Large Perguntas e discussões}\\[0.8cm]
+        {\normalsize
+        Classificação Multiclasse de Imagens com Modelos Híbridos Clássico-Quânticos\\[0.15cm]
+        Extratores profundos de características e circuitos quânticos variacionais
+        }
+
+        \vspace{0.3cm}
+        {\color{LNCCaltblue}\rule{0.62\linewidth}{0.8pt}}\\[0.35cm]
+        {\small Lorran de Araújo Durães Soares\\
+        \texttt{lorran@posgrad.lncc.br}}
+    \end{center}
+    \vfill
 \end{frame}
 
 \end{document}

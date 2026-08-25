@@ -45,8 +45,11 @@ def _build_experiments(config):
             "encoding": None,
             "num_qubits": None,
             "pca_dim": None,
+<<<<<<< Updated upstream
             "hidden_layers": None,
             "dropout": None,
+=======
+>>>>>>> Stashed changes
         }
     ]
 
@@ -83,6 +86,19 @@ def _build_experiments(config):
     for encoding in encodings:
         for num_qubits in qubits:
             pca_dim = quantum_input_dim(encoding, num_qubits)
+<<<<<<< Updated upstream
+=======
+            experiments.append(
+                {
+                    "name": f"mlp_pca_{encoding}_{num_qubits}q",
+                    "classifier": "mlp",
+                    "feature_source": "pca",
+                    "encoding": encoding,
+                    "num_qubits": num_qubits,
+                    "pca_dim": pca_dim,
+                }
+            )
+>>>>>>> Stashed changes
             experiments.append(
                 {
                     "name": f"quantum_{encoding}_{num_qubits}q",
@@ -92,8 +108,11 @@ def _build_experiments(config):
                     "encoding": encoding,
                     "num_qubits": num_qubits,
                     "pca_dim": pca_dim,
+<<<<<<< Updated upstream
                     "hidden_layers": None,
                     "dropout": None,
+=======
+>>>>>>> Stashed changes
                 }
             )
 
@@ -109,10 +128,13 @@ def _config_for_experiment(base_config, experiment, output_root):
     if experiment["classifier"] == "mlp":
         config["model"].setdefault("mlp", {})
         config["model"]["mlp"]["feature_source"] = experiment["feature_source"]
+<<<<<<< Updated upstream
         if experiment.get("hidden_layers") is not None:
             config["model"]["mlp"]["hidden_layers"] = experiment["hidden_layers"]
         if experiment.get("dropout") is not None:
             config["model"]["mlp"]["dropout"] = experiment["dropout"]
+=======
+>>>>>>> Stashed changes
         if experiment["feature_source"] == "pca":
             config["model"]["mlp"]["reduced_dim"] = experiment["pca_dim"]
     else:

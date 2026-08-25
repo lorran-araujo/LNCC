@@ -1,0 +1,25 @@
+\frametitle{Arquitetura da MLP Clássica}
+
+\begin{lstlisting}[style=pythonstyle]
+class MLPClassifier(nn.Module):
+    def __init__(self, input_dim, config):
+        super().__init__()
+
+        self.network = _build_mlp(
+            input_dim,
+            config.get("hidden_layers", [256]),
+            config.get("dropout", 0.3),
+            config["num_classes"],
+        )
+
+    def forward(self, features):
+        return self.network(features)
+\end{lstlisting}
+
+\begin{block}{Estrutura utilizada}
+A MLP recebe as características extraídas pela CNN e aplica uma ou mais
+camadas densas. Na configuração padrão, utiliza-se uma camada oculta com
+$256$ neurônios, \textit{dropout} de $0{,}3$ e uma camada de saída com um
+neurônio para cada classe.
+\end{block}
+
