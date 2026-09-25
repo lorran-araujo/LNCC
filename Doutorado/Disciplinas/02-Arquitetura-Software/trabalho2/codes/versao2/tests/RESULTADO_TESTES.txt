@@ -1,0 +1,138 @@
+RESULTADO DA EXECUCAO DOS TESTES - PIMUCS (VERSAO 2)
+=====================================================
+
+Comando executado:
+python3 -m unittest discover -s tests -v
+
+Resultado geral:
+- Total de testes executados: 17
+- Testes aprovados: 17
+- Falhas: 0
+- Erros: 0
+- Tempo de execucao: 0.003 s
+- Situacao final: OK
+
+Os testes utilizam o modulo unittest da biblioteca padrao do Python. Eles
+verificam as responsabilidades individuais dos componentes e a integracao do
+fluxo automatico de atualizacao de mapas.
+
+TESTES DE INTEGRACAO
+--------------------
+
+1. test_complete_flow_with_new_data_and_irregularity
+   Arquivo: tests/test_integration.py
+   Verifica o fluxo completo quando ha novas imagens e uma irregularidade e
+   identificada. Confirma o armazenamento dos dados pre-processados, a
+   atualizacao do modelo, a publicacao do mapa e a disponibilizacao de um
+   alerta pela aplicacao web.
+   Resultado: PASSOU.
+
+2. test_complete_flow_without_irregularity
+   Arquivo: tests/test_integration.py
+   Verifica o fluxo completo quando ha novas imagens, mas nao ha
+   irregularidade. Confirma que o mapa e publicado e que nenhum alerta e
+   registrado.
+   Resultado: PASSOU.
+
+3. test_pipeline_is_not_executed_without_new_data
+   Arquivo: tests/test_integration.py
+   Verifica que, na ausencia de dados novos no repositorio externo, o pipeline
+   nao e iniciado e os dados pre-processados, o modelo, o mapa e os alertas
+   permanecem inalterados.
+   Resultado: PASSOU.
+
+4. test_failure_keeps_previously_published_map_and_model
+   Arquivo: tests/test_integration.py
+   Verifica parcialmente o RNF3. Depois de uma atualizacao bem-sucedida,
+   simula uma falha na coleta de imagens durante uma nova execucao. Confirma
+   que o pipeline falha na etapa DataPreProcessing e que o mapa, o modelo e os
+   alertas da atualizacao anterior permanecem disponiveis.
+   Resultado: PASSOU.
+
+TESTES UNITARIOS
+----------------
+
+5. test_view_alerts_returns_alerts_registered_in_alert_management
+   Arquivo: tests/test_unit.py
+   Verifica que ControlledAccess consulta e retorna os alertas registrados em
+   AlertManagement.
+   Resultado: PASSOU.
+
+6. test_execute_preprocesses_and_saves_data
+   Arquivo: tests/test_unit.py
+   Verifica que DataPreProcessing coleta imagens, executa o pre-processamento
+   dummy e armazena o resultado no DataPreprocessedRepository.
+   Resultado: PASSOU.
+
+7. test_execute_generates_and_publishes_map
+   Arquivo: tests/test_unit.py
+   Verifica que Generate cria e publica um mapa associado a versao atual do
+   modelo de IA.
+   Resultado: PASSOU.
+
+8. test_does_not_start_pipeline_when_no_new_data_exists
+   Arquivo: tests/test_unit.py
+   Verifica que IngestionScheduler retorna False e nao chama o pipeline quando
+   o repositorio externo informa que nao ha dados novos.
+   Resultado: PASSOU.
+
+9. test_reports_failure_when_pipeline_fails
+   Arquivo: tests/test_unit.py
+   Verifica que IngestionScheduler retorna False quando o PipelineManager
+   informa falha na execucao.
+   Resultado: PASSOU.
+
+10. test_starts_pipeline_when_new_data_exists
+    Arquivo: tests/test_unit.py
+    Verifica que IngestionScheduler inicia o pipeline e retorna True quando o
+    repositorio externo informa a existencia de dados novos.
+    Resultado: PASSOU.
+
+11. test_execute_does_not_register_alert_without_irregularity
+    Arquivo: tests/test_unit.py
+    Verifica que Monitoring conclui a analise sem registrar alertas quando nao
+    existe irregularidade simulada.
+    Resultado: PASSOU.
+
+12. test_execute_fails_when_no_map_is_available
+    Arquivo: tests/test_unit.py
+    Verifica que Monitoring retorna False e nao registra alertas quando nao ha
+    mapa de uso e cobertura do solo disponivel para analise.
+    Resultado: PASSOU.
+
+13. test_execute_registers_alert_when_irregularity_exists
+    Arquivo: tests/test_unit.py
+    Verifica que Monitoring registra um alerta em AlertManagement quando uma
+    irregularidade e identificada.
+    Resultado: PASSOU.
+
+14. test_executes_stages_in_the_given_order
+    Arquivo: tests/test_unit.py
+    Verifica que PipelineManager executa as etapas na mesma ordem em que elas
+    foram injetadas e nao registra uma etapa com falha.
+    Resultado: PASSOU.
+
+15. test_stops_at_first_failed_stage
+    Arquivo: tests/test_unit.py
+    Verifica que PipelineManager interrompe o fluxo na primeira etapa que
+    retorna False e registra seu nome em failed_stage.
+    Resultado: PASSOU.
+
+16. test_treats_unexpected_exception_as_failure
+    Arquivo: tests/test_unit.py
+    Verifica que PipelineManager trata uma excecao inesperada em uma etapa como
+    falha, registra o erro no log e nao executa as etapas posteriores.
+    Resultado: PASSOU.
+
+17. test_execute_updates_model_version
+    Arquivo: tests/test_unit.py
+    Verifica que Training utiliza os dados pre-processados e atualiza a versao
+    do modelo armazenado no ModelRepository.
+    Resultado: PASSOU.
+
+CONCLUSAO
+---------
+A execucao confirmou que os componentes dummy implementados na versao 2
+atendem aos cenarios previstos no plano de testes: processamento de novos
+dados, atualizacao de modelo e mapa, monitoramento, consulta de alertas e
+tratamento basico de falhas no pipeline.

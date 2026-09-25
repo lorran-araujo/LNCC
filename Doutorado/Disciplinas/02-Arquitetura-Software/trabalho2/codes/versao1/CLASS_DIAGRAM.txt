@@ -1,0 +1,348 @@
+GUIA PARA DIAGRAMA UML DE CLASSES - IAProcessing Dummy
+========================================================
+
+1. ESCOPO E ORGANIZACAO
+-----------------------
+
+Este documento descreve apenas as classes implementadas neste repositorio.
+O sistema nao possui pacotes Python formais (nao ha diretorios com
+__init__.py). Para o diagrama, use os arquivos .py como modulos ou agrupe-os
+em tres pacotes logicos:
+
+- IAProcessing: ingestion_scheduler.py, pipeline_manager.py,
+  data_preprocessing.py, training.py, generate.py e monitoring.py.
+- DataManagement: repositories.py.
+- Models: models.py.
+
+main.py e o ponto de montagem da aplicacao: cria os objetos e injeta suas
+dependencias. Ele nao contem classe e, portanto, nao precisa aparecer no
+diagrama de classes.
+
+Nao ha heranca, subclasses, classes abstratas ou interfaces explicitamente
+definidas no codigo. As relacoes entre as classes sao associacoes ou
+dependencias de uso.
+
+2. PACOTE LOGICO: IAProcessing
+------------------------------
+
+Classe: IngestionScheduler
+Modulo: ingestion_scheduler.py
+Responsabilidade: verifica a existencia de novos dados e inicia o pipeline.
+
+Atributos:
+- external_repository: ExternalDataRepository
+- pipeline_manager: PipelineManager
+
+Operacao publica:
+- check_for_new_data(preprocessor, trainer, generator, monitoring) -> bool
+
+Relacoes:
+- associacao unidirecional com 1 ExternalDataRepository.
+- associacao unidirecional com 1 PipelineManager.
+- dependencia de DataPreProcessing, Training, Generate e Monitoring, pois
+  essas etapas sao recebidas como parametros de check_for_new_data().
+
+
+Classe: PipelineManager
+Modulo: pipeline_manager.py
+Responsabilidade: coordena as etapas do pipeline na ordem de preprocessamento,
+treinamento, geracao e monitoramento.
+
+Atributos:
+- nenhum atributo de instancia.
+
+Operacoes publicas:
+- execute_pipeline(preprocessor, trainer, generator, monitoring) -> bool
+- execute_preprocessing(preprocessor) -> bool
+- execute_training(trainer) -> bool
+- execute_generation(generator) -> bool
+- execute_monitoring(monitoring) -> bool
+
+Relacoes:
+- dependencia de DataPreProcessing, Training, Generate e Monitoring. Use
+  dependencia (seta tracejada), e nao associacao: as etapas sao argumentos de
+  metodos e nao sao armazenadas em atributos.
+
+
+Classe: DataPreProcessing
+Modulo: data_preprocessing.py
+Responsabilidade: coleta imagens no repositorio externo, realiza o
+preprocessamento dummy e armazena seu resultado.
+
+Atributos:
+- external_repository: ExternalDataRepository
+- preprocessed_repository: DataPreprocessedRepository
+
+Operacoes publicas:
+- execute() -> bool
+- preprocess(images) -> dict
+
+Relacoes:
+- associacao unidirecional com 1 ExternalDataRepository.
+- associacao unidirecional com 1 DataPreprocessedRepository.
+- dependencia de GeoReferencedImage, que e retornada pelo repositorio externo
+  e recebida por preprocess().
+
+
+Classe: Training
+Modulo: training.py
+Responsabilidade: carrega os dados pre-processados e o modelo atual, produz um
+novo modelo dummy e o salva.
+
+Atributos:
+- preprocessed_repository: DataPreprocessedRepository
+- model_repository: ModelRepository
+
+Operacoes publicas:
+- execute() -> bool
+- train(model, data) -> AIModel
+
+Relacoes:
+- associacao unidirecional com 1 DataPreprocessedRepository.
+- associacao unidirecional com 1 ModelRepository.
+- dependencia de AIModel, pois train() recebe e retorna esse tipo.
+
+
+Classe: Generate
+Modulo: generate.py
+Responsabilidade: usa os dados pre-processados e o modelo para gerar um novo
+mapa dummy e disponibiliza-lo.
+
+Atributos:
+- preprocessed_repository: DataPreprocessedRepository
+- model_repository: ModelRepository
+- land_use_management: LandUseCoverManagement
+
+Operacoes publicas:
+- execute() -> bool
+- generate_map(model, data) -> LandUseCoverMap
+
+Relacoes:
+- associacao unidirecional com 1 DataPreprocessedRepository.
+- associacao unidirecional com 1 ModelRepository.
+- associacao unidirecional com 1 LandUseCoverManagement.
+- dependencia de AIModel e LandUseCoverMap.
+
+
+Classe: Monitoring
+Modulo: monitoring.py
+Responsabilidade: compara o mapa de uso e cobertura com o mapa de zoneamento e
+registra alertas para irregularidades encontradas.
+
+Atributos:
+- land_use_management: LandUseCoverManagement
+- zoning_management: ZoningManagement
+- controlled_access: ControlledAccess
+- simulate_irregularity: bool
+
+Operacoes publicas:
+- execute() -> bool
+- compare_maps(land_use_map, zoning_map) -> list[IrregularityAlert]
+
+Relacoes:
+- associacao unidirecional com 1 LandUseCoverManagement.
+- associacao unidirecional com 1 ZoningManagement.
+- associacao unidirecional com 1 ControlledAccess.
+- dependencia de LandUseCoverMap, ZoningMap e IrregularityAlert.
+
+3. PACOTE LOGICO: DataManagement
+---------------------------------
+
+Classe: ExternalDataRepository
+Modulo: repositories.py
+Responsabilidade: representa a fonte externa de imagens georreferenciadas.
+
+Atributos:
+- has_new_data: bool
+
+Operacoes publicas:
+- check_new_data() -> bool
+- get_new_images() -> list[GeoReferencedImage]
+
+Relacoes:
+- dependencia de GeoReferencedImage.
+- conceitualmente fornece 0..* GeoReferencedImage; na implementacao dummy,
+  get_new_images() sempre retorna uma imagem.
+
+
+Classe: DataPreprocessedRepository
+Modulo: repositories.py
+Responsabilidade: armazena o resultado do preprocessamento.
+
+Atributos:
+- data: dict ou None
+
+Operacoes publicas:
+- save(data) -> None
+- load() -> dict ou None
+
+Relacoes:
+- nao possui associacao com uma classe de modelo, pois os dados pre-processados
+  sao representados por um dicionario Python.
+- pode conter 0..1 resultado pre-processado.
+
+
+Classe: ModelRepository
+Modulo: repositories.py
+Responsabilidade: armazena o modelo de IA atual.
+
+Atributos:
+- model: AIModel
+
+Operacoes publicas:
+- load() -> AIModel
+- save(model) -> None
+
+Relacoes:
+- associacao unidirecional com 1 AIModel. O repositorio cria um modelo inicial,
+  mas save() tambem pode receber um modelo criado externamente; portanto, o
+  codigo nao caracteriza composicao.
+
+
+Classe: LandUseCoverManagement
+Modulo: repositories.py
+Responsabilidade: disponibiliza e atualiza o mapa atual de uso e cobertura do
+solo.
+
+Atributos:
+- current_map: LandUseCoverMap ou None
+
+Operacoes publicas:
+- update_map(land_use_map) -> None
+- get_current_map() -> LandUseCoverMap ou None
+
+Relacoes:
+- associacao unidirecional com 0..1 LandUseCoverMap. O mapa e recebido por
+  update_map(), portanto o codigo nao determina uma relacao de agregacao ou
+  composicao.
+
+
+Classe: ZoningManagement
+Modulo: repositories.py
+Responsabilidade: disponibiliza o mapa oficial de zoneamento.
+
+Atributos:
+- zoning_map: ZoningMap
+
+Operacao publica:
+- get_zoning_map() -> ZoningMap
+
+Relacoes:
+- associacao unidirecional com 1 ZoningMap. Embora crie o mapa inicial, o
+  codigo nao define explicitamente o ciclo de vida da entidade.
+
+
+Classe: ControlledAccess
+Modulo: repositories.py
+Responsabilidade: registra os alertas que poderao ser consultados por usuarios
+autorizados em uma futura camada web.
+
+Atributos:
+- alerts: list[IrregularityAlert]
+
+Operacao publica:
+- register_alert(alert) -> None
+
+Relacoes:
+- associacao unidirecional com 0..* IrregularityAlert.
+
+4. PACOTE LOGICO: Models
+------------------------
+
+As classes deste pacote sao dataclasses. No diagrama, elas podem ser exibidas
+somente com atributos, pois nao possuem metodos explicitos no codigo.
+
+Classe: GeoReferencedImage
+Modulo: models.py
+Atributos:
+- name: str
+- acquisition_date: datetime
+
+
+Classe: AIModel
+Modulo: models.py
+Atributo:
+- version: int
+
+
+Classe: LandUseCoverMap
+Modulo: models.py
+Atributos:
+- version: int
+- model_version: int
+
+Observacao: model_version e um inteiro, nao uma associacao direta com AIModel.
+Se quiser demonstrar a semantica do dominio, uma dependencia opcional e
+rotulada como "generated using version" pode ligar LandUseCoverMap a AIModel.
+Ela nao e uma referencia de objeto no codigo.
+
+
+Classe: ZoningMap
+Modulo: models.py
+Atributo:
+- version: int
+
+
+Classe: IrregularityAlert
+Modulo: models.py
+Atributo:
+- description: str
+
+5. RELACOES PRINCIPAIS PARA DESENHAR
+------------------------------------
+
+Associe as classes com setas de navegabilidade na direcao abaixo:
+
+- IngestionScheduler --> ExternalDataRepository
+- IngestionScheduler --> PipelineManager
+- DataPreProcessing --> ExternalDataRepository
+- DataPreProcessing --> DataPreprocessedRepository
+- Training --> DataPreprocessedRepository
+- Training --> ModelRepository
+- Generate --> DataPreprocessedRepository
+- Generate --> ModelRepository
+- Generate --> LandUseCoverManagement
+- Monitoring --> LandUseCoverManagement
+- Monitoring --> ZoningManagement
+- Monitoring --> ControlledAccess
+
+Use dependencias tracejadas para:
+
+- PipelineManager ..> DataPreProcessing
+- PipelineManager ..> Training
+- PipelineManager ..> Generate
+- PipelineManager ..> Monitoring
+- IngestionScheduler ..> DataPreProcessing
+- IngestionScheduler ..> Training
+- IngestionScheduler ..> Generate
+- IngestionScheduler ..> Monitoring
+
+Use as relacoes entre gerenciadores/repositorios e entidades:
+
+- ModelRepository --> AIModel (1)
+- ZoningManagement --> ZoningMap (1)
+- LandUseCoverManagement --> LandUseCoverMap (0..1)
+- ControlledAccess --> IrregularityAlert (0..*)
+- ExternalDataRepository ..> GeoReferencedImage (0..*)
+
+Legenda:
+- --> : associacao unidirecional.
+- ..> : dependencia/uso temporario.
+
+6. ELEMENTOS QUE NAO DEVEM ENTRAR COMO CLASSES
+-----------------------------------------------
+
+- main(): funcao que monta o grafo de objetos; nao e classe.
+- bool, int, str, list, dict, datetime e None: tipos auxiliares, nao classes
+  do dominio deste projeto.
+- FakeStage e FakePipelineManager: classes exclusivas dos testes unitarios;
+  nao pertencem ao diagrama da aplicacao.
+
+7. OBSERVACAO DE ESCOPO
+----------------------
+
+O trabalho1.pdf tambem descreve componentes como Visualization, autenticacao,
+gerenciamento de usuarios e interface web. Eles nao possuem implementacao neste
+repositorio e nao devem ser mostrados como classes existentes. Se o objetivo for
+um diagrama da arquitetura completa proposta no PDF, eles podem ser incluidos em
+outro diagrama, explicitamente identificados como componentes futuros.

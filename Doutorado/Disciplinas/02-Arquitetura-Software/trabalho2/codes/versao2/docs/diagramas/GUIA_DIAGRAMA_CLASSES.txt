@@ -1,0 +1,541 @@
+GUIA PARA O DIAGRAMA DE CLASSES - PIMUCS (VERSAO 2)
+=====================================================
+
+1. OBJETIVO E ESCOPO
+--------------------
+Este guia especifica o diagrama de classes das 19 classes que ja existem no
+codigo da versao 2. O diagrama deve representar o funcionamento esperado da
+PIMUCS descrita em trabalho1.pdf, e nao apenas as simplificacoes do dummy.
+
+Assim, cada classe deve exibir:
+- atributos existentes e atributos necessarios ao funcionamento previsto;
+- operacoes existentes e operacoes esperadas para a responsabilidade da classe;
+- relacoes UML estruturais entre as classes existentes.
+
+Itens marcados com [DUMMY] existem no codigo atual. Itens marcados com
+[PREVISTO] representam o comportamento esperado, mas ainda nao foram
+implementados. Nao incluir novas classes neste diagrama.
+
+Notacao sugerida:
+- + operacao ou atributo publico;
+- - atributo privado;
+- linha continua com seta: associacao unidirecional;
+- linha tracejada com ponta aberta: dependencia;
+- linha continua com triangulo vazio: generalizacao/heranca;
+- linha tracejada com estereotipo <<create>>: criacao de objeto;
+- 1, 0..1 e 0..*: multiplicidades.
+
+2. PACOTE MODELS
+----------------
+As entidades sao dataclasses. Desenhar apenas atributos; o construtor e os
+metodos especiais gerados por dataclass podem ser omitidos.
+
+2.1 GeoReferencedImage
+Responsabilidade: representar uma imagem georreferenciada obtida do repositorio
+externo e utilizada no pre-processamento e na geracao do mapa.
+
+Atributos:
+- + name: str [DUMMY]
+- + acquisition_date: datetime [DUMMY]
+- + source_identifier: str [PREVISTO]
+- + spatial_reference: str [PREVISTO]
+- + spatial_extent: object [PREVISTO]
+- + resolution: float [PREVISTO]
+- + metadata: dict [PREVISTO]
+
+Operacoes: nenhuma operacao de dominio obrigatoria.
+
+Relacoes:
+- ExternalDataRepository cria e retorna 0..* GeoReferencedImage.
+- DataPreProcessing depende de GeoReferencedImage como entrada de preprocess().
+- datetime e um tipo de biblioteca, nao deve aparecer como classe de dominio.
+
+2.2 AIModel
+Responsabilidade: representar a versao treinada e aprovada do modelo de IA usada
+para gerar mapas.
+
+Atributos:
+- + version: int [DUMMY]
+- + trained_at: datetime [PREVISTO]
+- + training_data_reference: str [PREVISTO]
+- + performance_metrics: dict [PREVISTO]
+- + artifact_location: str [PREVISTO]
+- + status: str [PREVISTO]
+
+Operacoes: nenhuma operacao de dominio obrigatoria; treinamento e persistencia
+pertencem a Training e ModelRepository.
+
+Relacoes:
+- ModelRepository mantem 1 AIModel vigente.
+- Training le e produz 1 AIModel.
+- Generate depende de 1 AIModel para gerar um mapa.
+
+2.3 LandUseCoverMap
+Responsabilidade: representar uma versao publicada do mapa de uso e cobertura do
+solo, disponivel para consulta e monitoramento.
+
+Atributos:
+- + version: int [DUMMY]
+- + model_version: int [DUMMY]
+- + generated_at: datetime [PREVISTO]
+- + spatial_reference: str [PREVISTO]
+- + spatial_extent: object [PREVISTO]
+- + classification_data_location: str [PREVISTO]
+- + statistics: dict [PREVISTO]
+- + publication_status: str [PREVISTO]
+
+Operacoes: nenhuma operacao de dominio obrigatoria.
+
+Relacoes:
+- LandUseCoverManagement mantem de 0..1 mapa vigente e deve preservar versoes
+  publicadas para consulta historica.
+- Generate cria 1 LandUseCoverMap.
+- Monitoring depende de 1 LandUseCoverMap para a comparacao.
+- model_version e apenas um atributo de rastreabilidade; nao desenhar associacao
+  estrutural entre LandUseCoverMap e AIModel.
+
+2.4 ZoningMap
+Responsabilidade: representar o mapa oficial de zoneamento ambiental utilizado
+como referencia para fiscalizacao.
+
+Atributos:
+- + version: int [DUMMY]
+- + effective_from: datetime [PREVISTO]
+- + spatial_reference: str [PREVISTO]
+- + zoning_data_location: str [PREVISTO]
+- + updated_at: datetime [PREVISTO]
+
+Operacoes: nenhuma operacao de dominio obrigatoria.
+
+Relacoes:
+- ZoningManagement mantem 1 ZoningMap vigente.
+- Monitoring depende de 1 ZoningMap para a comparacao.
+
+2.5 IrregularityAlert
+Responsabilidade: registrar uma possivel incompatibilidade entre o mapa gerado e
+o zoneamento oficial, para consulta por usuario fiscalizador.
+
+Atributos:
+- + description: str [DUMMY]
+- + identifier: str [PREVISTO]
+- + location: object [PREVISTO]
+- + detected_at: datetime [PREVISTO]
+- + severity: str [PREVISTO]
+- + status: str [PREVISTO]
+- + land_use_map_version: int [PREVISTO]
+- + zoning_map_version: int [PREVISTO]
+
+Operacoes previstas:
+- + change_status(status: str): None
+
+Relacoes:
+- AlertManagement mantem 0..* IrregularityAlert.
+- Monitoring cria de 0..* alertas como resultado da comparacao.
+- ControlledAccess consulta de 0..* alertas por meio de AlertManagement.
+
+3. PACOTE EXTERNAL
+------------------
+3.1 ExternalDataRepository
+Responsabilidade: atuar como fachada para o sistema externo de sensoriamento
+remoto. Deve identificar dados mais recentes e recuperar somente as imagens
+necessarias para uma atualizacao.
+
+Atributos:
+- + has_new_data: bool [DUMMY]
+- - last_checked_at: datetime | None [PREVISTO]
+- - source_name: str [PREVISTO]
+- - connection_configuration: dict [PREVISTO]
+
+Operacoes:
+- + check_new_data(): bool [DUMMY]
+- + get_new_images(): list[GeoReferencedImage] [DUMMY]
+- + check_new_data(last_update: datetime | None): bool [PREVISTO]
+- + get_new_images(since: datetime | None): list[GeoReferencedImage] [PREVISTO]
+- + get_latest_available_date(): datetime | None [PREVISTO]
+
+Relacoes:
+- cria 0..* GeoReferencedImage: dependencia <<create>>.
+- IngestionScheduler possui associacao com 1 ExternalDataRepository.
+- DataPreProcessing possui associacao com 1 ExternalDataRepository.
+
+4. PACOTE DATA MANAGEMENT
+-------------------------
+4.1 LandUseCoverManagement
+Responsabilidade: encapsular a leitura, publicacao e consulta dos mapas de uso e
+cobertura do solo. Uma nova versao so deve substituir a versao publicada apos
+ser gerada e persistida com sucesso, conforme RNF3.
+
+Atributos:
+- - current_map: LandUseCoverMap | None [DUMMY: _current_map]
+- - map_history: list[LandUseCoverMap] [PREVISTO]
+- - storage_configuration: dict [PREVISTO]
+
+Operacoes:
+- + update_map(land_use_map: LandUseCoverMap): None [DUMMY]
+- + get_current_map(): LandUseCoverMap | None [DUMMY]
+- + publish_map(land_use_map: LandUseCoverMap): bool [PREVISTO]
+- + get_map(version: int): LandUseCoverMap | None [PREVISTO]
+- + list_maps(): list[LandUseCoverMap] [PREVISTO]
+- + calculate_statistics(region: object): dict [PREVISTO]
+- + export_statistics_csv(region: object): str [PREVISTO]
+
+Relacoes:
+- associa-se a 0..1 LandUseCoverMap como current_map.
+- associa-se a 0..* LandUseCoverMap como map_history.
+- Generate possui associacao com 1 LandUseCoverManagement.
+- Monitoring possui associacao com 1 LandUseCoverManagement.
+
+4.2 ZoningManagement
+Responsabilidade: encapsular o acesso e a administracao do mapa oficial de
+zoneamento ambiental que serve de referencia para o monitoramento.
+
+Atributos:
+- - zoning_map: ZoningMap [DUMMY: _zoning_map]
+- - zoning_history: list[ZoningMap] [PREVISTO]
+- - storage_configuration: dict [PREVISTO]
+
+Operacoes:
+- + get_zoning_map(): ZoningMap [DUMMY]
+- + update_zoning_map(zoning_map: ZoningMap): bool [PREVISTO]
+- + get_zoning_map(version: int): ZoningMap | None [PREVISTO]
+- + list_zoning_maps(): list[ZoningMap] [PREVISTO]
+
+Relacoes:
+- associa-se a 1 ZoningMap vigente.
+- pode associar-se a 0..* ZoningMap como historico previsto.
+- Monitoring possui associacao com 1 ZoningManagement.
+- ControlledAccess depende de ZoningManagement para futuras operacoes
+  administrativas, embora esta associacao ainda nao exista no dummy.
+
+4.3 AlertManagement
+Responsabilidade: persistir, consultar e atualizar o ciclo de vida de alertas.
+Esta classe separa a escrita feita pelo processamento de IA da leitura feita
+pela aplicacao web, preservando a direcao das dependencias entre camadas.
+
+Atributos:
+- - alerts: list[IrregularityAlert] [DUMMY: _alerts]
+- - storage_configuration: dict [PREVISTO]
+
+Operacoes:
+- + register_alert(alert: IrregularityAlert): None [DUMMY]
+- + get_alerts(): list[IrregularityAlert] [DUMMY]
+- + find_alerts(status: str | None, region: object | None): list[IrregularityAlert]
+  [PREVISTO]
+- + update_alert_status(identifier: str, status: str): bool [PREVISTO]
+- + has_equivalent_alert(alert: IrregularityAlert): bool [PREVISTO]
+
+Relacoes:
+- associa-se a 0..* IrregularityAlert.
+- Monitoring possui associacao com 1 AlertManagement e registra alertas.
+- ControlledAccess possui associacao com 1 AlertManagement e consulta alertas.
+
+5. PACOTE WEB APPLICATION
+-------------------------
+5.1 ControlledAccess
+Responsabilidade: disponibilizar funcoes restritas da plataforma. Deve aplicar
+autenticacao e autorizacao antes de permitir consulta de alertas por
+fiscalizadores ou administracao do zoneamento, conforme RNF4.
+
+Atributos:
+- - alert_management: AlertManagement [DUMMY: _alert_management]
+- - authentication_service: object [PREVISTO]
+- - authorization_service: object [PREVISTO]
+- - zoning_management: ZoningManagement [PREVISTO]
+
+Operacoes:
+- + view_alerts(): list[IrregularityAlert] [DUMMY]
+- + authenticate(credentials: dict): str | None [PREVISTO]
+- + authorize(user_identifier: str, operation: str): bool [PREVISTO]
+- + view_alerts(user_identifier: str): list[IrregularityAlert] [PREVISTO]
+- + update_zoning_map(user_identifier: str, zoning_map: ZoningMap): bool
+  [PREVISTO]
+
+Relacoes:
+- associa-se a 1 AlertManagement.
+- depende de IrregularityAlert como tipo de retorno.
+- associa-se a 1 ZoningManagement apenas no comportamento administrativo
+  previsto; a classe ja existe, portanto a relacao pode ser desenhada com a
+  anotacao [PREVISTO].
+- authentication_service e authorization_service nao devem ser desenhados como
+  classes neste diagrama, pois nao existem no escopo definido.
+
+6. PACOTE IA PROCESSING - INFRAESTRUTURA
+----------------------------------------
+6.1 PipelineStage (abstrata)
+Responsabilidade: definir o contrato polimorfico de uma etapa executavel do
+pipeline de atualizacao.
+
+Atributos: nenhum.
+
+Operacoes:
+- + execute(): bool [DUMMY e PREVISTO, abstrata]
+
+Relacoes:
+- herda de ABC, classe da biblioteca Python que pode ser omitida do diagrama.
+- DataPreProcessing, Training, Generate e Monitoring herdam de PipelineStage.
+
+6.2 PipelineManager
+Responsabilidade: coordenar as etapas na ordem configurada, interromper na
+primeira falha e garantir que apenas uma atualizacao completamente bem-sucedida
+possa ser publicada como nova versao. No sistema real, deve coordenar a
+compensacao ou o isolamento de alteracoes intermediarias em caso de falha.
+
+Atributos:
+- - stages: list[PipelineStage] [DUMMY: _stages]
+- + failed_stage: str | None [DUMMY]
+- - execution_identifier: str | None [PREVISTO]
+- - execution_status: str [PREVISTO]
+
+Operacoes:
+- + execute_pipeline(): bool [DUMMY]
+- + execute_pipeline(): bool [PREVISTO: deve registrar o resultado e preservar
+  a consistencia da publicacao]
+- + rollback_failed_execution(): None [PREVISTO]
+
+Relacoes:
+- associa-se a 1..* PipelineStage no fluxo previsto. O codigo atual aceita
+  uma lista vazia, mas o pipeline de negocio deve possuir etapas.
+- IngestionScheduler possui associacao com 1 PipelineManager.
+
+6.3 IngestionScheduler
+Responsabilidade: executar periodicamente a verificacao de novos dados e iniciar
+o pipeline somente quando existirem imagens mais recentes que a ultima
+atualizacao concluida.
+
+Atributos:
+- - external_repository: ExternalDataRepository [DUMMY: _external_repository]
+- - pipeline_manager: PipelineManager [DUMMY: _pipeline_manager]
+- - last_successful_update: datetime | None [PREVISTO]
+- - schedule_configuration: str [PREVISTO]
+
+Operacoes:
+- + check_for_new_data(): bool [DUMMY]
+- + check_for_new_data(): bool [PREVISTO: consulta desde last_successful_update]
+- + run_scheduled_check(): None [PREVISTO]
+- + record_successful_update(date: datetime): None [PREVISTO]
+
+Relacoes:
+- associa-se a 1 ExternalDataRepository.
+- associa-se a 1 PipelineManager.
+
+6.4 DataPreprocessedRepository
+Responsabilidade: armazenar de modo duravel os dados resultantes do
+pre-processamento, compartilhando-os com as etapas de treinamento e geracao.
+
+Atributos:
+- + data: dict | None [DUMMY]
+- - data_reference: str | None [PREVISTO]
+- - created_at: datetime | None [PREVISTO]
+- - source_image_references: list[str] [PREVISTO]
+
+Operacoes:
+- + save(data: dict): None [DUMMY]
+- + load(): dict | None [DUMMY]
+- + save(data: dict, metadata: dict): bool [PREVISTO]
+- + load(execution_identifier: str): dict | None [PREVISTO]
+- + remove(execution_identifier: str): bool [PREVISTO]
+
+Relacoes:
+- DataPreProcessing possui associacao com 1 DataPreprocessedRepository.
+- Training possui associacao com 1 DataPreprocessedRepository.
+- Generate possui associacao com 1 DataPreprocessedRepository.
+- O dado pre-processado e um dict no escopo atual; nao criar uma classe extra
+  para ele neste diagrama.
+
+6.5 ModelRepository
+Responsabilidade: armazenar, recuperar e versionar o modelo de IA vigente,
+assegurando que somente modelos treinados e validados sejam promovidos para uso.
+
+Atributos:
+- + model: AIModel [DUMMY]
+- - model_history: list[AIModel] [PREVISTO]
+- - storage_configuration: dict [PREVISTO]
+
+Operacoes:
+- + load(): AIModel [DUMMY]
+- + save(model: AIModel): None [DUMMY]
+- + load(version: int | None): AIModel | None [PREVISTO]
+- + save(model: AIModel): bool [PREVISTO]
+- + list_models(): list[AIModel] [PREVISTO]
+- + promote_model(version: int): bool [PREVISTO]
+
+Relacoes:
+- cria o AIModel inicial e mantem 1 modelo vigente.
+- pode associar-se a 0..* AIModel como historico previsto.
+- Training possui associacao com 1 ModelRepository.
+- Generate possui associacao com 1 ModelRepository.
+
+7. PACOTE IA PROCESSING - ETAPAS CONCRETAS
+-------------------------------------------
+7.1 DataPreProcessing
+Responsabilidade: recuperar imagens novas, validar qualidade e metadados,
+normalizar dados geoespaciais e persistir um conjunto pre-processado para as
+etapas posteriores.
+
+Atributos:
+- - external_repository: ExternalDataRepository [DUMMY: _external_repository]
+- - preprocessed_repository: DataPreprocessedRepository
+  [DUMMY: _preprocessed_repository]
+- - preprocessing_configuration: dict [PREVISTO]
+
+Operacoes:
+- + execute(): bool [DUMMY e PREVISTO]
+- + preprocess(images: list[GeoReferencedImage]): dict [DUMMY]
+- + validate_images(images: list[GeoReferencedImage]): bool [PREVISTO]
+- + preprocess(images: list[GeoReferencedImage]): dict [PREVISTO: inclui
+  normalizacao, reprojecao, recorte e controle de qualidade]
+
+Relacoes:
+- herda de PipelineStage.
+- associa-se a 1 ExternalDataRepository.
+- associa-se a 1 DataPreprocessedRepository.
+- depende de 0..* GeoReferencedImage como parametro.
+
+7.2 Training
+Responsabilidade: carregar dados pre-processados e o modelo vigente, treinar ou
+atualizar o modelo, avaliar sua qualidade e salvar uma nova versao somente se
+for aprovada.
+
+Atributos:
+- - preprocessed_repository: DataPreprocessedRepository
+  [DUMMY: _preprocessed_repository]
+- - model_repository: ModelRepository [DUMMY: _model_repository]
+- - training_configuration: dict [PREVISTO]
+- - acceptance_criteria: dict [PREVISTO]
+
+Operacoes:
+- + execute(): bool [DUMMY e PREVISTO]
+- + train(model: AIModel, data: dict | None): AIModel [DUMMY]
+- + validate_training_data(data: dict): bool [PREVISTO]
+- + train(model: AIModel, data: dict): AIModel [PREVISTO]
+- + evaluate(model: AIModel, data: dict): dict [PREVISTO]
+- + approve_model(model: AIModel, metrics: dict): bool [PREVISTO]
+
+Relacoes:
+- herda de PipelineStage.
+- associa-se a 1 DataPreprocessedRepository.
+- associa-se a 1 ModelRepository.
+- depende de AIModel nos parametros e retorno de train().
+
+7.3 Generate
+Responsabilidade: executar a inferencia com o modelo aprovado e dados
+pre-processados, gerar uma nova versao do mapa e solicita-la para publicacao
+atomica em LandUseCoverManagement.
+
+Atributos:
+- - preprocessed_repository: DataPreprocessedRepository
+  [DUMMY: _preprocessed_repository]
+- - model_repository: ModelRepository [DUMMY: _model_repository]
+- - land_use_management: LandUseCoverManagement
+  [DUMMY: _land_use_management]
+- - generation_configuration: dict [PREVISTO]
+
+Operacoes:
+- + execute(): bool [DUMMY e PREVISTO]
+- + generate_map(model: AIModel, data: dict | None): LandUseCoverMap [DUMMY]
+- + validate_generation_input(model: AIModel, data: dict): bool [PREVISTO]
+- + generate_map(model: AIModel, data: dict): LandUseCoverMap [PREVISTO]
+- + validate_map(land_use_map: LandUseCoverMap): bool [PREVISTO]
+
+Relacoes:
+- herda de PipelineStage.
+- associa-se a 1 DataPreprocessedRepository.
+- associa-se a 1 ModelRepository.
+- associa-se a 1 LandUseCoverManagement.
+- depende de AIModel e LandUseCoverMap nas assinaturas das operacoes.
+
+7.4 Monitoring
+Responsabilidade: comparar espacialmente o mapa novo com o zoneamento vigente,
+identificar usos incompativeis e registrar alertas com localizacao, descricao e
+referencias das versoes analisadas.
+
+Atributos:
+- - land_use_management: LandUseCoverManagement
+  [DUMMY: _land_use_management]
+- - zoning_management: ZoningManagement [DUMMY: _zoning_management]
+- - alert_management: AlertManagement [DUMMY: _alert_management]
+- + simulate_irregularity: bool [DUMMY; remover do diagrama previsto]
+- - monitoring_configuration: dict [PREVISTO]
+
+Operacoes:
+- + execute(): bool [DUMMY e PREVISTO]
+- + compare_maps(land_use_map: LandUseCoverMap, zoning_map: ZoningMap):
+  list[IrregularityAlert] [DUMMY]
+- + compare_maps(land_use_map: LandUseCoverMap, zoning_map: ZoningMap):
+  list[IrregularityAlert] [PREVISTO: executa analise geoespacial]
+- + detect_incompatible_uses(land_use_map: LandUseCoverMap,
+  zoning_map: ZoningMap): list[object] [PREVISTO]
+- + create_alert(occurrence: object): IrregularityAlert [PREVISTO]
+
+Relacoes:
+- herda de PipelineStage.
+- associa-se a 1 LandUseCoverManagement.
+- associa-se a 1 ZoningManagement.
+- associa-se a 1 AlertManagement.
+- depende de LandUseCoverMap, ZoningMap e IrregularityAlert nas assinaturas.
+- NAO desenhar associacao direta com ControlledAccess: Monitoring grava alertas
+  em AlertManagement, e ControlledAccess os consulta. Isso preserva as camadas.
+
+8. RELACOES CONSOLIDADAS PARA DESENHAR
+--------------------------------------
+
+8.1 Generalizacao (linha continua, triangulo vazio apontando para a superclasse)
+- DataPreProcessing --|> PipelineStage
+- Training --|> PipelineStage
+- Generate --|> PipelineStage
+- Monitoring --|> PipelineStage
+
+8.2 Associacoes por colaborador mantido (linha continua com navegabilidade)
+- IngestionScheduler --> ExternalDataRepository [1]
+- IngestionScheduler --> PipelineManager [1]
+- PipelineManager --> PipelineStage [1..*; papel: stages]
+- DataPreProcessing --> ExternalDataRepository [1]
+- DataPreProcessing --> DataPreprocessedRepository [1]
+- Training --> DataPreprocessedRepository [1]
+- Training --> ModelRepository [1]
+- Generate --> DataPreprocessedRepository [1]
+- Generate --> ModelRepository [1]
+- Generate --> LandUseCoverManagement [1]
+- Monitoring --> LandUseCoverManagement [1]
+- Monitoring --> ZoningManagement [1]
+- Monitoring --> AlertManagement [1]
+- ControlledAccess --> AlertManagement [1]
+- ControlledAccess --> ZoningManagement [1; PREVISTO para administracao]
+
+8.3 Associacoes entre gerenciadores/repositorios e entidades
+- LandUseCoverManagement --> LandUseCoverMap [0..1; papel: current_map]
+- LandUseCoverManagement --> LandUseCoverMap [0..*; papel: map_history,
+  PREVISTO]
+- ZoningManagement --> ZoningMap [1; papel: zoning_map]
+- ZoningManagement --> ZoningMap [0..*; papel: zoning_history, PREVISTO]
+- AlertManagement --> IrregularityAlert [0..*; papel: alerts]
+- ModelRepository --> AIModel [1; papel: model]
+- ModelRepository --> AIModel [0..*; papel: model_history, PREVISTO]
+
+8.4 Dependencias e criacoes
+- ExternalDataRepository ..> GeoReferencedImage [0..*; <<create>>]
+- DataPreProcessing ..> GeoReferencedImage [0..*; parametro]
+- Training ..> AIModel [parametro e retorno]
+- Generate ..> AIModel [parametro]
+- Generate ..> LandUseCoverMap [retorno/criacao]
+- Monitoring ..> LandUseCoverMap [parametro]
+- Monitoring ..> ZoningMap [parametro]
+- Monitoring ..> IrregularityAlert [retorno/criacao]
+- ControlledAccess ..> IrregularityAlert [retorno]
+
+9. ELEMENTOS A OMITIR DO DIAGRAMA
+---------------------------------
+- main(): e a raiz de composicao e nao uma classe.
+- Classes exclusivas dos testes, como FakeStage e FakePipelineManager.
+- Tipos de infraestrutura ou biblioteca: bool, int, str, dict, list, datetime,
+  object, Sequence, ABC e logging.
+- authentication_service e authorization_service: sao comportamentos previstos,
+  mas as classes correspondentes nao fazem parte do escopo solicitado.
+
+10. OBSERVACAO DE COERENCIA COM O CODIGO
+----------------------------------------
+O diagrama deve apresentar os atributos privados que o codigo realmente mantem,
+mesmo quando o diagrama anterior os omitia. Para o modelo previsto, manter os
+atributos e operacoes marcados como [PREVISTO] e remover a marca [DUMMY] na
+versao final do desenho. Se for necessario representar apenas a implementacao
+atual, desenhar exclusivamente os itens [DUMMY].

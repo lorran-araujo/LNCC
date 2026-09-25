@@ -1,0 +1,400 @@
+GUIA PARA OS DIAGRAMAS DE SEQUENCIA - PIMUCS (VERSAO 2)
+=========================================================
+
+1. OBJETIVO E CONVENCOES
+------------------------
+Este documento descreve dois diagramas de sequencia da versao 2 da PIMUCS:
+
+1. Atualizacao automatica do mapa de uso e cobertura do solo.
+2. Monitoramento do mapa publicado e possivel geracao de alerta.
+
+As mensagens descritas correspondem as chamadas do codigo atual. As observacoes
+marcadas com [PREVISTO] indicam o comportamento esperado pela arquitetura de
+trabalho1.pdf, ainda simplificado ou ausente no dummy.
+
+Convencoes UML sugeridas:
+- seta continua: chamada sincrona de metodo;
+- seta tracejada: retorno do metodo;
+- seta para a propria lifeline: chamada interna da mesma classe;
+- fragmento alt: caminhos condicionais mutuamente exclusivos;
+- fragmento loop: repeticao para cada elemento de uma colecao;
+- barra de ativacao: periodo em que o objeto executa a operacao.
+
+Nao desenhar main() como participante dos diagramas. Ele apenas instancia os
+objetos e injeta as dependencias antes do inicio do fluxo.
+
+2. DIAGRAMA 1 - ATUALIZACAO DO MAPA
+-----------------------------------
+
+2.1 Objetivo
+Representar a verificacao de dados novos, o pre-processamento, o treinamento,
+a geracao e a publicacao de uma nova versao do mapa.
+
+2.2 Participantes e pacotes
+Desenhar as lifelines na ordem abaixo, da esquerda para a direita:
+
+1. IngestionScheduler
+   Pacote: pimucs.ia_processing
+   Papel: inicia a verificacao de novos dados.
+
+2. ExternalDataRepository
+   Pacote: pimucs.external
+   Papel: sistema externo que informa disponibilidade e fornece imagens.
+
+3. PipelineManager
+   Pacote: pimucs.ia_processing
+   Papel: coordena as etapas do pipeline na ordem configurada.
+
+4. DataPreProcessing
+   Pacote: pimucs.ia_processing
+   Papel: coleta e prepara as imagens.
+
+5. DataPreprocessedRepository
+   Pacote: pimucs.ia_processing
+   Papel: armazena os dados intermediarios do pre-processamento.
+
+6. Training
+   Pacote: pimucs.ia_processing
+   Papel: atualiza o modelo de IA.
+
+7. ModelRepository
+   Pacote: pimucs.ia_processing
+   Papel: armazena o modelo vigente.
+
+8. Generate
+   Pacote: pimucs.ia_processing
+   Papel: gera uma nova versao do mapa.
+
+9. LandUseCoverManagement
+   Pacote: pimucs.data_management
+   Papel: publica e disponibiliza o mapa vigente.
+
+2.3 Fluxo principal: ha dados novos e todas as etapas sao bem-sucedidas
+
+1. Um acionador externo chama:
+   IngestionScheduler -> IngestionScheduler: check_for_new_data()
+   Modulo: pimucs.ia_processing.ingestion_scheduler
+   Efeito: inicia a verificacao de atualizacao.
+
+2. O agendador verifica se existem dados novos:
+   IngestionScheduler -> ExternalDataRepository: check_new_data()
+   Modulo chamado: pimucs.external.external_data_repository
+   Retorno: bool com True.
+   Efeito no dummy: retorna o atributo has_new_data.
+   [PREVISTO] Deve comparar a data ou versao mais recente disponivel com a data
+   da ultima atualizacao concluida.
+
+3. O agendador inicia o pipeline:
+   IngestionScheduler -> PipelineManager: execute_pipeline()
+   Modulo chamado: pimucs.ia_processing.pipeline_manager
+   Efeito: zera failed_stage e executa as etapas injetadas na ordem configurada.
+
+4. O gerenciador inicia o pre-processamento:
+   PipelineManager -> DataPreProcessing: execute()
+   Modulo chamado: pimucs.ia_processing.data_preprocessing
+
+5. A etapa recupera as imagens novas:
+   DataPreProcessing -> ExternalDataRepository: get_new_images()
+   Modulo chamado: pimucs.external.external_data_repository
+   Retorno: list[GeoReferencedImage].
+   Efeito no dummy: cria e retorna uma imagem simulada.
+   [PREVISTO] Deve recuperar todas as imagens posteriores a ultima atualizacao.
+
+6. A etapa pre-processa as imagens:
+   DataPreProcessing -> DataPreProcessing: preprocess(images)
+   Modulo: pimucs.ia_processing.data_preprocessing
+   Retorno: processed_data: dict.
+   Efeito no dummy: gera apenas as chaves processed e number_of_images.
+   [PREVISTO] Deve validar imagens, normalizar dados, reprojetar, recortar e
+   aplicar controles de qualidade geoespacial.
+
+7. A etapa persiste os dados intermediarios:
+   DataPreProcessing -> DataPreprocessedRepository: save(processed_data)
+   Modulo chamado: pimucs.ia_processing.repositories
+   Retorno: None.
+   Efeito: disponibiliza os dados para Training e Generate.
+
+8. A etapa retorna sucesso:
+   DataPreProcessing --> PipelineManager: True
+   Efeito: PipelineManager continua para Training.
+
+9. O gerenciador inicia o treinamento:
+   PipelineManager -> Training: execute()
+   Modulo chamado: pimucs.ia_processing.training
+
+10. Training carrega os dados preparados:
+    Training -> DataPreprocessedRepository: load()
+    Modulo chamado: pimucs.ia_processing.repositories
+    Retorno: data: dict | None.
+
+11. Training carrega o modelo vigente:
+    Training -> ModelRepository: load()
+    Modulo chamado: pimucs.ia_processing.repositories
+    Retorno: model: AIModel.
+
+12. Training produz a nova versao do modelo:
+    Training -> Training: train(model, data)
+    Modulo: pimucs.ia_processing.training
+    Retorno: updated_model: AIModel.
+    Efeito no dummy: cria AIModel com version incrementada.
+    [PREVISTO] Deve treinar o modelo com dados validos, calcular metricas e
+    aprovar a nova versao antes de promove-la.
+
+13. Training salva o modelo atualizado:
+    Training -> ModelRepository: save(updated_model)
+    Modulo chamado: pimucs.ia_processing.repositories
+    Retorno: None.
+
+14. A etapa retorna sucesso:
+    Training --> PipelineManager: True
+    Efeito: PipelineManager continua para Generate.
+
+15. O gerenciador inicia a geracao do mapa:
+    PipelineManager -> Generate: execute()
+    Modulo chamado: pimucs.ia_processing.generate
+
+16. Generate recupera os dados pre-processados:
+    Generate -> DataPreprocessedRepository: load()
+    Modulo chamado: pimucs.ia_processing.repositories
+    Retorno: data: dict | None.
+
+17. Generate recupera o modelo atualizado:
+    Generate -> ModelRepository: load()
+    Modulo chamado: pimucs.ia_processing.repositories
+    Retorno: model: AIModel.
+
+18. Generate verifica o mapa publicado para definir a versao nova:
+    Generate -> LandUseCoverManagement: get_current_map()
+    Modulo chamado: pimucs.data_management.land_use_cover_management
+    Retorno: current_map: LandUseCoverMap | None.
+    Efeito: define versao 1 se nao ha mapa; caso contrario, usa a versao atual
+    acrescida de um.
+
+19. Generate cria o novo mapa:
+    Generate -> Generate: generate_map(model, data)
+    Modulo: pimucs.ia_processing.generate
+    Retorno: new_map: LandUseCoverMap.
+    Efeito no dummy: cria um mapa apenas com version e model_version.
+    [PREVISTO] Deve executar a inferencia do modelo e validar o mapa produzido.
+
+20. Generate publica o novo mapa:
+    Generate -> LandUseCoverManagement: update_map(new_map)
+    Modulo chamado: pimucs.data_management.land_use_cover_management
+    Retorno: None.
+    Efeito no dummy: substitui _current_map em memoria.
+    [PREVISTO] Deve persistir a nova versao e torna-la vigente apenas apos uma
+    publicacao confirmada, preservando os mapas historicos.
+
+21. A etapa retorna sucesso:
+    Generate --> PipelineManager: True
+    Efeito: o mapa ja esta publicado e Monitoring pode ser executado como a
+    quarta etapa do pipeline. O monitoramento esta no Diagrama 2.
+
+2.4 Fragmentos alt obrigatorios
+
+alt [nao ha dados novos]
+1. IngestionScheduler -> ExternalDataRepository: check_new_data()
+2. ExternalDataRepository --> IngestionScheduler: False
+3. IngestionScheduler retorna False ao acionador externo.
+4. PipelineManager e as etapas nao sao chamados.
+
+alt [uma etapa retorna False ou lanca excecao]
+1. A etapa em execucao retorna False, ou sua chamada lanca excecao.
+2. PipelineManager registra o nome da classe em failed_stage.
+3. PipelineManager --> IngestionScheduler: False.
+4. IngestionScheduler retorna False ao acionador externo.
+5. As etapas posteriores nao sao chamadas.
+
+Observacao: PipelineManager captura excecoes de execute(), registra o erro no
+log e as trata como falha. O codigo nao implementa rollback transacional de
+modelo ou dados intermediarios se uma falha acontecer apos Training.
+
+alt [ha mapa vigente] / [nao ha mapa vigente]
+1. Dentro de Generate.generate_map(), o retorno de get_current_map() define a
+versao do novo mapa.
+2. [nao ha mapa vigente]: new_version = 1.
+3. [ha mapa vigente]: new_version = current_map.version + 1.
+
+2.5 Retorno final do processo
+Depois de Monitoring concluir com sucesso, PipelineManager retorna True para
+IngestionScheduler, que tambem retorna True ao acionador externo. A publicacao
+do mapa ocorre antes de Monitoring; portanto, uma falha de Monitoring nao desfaz
+o mapa que ja foi publicado no dummy.
+
+3. DIAGRAMA 2 - MONITORAMENTO E POSSIVEL GERACAO DE ALERTA
+-----------------------------------------------------------
+
+3.1 Objetivo
+Representar a analise do mapa de uso e cobertura publicado contra o zoneamento
+oficial e o registro condicional de alertas para consulta posterior.
+
+3.2 Participantes e pacotes
+Desenhar as lifelines na ordem abaixo, da esquerda para a direita:
+
+1. PipelineManager
+   Pacote: pimucs.ia_processing
+   Papel: chama Monitoring depois de Generate concluir com sucesso.
+
+2. Monitoring
+   Pacote: pimucs.ia_processing
+   Papel: coordena a comparacao dos mapas e a criacao dos alertas.
+
+3. LandUseCoverManagement
+   Pacote: pimucs.data_management
+   Papel: fornece o mapa de uso e cobertura vigente.
+
+4. ZoningManagement
+   Pacote: pimucs.data_management
+   Papel: fornece o mapa oficial de zoneamento vigente.
+
+5. AlertManagement
+   Pacote: pimucs.data_management
+   Papel: registra e armazena alertas de irregularidade.
+
+6. ControlledAccess
+   Pacote: pimucs.web_application
+   Papel: consulta os alertas em uma interacao posterior de usuario fiscalizador.
+
+3.3 Fluxo principal: irregularidade identificada
+
+1. Depois de Generate retornar True, o gerenciador inicia o monitoramento:
+   PipelineManager -> Monitoring: execute()
+   Modulo chamado: pimucs.ia_processing.monitoring
+
+2. Monitoring recupera o mapa publicado:
+   Monitoring -> LandUseCoverManagement: get_current_map()
+   Modulo chamado: pimucs.data_management.land_use_cover_management
+   Retorno: land_use_map: LandUseCoverMap | None.
+
+3. Monitoring recupera o zoneamento oficial:
+   Monitoring -> ZoningManagement: get_zoning_map()
+   Modulo chamado: pimucs.data_management.zoning_management
+   Retorno: zoning_map: ZoningMap.
+
+4. Monitoring compara os mapas:
+   Monitoring -> Monitoring: compare_maps(land_use_map, zoning_map)
+   Modulo: pimucs.ia_processing.monitoring
+   Retorno: alerts: list[IrregularityAlert].
+   Efeito no dummy: se simulate_irregularity for True, retorna uma lista com
+   um alerta de descricao fixa.
+   [PREVISTO] Deve realizar comparacao geoespacial, identificar areas com uso
+   incompativel e produzir alertas com localizacao, descricao e referencias das
+   versoes dos mapas analisados.
+
+5. Para cada alerta identificado, Monitoring solicita o registro:
+   Monitoring -> AlertManagement: register_alert(alert)
+   Modulo chamado: pimucs.data_management.alert_management
+   Retorno: None.
+   Efeito no dummy: adiciona o alerta a lista _alerts em memoria.
+
+6. Monitoring retorna sucesso:
+   Monitoring --> PipelineManager: True.
+
+7. PipelineManager encerra a etapa de monitoramento apos receber True.
+
+8. Em uma consulta posterior do fiscalizador, ControlledAccess busca os alertas:
+   ControlledAccess -> ControlledAccess: view_alerts()
+   Modulo: pimucs.web_application.controlled_access
+
+9. ControlledAccess delega a consulta:
+   ControlledAccess -> AlertManagement: get_alerts()
+   Modulo chamado: pimucs.data_management.alert_management
+   Retorno: list[IrregularityAlert].
+   Efeito: AlertManagement retorna uma copia da lista de alertas.
+
+10. ControlledAccess retorna os alertas ao usuario fiscalizador.
+
+3.4 Fragmentos alt obrigatorios
+
+alt [nao ha mapa publicado]
+1. Monitoring -> LandUseCoverManagement: get_current_map()
+2. LandUseCoverManagement --> Monitoring: None.
+3. Monitoring --> PipelineManager: False.
+4. PipelineManager registra failed_stage = "Monitoring" e retorna False.
+5. ZoningManagement, compare_maps() e AlertManagement nao sao chamados.
+
+alt [irregularidade identificada]
+1. compare_maps() retorna 1..* IrregularityAlert.
+2. Usar um fragmento loop [para cada alert].
+3. Monitoring -> AlertManagement: register_alert(alert).
+4. Monitoring retorna True apos registrar todos os alertas.
+
+alt [nenhuma irregularidade identificada]
+1. compare_maps() retorna uma lista vazia.
+2. AlertManagement.register_alert() nao e chamado.
+3. Monitoring retorna True: a ausencia de irregularidade nao e falha.
+
+3.5 Relacao com ControlledAccess
+Nao desenhar uma chamada automatica de Monitoring para ControlledAccess.
+
+Na versao 2, o fluxo correto e:
+Monitoring -> AlertManagement -> ControlledAccess.
+
+Monitoring grava os alertas em AlertManagement. ControlledAccess apenas os le
+em uma consulta posterior. Essa separacao evita a dependencia de IAProcessing
+para WebApplication e mantem a direcao arquitetural das camadas.
+
+4. DIVERGENCIAS E LIMITACOES DO DUMMY
+-------------------------------------
+- ExternalDataRepository usa has_new_data, sem data da ultima atualizacao.
+- DataPreprocessedRepository, ModelRepository, LandUseCoverManagement e
+  AlertManagement armazenam dados apenas em memoria.
+- Training incrementa a versao do modelo, mas nao executa treinamento real.
+- Generate cria um mapa sem inferencia geoespacial real.
+- LandUseCoverManagement mantem somente o mapa vigente; nao ha historico.
+- Monitoring nao compara conteudo espacial; simulate_irregularity controla o
+  resultado da analise.
+- IrregularityAlert nao contem localizacao, identificador ou ciclo de vida.
+- ControlledAccess nao autentica nem autoriza usuarios, apesar do RNF4.
+- Nao ha notificacao ativa ao fiscalizador; ha apenas consulta posterior.
+- Nao ha rollback transacional completo se uma falha ocorre apos a atualizacao
+  do modelo ou apos a publicacao do mapa.
+
+5. RESUMO DAS CHAMADAS POR MODULO
+---------------------------------
+
+pimucs.external.external_data_repository
+- ExternalDataRepository.check_new_data()
+- ExternalDataRepository.get_new_images()
+
+pimucs.ia_processing.ingestion_scheduler
+- IngestionScheduler.check_for_new_data()
+
+pimucs.ia_processing.pipeline_manager
+- PipelineManager.execute_pipeline()
+
+pimucs.ia_processing.data_preprocessing
+- DataPreProcessing.execute()
+- DataPreProcessing.preprocess(images)
+
+pimucs.ia_processing.repositories
+- DataPreprocessedRepository.save(data)
+- DataPreprocessedRepository.load()
+- ModelRepository.load()
+- ModelRepository.save(model)
+
+pimucs.ia_processing.training
+- Training.execute()
+- Training.train(model, data)
+
+pimucs.ia_processing.generate
+- Generate.execute()
+- Generate.generate_map(model, data)
+
+pimucs.data_management.land_use_cover_management
+- LandUseCoverManagement.get_current_map()
+- LandUseCoverManagement.update_map(land_use_map)
+
+pimucs.data_management.zoning_management
+- ZoningManagement.get_zoning_map()
+
+pimucs.ia_processing.monitoring
+- Monitoring.execute()
+- Monitoring.compare_maps(land_use_map, zoning_map)
+
+pimucs.data_management.alert_management
+- AlertManagement.register_alert(alert)
+- AlertManagement.get_alerts()
+
+pimucs.web_application.controlled_access
+- ControlledAccess.view_alerts()
