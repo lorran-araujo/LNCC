@@ -1,0 +1,13 @@
+[workspace]
+authors = ["Lorran de Araújo Durães Soares <lorranspbr@gmail.com>"]
+channels = ["conda-forge"]
+name = "05-problemas-inversos"
+platforms = ["linux-64"]
+version = "0.1.0"
+
+[tasks]
+
+[dependencies]
+numpy = ">=2.5.3,<3"
+matplotlib = ">=3.11.2,<4"
+python = "3.12.3.*"

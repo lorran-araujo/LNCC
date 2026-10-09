@@ -243,3 +243,5 @@ Notas:
   ignore apenas checkpoints grandes manualmente.
 - Como os checkpoints .pt costumam ser grandes, a recomendacao padrao e nao
   versiona-los no Git.
+Doutorado/Disciplinas/05-problemas-inversos/.gitattributes
+Doutorado/Disciplinas/05-problemas-inversos/.vscode/settings.json
