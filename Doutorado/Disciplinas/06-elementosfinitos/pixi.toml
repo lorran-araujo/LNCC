@@ -1,0 +1,14 @@
+[workspace]
+authors = ["Lorran de Araújo Durães Soares <lorranspbr@gmail.com>"]
+channels = ["conda-forge"]
+name = "06-elementosfinitos"
+platforms = ["linux-64"]
+version = "0.1.0"
+
+[tasks]
+start = "python hello.py"
+
+[dependencies]
+numpy = ">=2.5.4,<3"
+matplotlib = ">=3.11.2,<4"
+ipykernel = ">=7.2.0,<8"
