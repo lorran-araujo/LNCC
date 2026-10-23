@@ -1,0 +1,58 @@
+\documentclass[9pt]{beamer}
+\usepackage{amsfonts,amsmath,oldgerm}
+\usepackage{amssymb, amsthm,thmtools}	% Teoremas e outras definições matemáticas
+\usepackage{booktabs}
+
+\usepackage[language=portuguese]{./assets/style/beamerthemeLNCC}
+\usetikzlibrary{shapes.geometric}
+%\usepackage[language=english]{./assets/style/beamerthemeLNCC}
+
+%\usepackage[backend=biber,style=numeric]{biblatex}
+
+%\addbibresource{referencias.bib}  % Adicione o arquivo de referências .bib
+%\addbibresource{bibliografia.bib}  % Adicione o arquivo de referências .bib
+
+\usepackage{csquotes}
+\usepackage[backend=biber,style=numeric,maxnames=2]{biblatex}
+\addbibresource{bibliografia.bib}
+\newcommand{\slidecite}[1]{\footnote{\citeauthor{#1}, \emph{\citetitle{#1}}, \citeyear{#1}.}}
+
+% Remover o título da citação
+% \AtEveryCitekey{\clearfield{title}}
+% \AtEveryBibitem{\clearfield{title}}
+
+\newcommand{\testcolor}[1]{\colorbox{#1}{\textcolor{#1}{test}}~\texttt{#1}}
+
+\usefonttheme[onlymath]{serif}
+
+\titlebackground*{assets/img/background3}
+
+\newcommand{\hrefcol}[2]{\textcolor{LNCCaltblue}{\href{#1}{#2}}}
+
+\title{Calibração do Modelo de Rosenzweig-MacArthur com Algoritmos Genéticos e Redes Neurais}
+\subtitle{GB-500 - TEMC: Problemas Inversos Computacionalmente Intensivos: Implementação via Técnicas de Inteligência Artificial}
+%#\course{Master's Degree student in Computational Modeling}
+
+\author{
+    \begin{tabular}{l}
+        \\
+        Lorran de Araújo Durães Soares$^{1}$ - \texttt{lorran@posgrad.lncc.br} \\
+    \end{tabular}
+}
+
+\institute[]{\normalsize
+  \inst{1} Laboratório Nacional de Computação Científica (LNCC/MCTI)\\ 
+}
+
+\newcommand{\insertemail}{ 
+}
+
+\begin{document}
+
+\maketitle
+
+\include{tex/text}
+
+\backmatter
+
+\end{document}

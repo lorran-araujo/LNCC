@@ -1,0 +1,550 @@
+\section{Introdução e Motivação}
+
+\begin{frame}{Contextualização do Problema}
+
+\begin{itemize}
+
+    \item Modelos matemáticos baseados em
+    \textbf{equações diferenciais ordinárias (EDOs)}
+    são amplamente utilizados para descrever
+    a evolução temporal de sistemas dinâmicos.
+
+    \vspace{0.3cm}
+
+    \item A capacidade preditiva desses modelos
+    depende da determinação adequada de seus
+    \textbf{parâmetros}.
+
+    \vspace{0.3cm}
+
+    \item A identificação desses parâmetros a partir
+    de observações constitui um
+    \textbf{problema inverso}, frequentemente
+    formulado como um problema de otimização.
+
+    \vspace{0.3cm}
+
+    \item Sua resolução pode apresentar desafios,
+    como:
+    \begin{itemize}
+        \item Sensibilidade ao ruído e às condições iniciais;
+        \item Não linearidade e mínimos locais;
+        \item Identificabilidade dos parâmetros;
+        \item Custo computacional.
+    \end{itemize}
+
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}{Objetivos do Trabalho}
+
+\textbf{Objetivo Geral}
+
+\begin{itemize}
+    \item Investigar e comparar diferentes técnicas de
+    \textbf{identificação de parâmetros} em problemas
+    inversos, utilizando o modelo de Rosenzweig-MacArthur
+    como estudo de caso.
+\end{itemize}
+
+\vspace{0.35cm}
+
+\textbf{Objetivos Específicos}
+
+\begin{itemize}
+
+    \item Implementar um algoritmo genético para
+    calibração de parâmetros;
+
+    \vspace{0.15cm}
+
+    \item Investigar abordagens baseadas em
+    \textbf{redes neurais}, incluindo redes neurais
+    inversas e PINNs;
+
+    \vspace{0.15cm}
+
+    \item Avaliar a capacidade de recuperação dos
+    parâmetros a partir de dados sintéticos,
+    com diferentes níveis de ruído;
+
+    \vspace{0.15cm}
+
+    \item Comparar as técnicas quanto à
+    \textbf{precisão, robustez, sensibilidade}
+    e \textbf{custo computacional}.
+
+\end{itemize}
+
+\end{frame}
+
+\section{Definição do Problema Inverso}
+
+\begin{frame}{Modelo de Rosenzweig-MacArthur}
+
+O modelo de \textbf{Rosenzweig-MacArthur} descreve
+a dinâmica entre presas e predadores, incorporando o
+crescimento logístico das presas e a resposta funcional
+de Holling tipo II.
+
+\vspace{0.25cm}
+
+\begin{columns}
+    \begin{column}{0.5\textwidth}
+        \begin{block}{Sistema de Equações Diferenciais}
+        \begin{equation}
+        \begin{cases}
+        \dfrac{dN}{dt} = rN\left(1-\dfrac{N}{K}\right)
+        - \dfrac{aNP}{1+ahN}, \\[8pt]
+        \dfrac{dP}{dt} = e\dfrac{aNP}{1+ahN} - mP.
+        \end{cases}
+        \end{equation}
+        \end{block}
+    \end{column}
+    \begin{column}{0.5\textwidth}
+        Em que $N(t)$ e $P(t)$ representam, respectivamente,
+        as populações de presas e predadores.
+
+        \vspace{0.2cm}
+
+        \begin{itemize}
+            \item $r$: taxa de crescimento das presas;
+            \item $K$: capacidade de suporte;
+            \item $a$: taxa de ataque dos predadores;
+            \item $h$: tempo de manipulação;
+            \item $e$: eficiência de conversão;
+            \item $m$: taxa de mortalidade dos predadores.
+        \end{itemize}
+    \end{column}
+\end{columns}
+
+\vspace{0.15cm}
+
+O vetor de parâmetros a ser identificado é:
+\[
+\boldsymbol{\theta} =
+(r,K,a,h,e,m).
+\]
+
+\end{frame}
+
+\begin{frame}{Geração dos Dados Sintéticos}
+
+    \begin{itemize}
+        \item Definir um conjunto de parâmetros de referência:
+        \[
+        \boldsymbol{\theta}^{*}
+        =
+        (r^{*},K^{*},a^{*},h^{*},e^{*},m^{*}).
+        \]
+
+        \item Resolver numericamente o sistema de
+        Rosenzweig-MacArthur, considerando condições iniciais
+        conhecidas:
+        \[
+        N(0)=N_0,
+        \qquad
+        P(0)=P_0.
+        \]
+
+        \item Amostrar as soluções em instantes discretos
+        $t_1,t_2,\ldots,t_m$ e adicionar ruído:
+        \[
+        \begin{aligned}
+        N_i^{obs} &= N(t_i;\boldsymbol{\theta}^{*})
+                    + \varepsilon_{N,i},\\
+        P_i^{obs} &= P(t_i;\boldsymbol{\theta}^{*})
+                    + \varepsilon_{P,i}.
+        \end{aligned}
+        \]
+
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{Geração de Dados Sintéticos}
+    \begin{figure}
+        \includegraphics[width=0.8\textwidth]{imgs/dados.png}
+    \end{figure}
+\end{frame}
+
+\begin{frame}{Geração de Dados Sintéticos}
+    
+    Considerar diferentes cenários experimentais:
+    \begin{itemize}
+        \item Dados sem ruído e com diferentes níveis de ruído;
+        \item Diferentes quantidades de observações temporais;
+        \item Diferentes conjuntos de parâmetros de referência.
+    \end{itemize}
+
+\vspace{0.15cm}
+
+\begin{block}{Finalidade}
+    Construir problemas inversos controlados, permitindo
+    avaliar a capacidade de cada método em recuperar
+    os parâmetros conhecidos.
+\end{block}
+\end{frame}
+
+\begin{frame}{Formulação do Problema Inverso}
+
+\begin{columns}
+    \begin{column}{0.65\textwidth}
+        \begin{itemize}
+
+            \item Considere as observações disponíveis em
+            $m$ instantes de tempo:
+            \[
+            \mathcal{D}
+            =
+            \left\{
+            (t_i,N_i^{obs},P_i^{obs})
+            \right\}_{i=1}^{m}.
+            \]
+
+            \item O objetivo é identificar o vetor de parâmetros:
+            \[
+            \boldsymbol{\theta}
+            =
+            (r,K,a,h,e,m),
+            \]
+            cujas soluções numéricas melhor reproduzam
+            as observações.
+
+        \end{itemize}
+        
+    \end{column}
+    \begin{column}{0.3\textwidth}
+        \begin{itemize}
+        \item $\Omega$: conjunto admissível de parâmetros positivos;
+        \item $w_N,w_P$: pesos para balancear os resíduos;
+        \item $N(t;\boldsymbol{\theta}),P(t;\boldsymbol{\theta})$:
+        soluções numéricas do modelo.
+        \end{itemize}
+    \end{column}
+\end{columns}
+
+\begin{block}{Problema de Otimização}
+        \[
+        \boxed{
+        \boldsymbol{\theta}^{opt}
+        =
+        \underset{\boldsymbol{\theta}\in\Omega}{\arg\min}
+        \; J(\boldsymbol{\theta})
+        }
+        \]
+
+        \vspace{-0.2cm}
+
+        \[
+        J(\boldsymbol{\theta})
+        =
+        \frac{1}{m}
+        \sum_{i=1}^{m}
+        \left[
+        w_N\left(N(t_i;\boldsymbol{\theta})-N_i^{obs}\right)^2
+        +
+        w_P\left(P(t_i;\boldsymbol{\theta})-P_i^{obs}\right)^2
+        \right].
+        \]
+\end{block}
+\end{frame}
+
+\section{Métodos de Identificação de Parâmetros}
+
+\begin{frame}{Algoritmo Genético}
+
+\small O AG explora populações de parâmetros candidatos sem exigir o
+cálculo de derivadas da função objetivo.
+
+\vspace{0.2cm}
+
+\begin{center}
+\begin{tikzpicture}[
+    >=stealth,
+    etapa/.style={
+        draw=LNCCmainblue,
+        fill=LNCClighteraltblue,
+        rounded corners=3pt,
+        align=center,
+        minimum width=2.25cm,
+        minimum height=0.9cm,
+        font=\scriptsize
+    },
+    decisao/.style={
+        draw=LNCCdarkorange,
+        fill=LNCClightyellow,
+        diamond,
+        aspect=1.7,
+        align=center,
+        inner sep=1pt,
+        font=\scriptsize
+    },
+    resultado/.style={
+        draw=LNCCdarkgreen,
+        fill=LNCClightgreen,
+        rounded corners=3pt,
+        align=center,
+        minimum width=2.25cm,
+        minimum height=0.75cm,
+        font=\scriptsize
+    },
+    seta/.style={->, thick, draw=LNCCdarkaltblue}
+]
+    \node[etapa] (populacao) at (0,0) {População inicial\\$\boldsymbol{\theta}_i=(r,K,a,h,e,m)$};
+    \node[etapa] (avaliacao) at (3.1,0) {Resolver as EDOs\\e calcular $J(\boldsymbol{\theta}_i)$};
+    \node[etapa] (selecao) at (6.2,0) {Seleção dos\\melhores indivíduos};
+    \node[etapa] (operadores) at (9.3,0) {Cruzamento e mutação\\geram nova população};
+    \node[decisao] (parada) at (9.3,-1.65) {Critério de\\parada?};
+    \node[resultado] (resultado) at (9.3,-2.85) {Melhor solução\\$\hat{\boldsymbol{\theta}}$};
+
+    \draw[seta] (populacao) -- (avaliacao);
+    \draw[seta] (avaliacao) -- (selecao);
+    \draw[seta] (selecao) -- (operadores);
+    \draw[seta] (operadores) -- (parada) node[midway, right, font=\scriptsize] {nova geração};
+    \draw[seta] (parada) -- (resultado) node[midway, right, font=\scriptsize] {sim};
+    \draw[seta] (parada.west) -| (avaliacao.south) node[pos=0.18, below, font=\scriptsize] {não};
+\end{tikzpicture}
+\end{center}
+
+\end{frame}
+
+\begin{frame}{Redes Neurais para Problemas Inversos}
+
+\begin{figure}
+    \includegraphics[width=0.7\textwidth]{imgs/NN.png}
+\end{figure}
+\end{frame}
+
+\begin{frame}{Rede Neural Inversa: Dados e Características}
+\scriptsize
+\begin{columns}[T,onlytextwidth]
+    \begin{column}{0.3\textwidth}
+        \begin{block}{Dados utilizados}
+        \begin{itemize}
+            \item Banco supervisionado de pares
+            $(\mathbf{y}^{(j)},\boldsymbol{\theta}^{(j)})$;
+            \item Trajetórias geradas para diferentes parâmetros,
+            condições iniciais e níveis de ruído;
+            \item Separação em treino, validação e teste por
+            vetores de parâmetros.
+        \end{itemize}
+        \end{block}
+    \end{column}
+    \begin{column}{0.3\textwidth}
+        \begin{block}{Vantagens}
+        \begin{itemize}
+            \item Inferência rápida após o treinamento;
+            \item Reutilizável para muitas trajetórias observadas;
+            \item Não requer resolver as EDOs em cada nova
+            estimação.
+        \end{itemize}
+        \end{block}
+    \end{column}
+    \begin{column}{0.32\textwidth}
+        \begin{alertblock}{Limitações}
+        \begin{itemize}
+            \item Banco de treinamento grande e representativo;
+            \item Custo inicial de gerar trajetórias rotuladas;
+            \item Generalização limitada fora do domínio treinado.
+        \end{itemize}
+        \end{alertblock}
+    \end{column}
+\end{columns}
+
+\vspace{0.05cm}
+\begin{block}{Uso no teste}
+Uma nova trajetória observada, associada a parâmetros desconhecidos,
+é fornecida à rede para obter $\hat{\boldsymbol{\theta}}$.
+\end{block}
+\end{frame}
+
+\begin{frame}{Physics-Informed Neural Networks (PINNs)}
+
+\begin{figure}
+    \includegraphics[width=0.7\textwidth]{imgs/PINN.png}
+\end{figure}
+\end{frame}
+
+\begin{frame}{PINN Inversa: Dados e Características}
+\scriptsize
+\begin{columns}[T,onlytextwidth]
+    \begin{column}{0.3\textwidth}
+        \begin{block}{Dados utilizados}
+        \begin{itemize}
+            \item Uma única série observada de presas e predadores;
+            \item Condições iniciais conhecidas ou observadas;
+            \item Pontos de colocação no tempo para impor as EDOs.
+        \end{itemize}
+        \end{block}
+    \end{column}
+    \begin{column}{0.3\textwidth}
+        \begin{block}{Vantagens}
+        \begin{itemize}
+            \item Não exige banco prévio de trajetórias rotuladas;
+            \item Integra observações e a física do modelo;
+            \item Reconstrói trajetórias contínuas no tempo.
+        \end{itemize}
+        \end{block}
+    \end{column}
+    \begin{column}{0.32\textwidth}
+        \begin{alertblock}{Limitações}
+        \begin{itemize}
+            \item Novo treinamento para cada conjunto de observações;
+            \item Custo elevado e sensibilidade aos pesos das perdas;
+            \item Ruído e baixa identificabilidade dificultam a estimação.
+        \end{itemize}
+        \end{alertblock}
+    \end{column}
+\end{columns}
+
+\vspace{0.05cm}
+\begin{block}{Avaliação com dados sintéticos}
+O parâmetro verdadeiro é usado apenas para medir o erro de
+$\hat{\boldsymbol{\theta}}$, e não como rótulo durante o treinamento.
+\end{block}
+\end{frame}
+
+\section{Metodologia Experimental}
+
+\begin{frame}{Protocolo Experimental e Número de Otimizações}
+\small
+\begin{columns}[T,onlytextwidth]
+    \begin{column}{0.42\textwidth}
+        \begin{block}{Cenários de teste}
+        \begin{itemize}
+            \item Variar $N_\theta$ vetores de parâmetros,
+            $N_\sigma$ níveis de ruído e $N_m$ quantidades
+            de observações;
+            \item Total de cenários:
+            \[
+            N_c=N_\theta N_\sigma N_m;
+            \]
+            \item Repetir cada cenário $R$ vezes, com sementes
+            e inicializações distintas.
+        \end{itemize}
+        \end{block}
+    \end{column}
+    \begin{column}{0.55\textwidth}
+        \begin{block}{Execuções por método}
+        \centering
+        \scriptsize
+        \begin{tabular}{@{}p{0.24\linewidth}p{0.48\linewidth}c@{}}
+        \toprule
+        Método & Por caso & Total \\
+        \midrule
+        AG & Uma calibração evolutiva & $N_cR$ \\
+        Rede neural inversa & Treino único; inferência nos testes & $N_{NN}$ \\
+        PINN & Uma PINN por série observada & $N_cR$ \\
+        \bottomrule
+        \end{tabular}
+        \end{block}
+    \end{column}
+\end{columns}
+
+\vspace{0.1cm}
+\begin{alertblock}{Contagem total}
+\[
+N_{\mathrm{otim}} = 2N_cR + N_{NN},
+\]
+em que $N_{NN}$ é o número de treinamentos da rede inversa
+(configurações de arquitetura e sementes). Para uma única configuração
+e semente, $N_{NN}=1$.
+\end{alertblock}
+\end{frame}
+
+\section{Estratégia de Avaliação}
+
+\begin{frame}{Métricas de Avaliação}
+
+\small
+
+\begin{itemize}
+
+    \item \textbf{Erro relativo dos parâmetros:}
+    \[
+    E_{\theta}
+    =
+    \frac{
+        \left\|
+        \hat{\boldsymbol{\theta}}
+        -
+        \boldsymbol{\theta}^{*}
+        \right\|_2
+    }{
+        \left\|\boldsymbol{\theta}^{*}\right\|_2
+    }.
+    \]
+
+    \item \textbf{Erro das trajetórias reconstruídas:}
+    \[
+    \mathrm{RMSE}
+    =
+    \sqrt{
+        \frac{1}{2m}
+        \sum_{i=1}^{m}
+        \left[
+        \left(\hat{N}(t_i)-N^{*}(t_i)\right)^2
+        +
+        \left(\hat{P}(t_i)-P^{*}(t_i)\right)^2
+        \right]
+    }.
+    \]
+
+    \item \textbf{Estabilidade e robustez:}
+    \begin{itemize}
+        \item Média e desvio-padrão dos erros
+        em múltiplas execuções;
+        \item Variação do desempenho em função
+        do ruído e da quantidade de observações.
+    \end{itemize}
+
+    \item \textbf{Custo computacional:}
+    \begin{itemize}
+        \item Tempo de treinamento e calibração;
+        \item Número de avaliações da função objetivo;
+        \item Tempo de inferência, quando aplicável.
+    \end{itemize}
+
+\end{itemize}
+
+\end{frame}
+
+\section{Resultados Esperados e Desafios}
+
+\begin{frame}{Resultados Esperados e Limitações}
+
+\begin{block}{Resultados Esperados}
+\begin{itemize}
+
+    \item Implementação e avaliação de diferentes
+    técnicas de identificação de parâmetros
+    para o modelo de Rosenzweig-MacArthur;
+
+    \item Análise comparativa da
+    \textbf{precisão, robustez e eficiência}
+    dos métodos investigados;
+
+    \item Identificação das vantagens e limitações
+    do algoritmo genético e das abordagens baseadas
+    em redes neurais;
+\end{itemize}
+\end{block}
+
+\vspace{0.2cm}
+
+\begin{alertblock}{Limitações e Desafios}
+\begin{itemize}
+
+    \item Possíveis dificuldades de identificabilidade
+    e sensibilidade dos parâmetros;
+
+    \item Dependência das condições iniciais
+    e das configurações de otimização;
+
+    \item Custo de treinamento das redes neurais
+    em comparação com a resolução numérica das EDOs.
+\end{itemize}
+\end{alertblock}
+
+\end{frame}
