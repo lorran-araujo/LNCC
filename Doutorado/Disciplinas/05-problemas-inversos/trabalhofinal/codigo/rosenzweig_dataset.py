@@ -209,12 +209,16 @@ def generate_pilot_dataset(config: GenerationConfig = GenerationConfig()) -> Sce
     )
 
 
-def save_dataset(dataset: ScenarioDataset, output_dir: str | Path) -> tuple[Path, Path]:
-    """Save numerical arrays as NPZ and one inspectable metadata row per scenario."""
+def save_dataset(
+    dataset: ScenarioDataset, output_dir: str | Path, dataset_name: str = "piloto"
+) -> tuple[Path, Path]:
+    """Save arrays and metadata using a shared, name-based dataset convention."""
     output_path = Path(output_dir)
     output_path.mkdir(parents=True, exist_ok=True)
-    arrays_path = output_path / "piloto_trajectories.npz"
-    metadata_path = output_path / "piloto_metadata.csv"
+    if not dataset_name or Path(dataset_name).name != dataset_name:
+        raise ValueError("dataset_name must be a non-empty file-name stem.")
+    arrays_path = output_path / f"{dataset_name}_trajectories.npz"
+    metadata_path = output_path / f"{dataset_name}_metadata.csv"
 
     np.savez_compressed(
         arrays_path,
